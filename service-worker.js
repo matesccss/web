@@ -1,8 +1,8 @@
 /* =========================================================
    SERVICE WORKER
-   ========================================================= */
+========================================================= */
 
-const CACHE_NAME = "mates-v2";
+const CACHE_NAME = "mates-cache";
 
 
 const ARCHIVOS = [
@@ -23,15 +23,9 @@ self.addEventListener("install", event => {
     event.waitUntil(
 
         caches.open(CACHE_NAME)
-            .then(cache => {
-
-                return cache.addAll(ARCHIVOS);
-
-            })
+            .then(cache => cache.addAll(ARCHIVOS))
 
     );
-
-    /* Activa inmediatamente la nueva versión */
 
     self.skipWaiting();
 
@@ -47,11 +41,11 @@ self.addEventListener("activate", event => {
     event.waitUntil(
 
         caches.keys()
-            .then(nombres => {
+            .then(cachesExistentes => {
 
                 return Promise.all(
 
-                    nombres
+                    cachesExistentes
                         .filter(nombre => nombre !== CACHE_NAME)
                         .map(nombre => caches.delete(nombre))
 
@@ -59,13 +53,7 @@ self.addEventListener("activate", event => {
 
             })
 
-            .then(() => {
-
-                /* Toma el control inmediatamente */
-
-                return self.clients.claim();
-
-            })
+            .then(() => self.clients.claim())
 
     );
 
@@ -78,6 +66,11 @@ self.addEventListener("activate", event => {
 
 self.addEventListener("fetch", event => {
 
+    /*
+     * Para navegación y archivos de la web:
+     * intentar siempre obtener la versión actual.
+     */
+
     event.respondWith(
 
         fetch(event.request)
@@ -85,10 +78,26 @@ self.addEventListener("fetch", event => {
             .then(response => {
 
                 /*
-                 * Si la respuesta es válida,
-                 * devolvemos siempre la versión
-                 * actualizada de Internet.
+                 * Guardamos una copia actualizada.
                  */
+
+                if (
+                    response &&
+                    response.status === 200 &&
+                    response.type === "basic"
+                ) {
+
+                    const copia = response.clone();
+
+                    caches.open(CACHE_NAME)
+                        .then(cache => {
+                            cache.put(
+                                event.request,
+                                copia
+                            );
+                        });
+
+                }
 
                 return response;
 
@@ -97,8 +106,8 @@ self.addEventListener("fetch", event => {
             .catch(() => {
 
                 /*
-                 * Si no hay conexión,
-                 * utilizamos la caché.
+                 * Sin conexión:
+                 * utilizar la versión guardada.
                  */
 
                 return caches.match(event.request);
