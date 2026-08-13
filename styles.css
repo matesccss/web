@@ -913,387 +913,483 @@ line-height:1.25;
    MENÚ PRINCIPAL
 ========================================================= */
 
-.menu{
-  width:92%;
-  margin:0 auto 20px;
+.menu {
+    width: 92%;
+    margin: 0 auto 20px;
 
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-  background:#ffffff;
+    background: #ffffff;
 
-  border:1px solid #e5e7eb;
-  border-radius:16px;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
 
-  padding:8px;
+    padding: 8px;
 
-  box-shadow:0 6px 18px rgba(0,0,0,.08);
+    box-shadow: 0 6px 18px rgba(0,0,0,.08);
 
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 
-  position:relative;
-  z-index:1000;
+    position: relative;
+    z-index: 1000;
+
+    box-sizing: border-box;
 }
 
 
 /* =========================================================
-   MENÚ NORMAL — ORDENADOR
+   HAMBURGUESA
 ========================================================= */
 
-.menu-hamburguesa{
-  display:none;
+.menu-hamburguesa {
+
+    display: none;
+
+    border: 0;
+
+    width: 44px;
+    height: 44px;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background: #f1f5f9;
+
+    color: #334155;
+
+    font-size: 26px;
+    line-height: 1;
+
+    cursor: pointer;
+
+    padding: 0;
+
+    box-sizing: border-box;
 }
 
 
-.menu-contenido{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
+/* =========================================================
+   MENÚ NORMAL
+========================================================= */
+
+.menu-contenido {
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 6px;
+
+    width: auto;
 }
 
+
+/* ENLACES Y BOTONES */
 
 .menu-contenido > a,
-.menu-contenido .dropdown-btn{
+.menu-contenido .dropdown-btn {
 
-  border:none;
-  background:none;
+    display: flex;
 
-  padding:10px 14px;
+    align-items: center;
 
-  border-radius:10px;
+    justify-content: center;
 
-  text-decoration:none;
+    border: 0;
 
-  color:#334155;
+    background: transparent;
 
-  font-size:.9rem;
-  font-weight:600;
+    padding: 10px 14px;
 
-  cursor:pointer;
+    border-radius: 10px;
 
-  transition:.2s;
+    color: #334155;
+
+    font-family: inherit;
+
+    font-size: .9rem;
+
+    font-weight: 600;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    box-sizing: border-box;
+
+    transition:
+        background .2s ease,
+        color .2s ease;
 }
 
 
 .menu-contenido > a:hover,
-.menu-contenido .dropdown-btn:hover{
+.menu-contenido .dropdown-btn:hover {
 
-  background:#f1f5f9;
-  color:#2563eb;
+    background: #f1f5f9;
 
-}
-
-
-/* =========================================================
-   DESPLEGABLES — ORDENADOR
-========================================================= */
-
-.menu-dropdown{
-  position:relative;
-}
-
-
-.dropdown-btn{
-  white-space:nowrap;
-}
-
-
-.dropdown-content{
-
-  display:none;
-
-  position:absolute;
-
-  top:100%;
-  left:50%;
-
-  transform:translateX(-50%);
-
-  min-width:170px;
-
-  background:#ffffff;
-
-  border:1px solid #e5e7eb;
-
-  border-radius:12px;
-
-  box-shadow:0 10px 25px rgba(0,0,0,.12);
-
-  padding:6px;
-
-  z-index:1000;
-
-}
-
-
-.dropdown-content a{
-
-  display:block;
-
-  width:100%;
-
-  box-sizing:border-box;
-
-  padding:9px 10px;
-
-  border-radius:8px;
-
-  text-decoration:none;
-
-  color:#334155;
-
-  font-size:.85rem;
-
-}
-
-
-.dropdown-content a:hover{
-
-  background:#f1f5f9;
-  color:#2563eb;
-
-}
-
-
-.menu-dropdown:hover .dropdown-content{
-
-  display:block;
+    color: #2563eb;
 
 }
 
 
 /* =========================================================
-   TABLET / MÓVIL — HAMBURGUESA
+   DESPLEGABLE
 ========================================================= */
 
-@media(max-width:768px){
+.menu-dropdown {
 
-  .menu{
+    position: relative;
 
-    width:94%;
+}
 
-    justify-content:flex-start;
 
-    padding:6px;
+.dropdown-btn {
 
-  }
+    white-space: nowrap;
 
+}
 
-  /* MOSTRAR HAMBURGUESA */
 
-  .menu-hamburguesa{
+.dropdown-content {
 
-    display:flex;
+    display: none;
 
-    align-items:center;
-    justify-content:center;
+    position: absolute;
 
-    width:44px;
-    height:44px;
+    top: calc(100% + 5px);
 
-    border:none;
-    border-radius:12px;
+    left: 50%;
 
-    background:#f8fafc;
+    transform: translateX(-50%);
 
-    color:#334155;
+    width: 180px;
 
-    font-size:25px;
+    padding: 6px;
 
-    cursor:pointer;
+    background: #ffffff;
 
-    transition:.2s ease;
+    border: 1px solid #e5e7eb;
 
-  }
+    border-radius: 12px;
 
+    box-shadow: 0 10px 25px rgba(0,0,0,.12);
 
-  .menu-hamburguesa:hover{
+    box-sizing: border-box;
 
-    background:#eff6ff;
-    color:#2563eb;
+}
 
-  }
 
+.dropdown-content a {
 
-  .menu-hamburguesa.activo{
+    display: block;
 
-    background:#2563eb;
-    color:#ffffff;
+    width: 100%;
 
-  }
+    padding: 9px 12px;
 
+    border-radius: 8px;
 
-  /* OCULTAR MENÚ */
+    color: #334155;
 
-  .menu-contenido{
+    text-decoration: none;
 
-    display:none;
+    font-size: .85rem;
 
-    position:absolute;
+    box-sizing: border-box;
 
-    top:58px;
-    left:0;
+}
 
-    width:230px;
 
-    box-sizing:border-box;
+.dropdown-content a:hover {
 
-    padding:8px;
+    background: #f1f5f9;
 
-    flex-direction:column;
+    color: #2563eb;
 
-    align-items:stretch;
+}
 
-    gap:4px;
 
-    background:#ffffff;
+/* ORDENADOR */
 
-    border:1px solid #e5e7eb;
+@media (min-width: 769px) {
 
-    border-radius:16px;
+    .menu-dropdown:hover .dropdown-content {
 
-    box-shadow:0 14px 30px rgba(0,0,0,.14);
+        display: block;
 
-  }
-
-
-  /* MOSTRAR AL PULSAR */
-
-  .menu-contenido.menu-abierto{
-
-    display:flex;
-
-  }
-
-
-  .menu-contenido > a,
-  .menu-contenido .dropdown-btn{
-
-    width:100%;
-
-    box-sizing:border-box;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:flex-start;
-
-    padding:11px 12px;
-
-    font-size:.88rem;
-
-  }
-
-
-  /* DESPLEGABLE MÓVIL */
-
-  .menu-dropdown{
-
-    width:100%;
-
-  }
-
-
-  .menu-dropdown .dropdown-content{
-
-    display:none;
-
-    position:static;
-
-    transform:none;
-
-    width:100%;
-
-    min-width:0;
-
-    margin-top:2px;
-
-    padding:4px;
-
-    box-sizing:border-box;
-
-    background:#f8fafc;
-
-    border:1px solid #eef2f7;
-
-    border-radius:10px;
-
-    box-shadow:none;
-
-  }
-
-
-  .menu-dropdown.abierto .dropdown-content{
-
-    display:block;
-
-  }
-
-
-  .dropdown-content a{
-
-    padding:9px 12px;
-
-    font-size:.82rem;
-
-  }
-
-
-  /* DESACTIVAR HOVER EN MÓVIL */
-
-  .menu-dropdown:hover .dropdown-content{
-
-    display:none;
-
-  }
-
-
-  .menu-dropdown.abierto:hover .dropdown-content{
-
-    display:block;
-
-  }
+    }
 
 }
 
 
 /* =========================================================
-   MÓVIL PEQUEÑO
+   MÓVIL
 ========================================================= */
 
-@media(max-width:480px){
+@media (max-width: 768px) {
 
-  .menu{
+    .menu {
 
-    width:94%;
+        width: 94%;
 
-  }
+        margin-bottom: 15px;
 
+        justify-content: flex-start;
 
-  .menu-hamburguesa{
+        padding: 6px;
 
-    width:42px;
-    height:42px;
-
-    font-size:23px;
-
-  }
+    }
 
 
-  .menu-contenido{
+    /* MOSTRAR HAMBURGUESA */
 
-    top:56px;
+    .menu-hamburguesa {
 
-    width:220px;
+        display: flex;
 
-  }
+    }
+
+
+    /* BOTÓN ACTIVO */
+
+    .menu-hamburguesa.activo {
+
+        background: #2563eb;
+
+        color: #ffffff;
+
+    }
+
+
+    /* MENÚ CERRADO */
+
+    .menu-contenido {
+
+        display: none;
+
+        position: absolute;
+
+        top: calc(100% + 6px);
+
+        left: 0;
+
+        width: 250px;
+
+        max-width: calc(100vw - 30px);
+
+        padding: 8px;
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+        justify-content: flex-start;
+
+        gap: 3px;
+
+        background: #ffffff;
+
+        border: 1px solid #e5e7eb;
+
+        border-radius: 16px;
+
+        box-shadow: 0 15px 35px rgba(0,0,0,.16);
+
+        box-sizing: border-box;
+
+    }
+
+
+    /* MENÚ ABIERTO */
+
+    .menu-contenido.menu-abierto {
+
+        display: flex;
+
+    }
+
+
+    /* ENLACES */
+
+    .menu-contenido > a,
+    .menu-contenido .dropdown-btn {
+
+        width: 100%;
+
+        min-height: 42px;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: flex-start;
+
+        padding: 10px 12px;
+
+        border-radius: 10px;
+
+        color: #334155;
+
+        background: transparent;
+
+        text-decoration: none;
+
+        font-size: .9rem;
+
+        font-weight: 600;
+
+        text-align: left;
+
+    }
+
+
+    .menu-contenido > a:hover,
+    .menu-contenido .dropdown-btn:hover {
+
+        background: #f1f5f9;
+
+        color: #2563eb;
+
+    }
+
+
+    /* DESPLEGABLE */
+
+    .menu-dropdown {
+
+        width: 100%;
+
+    }
+
+
+    .menu-dropdown .dropdown-content {
+
+        display: none;
+
+        position: static;
+
+        transform: none;
+
+        width: 100%;
+
+        margin: 2px 0 4px;
+
+        padding: 4px;
+
+        background: #f8fafc;
+
+        border: 1px solid #eef2f7;
+
+        border-radius: 10px;
+
+        box-shadow: none;
+
+        box-sizing: border-box;
+
+    }
+
+
+    /* ABIERTO */
+
+    .menu-dropdown.abierto .dropdown-content {
+
+        display: block;
+
+    }
+
+
+    /* ENLACES DE LOS TEMAS */
+
+    .menu-dropdown .dropdown-content a {
+
+        display: block;
+
+        width: 100%;
+
+        padding: 9px 12px;
+
+        color: #475569;
+
+        text-decoration: none;
+
+        font-size: .84rem;
+
+        font-weight: 500;
+
+        border-radius: 8px;
+
+        box-sizing: border-box;
+
+    }
+
+
+    .menu-dropdown .dropdown-content a:hover {
+
+        background: #e2e8f0;
+
+        color: #2563eb;
+
+    }
+
+
+    /*
+       IMPORTANTE:
+       En móvil no usamos hover para abrir
+       los desplegables.
+    */
+
+    .menu-dropdown:hover .dropdown-content {
+
+        display: none;
+
+    }
+
+
+    .menu-dropdown.abierto:hover .dropdown-content {
+
+        display: block;
+
+    }
 
 }
 
+
+/* =========================================================
+   MÓVILES PEQUEÑOS
+========================================================= */
+
+@media (max-width: 480px) {
+
+    .menu {
+
+        width: 94%;
+
+    }
+
+
+    .menu-hamburguesa {
+
+        width: 42px;
+        height: 42px;
+
+        font-size: 24px;
+
+    }
+
+
+    .menu-contenido {
+
+        width: 240px;
+
+    }
+
+}
 
 /* =========================================================
    PÁGINAS DE TEMAS — CCSS I / CCSS II
