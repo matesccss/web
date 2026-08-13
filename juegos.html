@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>🎮 Modo Juego · Matemáticas</title>
+
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+
+        /* =========================================================
+           PÁGINA DE JUEGOS
+        ========================================================= */
+
+        .games-page {
+
+            max-width: 1200px;
+
+            margin: 0 auto;
+
+            padding: 25px 20px 60px;
+
+        }
+
+
+        /* =========================================================
+           CABECERA
+        ========================================================= */
+
+        .games-header {
+
+            text-align: center;
+
+            margin: 25px auto 45px;
+
+        }
+
+
+        .games-header h1 {
+
+            margin: 0;
+
+            font-size: clamp(2.2rem, 5vw, 3.5rem);
+
+            font-weight: 800;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #8b5cf6,
+                    #ec4899,
+                    #f59e0b
+                );
+
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+
+        }
+
+
+        .games-header .games-line {
+
+            width: 180px;
+
+            height: 5px;
+
+            margin: 12px auto 18px;
+
+            border-radius: 999px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #8b5cf6,
+                    #ec4899,
+                    #f59e0b
+                );
+
+            box-shadow:
+                0 0 15px rgba(236,72,153,.3);
+
+        }
+
+
+        .games-header p {
+
+            margin: 0 auto;
+
+            max-width: 650px;
+
+            color: #64748b;
+
+            font-size: 1rem;
+
+            line-height: 1.6;
+
+        }
+
+
+        /* =========================================================
+           CONTENEDOR DE JUEGOS
+        ========================================================= */
+
+        .games-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 25px;
+
+        }
+
+
+        /* =========================================================
+           TARJETA
+        ========================================================= */
+
+        .game-card {
+
+            position: relative;
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+
+            text-align: center;
+
+            min-height: 390px;
+
+            padding: 30px 25px 25px;
+
+            border-radius: 24px;
+
+            background: rgba(255,255,255,.92);
+
+            border: 1px solid rgba(139,92,246,.15);
+
+            box-shadow:
+                0 8px 25px rgba(15,23,42,.10);
+
+            overflow: hidden;
+
+            transition:
+                transform .3s ease,
+                box-shadow .3s ease,
+                border-color .3s ease;
+
+        }
+
+
+        .game-card::before {
+
+            content: "";
+
+            position: absolute;
+
+            top: 0;
+            left: 0;
+
+            width: 100%;
+            height: 6px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #8b5cf6,
+                    #ec4899,
+                    #f59e0b
+                );
+
+        }
+
+
+        .game-card:hover {
+
+            transform: translateY(-8px);
+
+            box-shadow:
+                0 16px 35px rgba(15,23,42,.16);
+
+            border-color:
+                rgba(139,92,246,.35);
+
+        }
+
+
+        /* =========================================================
+           ICONO
+        ========================================================= */
+
+        .game-icon {
+
+            width: 105px;
+            height: 105px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            margin: 15px auto 20px;
+
+            border-radius: 30px;
+
+            font-size: 4rem;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #ede9fe,
+                    #fce7f3
+                );
+
+            box-shadow:
+                0 8px 20px rgba(139,92,246,.15);
+
+            transition:
+                transform .3s ease;
+
+        }
+
+
+        .game-card:hover .game-icon {
+
+            transform:
+                scale(1.08)
+                rotate(-3deg);
+
+        }
+
+
+        /* =========================================================
+           TÍTULO
+        ========================================================= */
+
+        .game-card h2 {
+
+            margin: 0 0 10px;
+
+            font-size: 1.65rem;
+
+            font-weight: 800;
+
+            color: #1e293b;
+
+        }
+
+
+        /* =========================================================
+           DESCRIPCIÓN
+        ========================================================= */
+
+        .game-description {
+
+            margin: 0 auto;
+
+            max-width: 280px;
+
+            min-height: 55px;
+
+            color: #64748b;
+
+            font-size: .95rem;
+
+            line-height: 1.5;
+
+        }
+
+
+        /* =========================================================
+           BOTÓN
+        ========================================================= */
+
+        .game-button {
+
+            display: inline-flex;
+
+            align-items: center;
+            justify-content: center;
+
+            min-width: 145px;
+
+            min-height: 46px;
+
+            margin-top: auto;
+
+            padding: 10px 22px;
+
+            border-radius: 999px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #8b5cf6,
+                    #ec4899
+                );
+
+            color: white;
+
+            text-decoration: none;
+
+            font-weight: 800;
+
+            font-size: .95rem;
+
+            box-shadow:
+                0 6px 16px rgba(139,92,246,.3);
+
+            transition:
+                transform .2s ease,
+                box-shadow .2s ease;
+
+        }
+
+
+        .game-button:hover {
+
+            transform: scale(1.05);
+
+            box-shadow:
+                0 9px 22px rgba(139,92,246,.4);
+
+        }
+
+
+        /* =========================================================
+           TARJETAS BLOQUEADAS
+        ========================================================= */
+
+        .game-card.locked {
+
+            opacity: .82;
+
+        }
+
+
+        .game-card.locked .game-icon {
+
+            filter: grayscale(.45);
+
+        }
+
+
+        .game-button.locked-button {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #94a3b8,
+                    #64748b
+                );
+
+            box-shadow:
+                none;
+
+            cursor: default;
+
+        }
+
+
+        .game-button.locked-button:hover {
+
+            transform: none;
+
+        }
+
+
+        /* =========================================================
+           ETIQUETA PRÓXIMAMENTE
+        ========================================================= */
+
+        .coming-soon {
+
+            position: absolute;
+
+            top: 18px;
+            right: -35px;
+
+            padding: 6px 45px;
+
+            transform: rotate(35deg);
+
+            background:
+                #64748b;
+
+            color: white;
+
+            font-size: .7rem;
+
+            font-weight: 800;
+
+            letter-spacing: .5px;
+
+        }
+
+
+        /* =========================================================
+           SEPARADOR
+        ========================================================= */
+
+        .games-footer {
+
+            text-align: center;
+
+            margin-top: 50px;
+
+        }
+
+
+        .games-footer p {
+
+            margin: 0;
+
+            color: #94a3b8;
+
+            font-size: .9rem;
+
+        }
+
+
+        /* =========================================================
+           MÓVIL
+        ========================================================= */
+
+        @media (max-width: 800px) {
+
+            .games-page {
+
+                padding:
+                    15px
+                    12px
+                    40px;
+
+            }
+
+
+            .games-header {
+
+                margin:
+                    15px auto
+                    30px;
+
+            }
+
+
+            .games-header h1 {
+
+                font-size: 2.35rem;
+
+            }
+
+
+            .games-header .games-line {
+
+                width: 140px;
+
+                height: 4px;
+
+            }
+
+
+            .games-header p {
+
+                font-size: .9rem;
+
+                padding:
+                    0 10px;
+
+            }
+
+
+            .games-grid {
+
+                grid-template-columns: 1fr;
+
+                gap: 18px;
+
+            }
+
+
+            .game-card {
+
+                min-height: auto;
+
+                padding:
+                    28px
+                    20px
+                    22px;
+
+                border-radius: 20px;
+
+            }
+
+
+            .game-icon {
+
+                width: 90px;
+                height: 90px;
+
+                margin:
+                    10px auto
+                    18px;
+
+                font-size: 3.3rem;
+
+                border-radius: 25px;
+
+            }
+
+
+            .game-card h2 {
+
+                font-size: 1.45rem;
+
+            }
+
+
+            .game-description {
+
+                min-height: auto;
+
+                font-size: .9rem;
+
+                margin-bottom: 22px;
+
+            }
+
+
+            .game-button {
+
+                width: 100%;
+
+                max-width: 260px;
+
+                min-height: 48px;
+
+                font-size: .95rem;
+
+            }
+
+        }
+
+
+        /* =========================================================
+           MÓVILES PEQUEÑOS
+        ========================================================= */
+
+        @media (max-width: 400px) {
+
+            .games-header h1 {
+
+                font-size: 2rem;
+
+            }
+
+
+            .games-header p {
+
+                font-size: .85rem;
+
+            }
+
+
+            .game-card {
+
+                padding:
+                    25px
+                    16px
+                    20px;
+
+            }
+
+
+            .game-icon {
+
+                width: 80px;
+                height: 80px;
+
+                font-size: 2.9rem;
+
+            }
+
+
+            .game-card h2 {
+
+                font-size: 1.3rem;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================================================
+         MENÚ
+    ========================================================== -->
+
+    <nav class="menu">
+
+        <a href="index.html">
+            🏠 Inicio
+        </a>
+
+
+        <a href="https://accounts.google.com/AccountChooser?continue=https://script.google.com/a/macros/g.educaand.es/s/AKfycbxHgTgZREPTg4a2gfi1Yx1B_kc4OnKDFsuaprH3JRdDZoyebyEu9oWwpw2aquCw6zf76Q/exec"
+           target="_blank">
+
+            📤 Entregas
+
+        </a>
+
+
+        <!-- CCSS I -->
+
+        <div class="menu-dropdown">
+
+            <button>
+                📘 CCSS I ▾
+            </button>
+
+            <div class="dropdown-content">
+
+                <a href="ccss1/tema1.html">Tema 1</a>
+                <a href="ccss1/tema2.html">Tema 2</a>
+                <a href="ccss1/tema3.html">Tema 3</a>
+                <a href="ccss1/tema4.html">Tema 4</a>
+                <a href="ccss1/tema5.html">Tema 5</a>
+                <a href="ccss1/tema6.html">Tema 6</a>
+                <a href="ccss1/tema7.html">Tema 7</a>
+                <a href="ccss1/tema8.html">Tema 8</a>
+                <a href="ccss1/tema9.html">Tema 9</a>
+                <a href="ccss1/tema10.html">Tema 10</a>
+
+            </div>
+
+        </div>
+
+
+        <!-- CCSS II -->
+
+        <div class="menu-dropdown">
+
+            <button>
+                📕 CCSS II ▾
+            </button>
+
+            <div class="dropdown-content">
+
+                <a href="ccss2/tema1.html">Tema 1</a>
+                <a href="ccss2/tema2.html">Tema 2</a>
+                <a href="ccss2/tema3.html">Tema 3</a>
+                <a href="ccss2/tema4.html">Tema 4</a>
+                <a href="ccss2/tema5.html">Tema 5</a>
+                <a href="ccss2/tema6.html">Tema 6</a>
+                <a href="ccss2/tema7.html">Tema 7</a>
+
+            </div>
+
+        </div>
+
+
+        <a href="cumpleanos.html">
+            🎂 Cumpleaños
+        </a>
+
+
+        <a href="juegos.html">
+            🎮 Juegos
+        </a>
+
+
+        <a href="reels.html">
+            🎬 Reels
+        </a>
+
+    </nav>
+
+
+    <!-- =========================================================
+         CONTENIDO
+    ========================================================== -->
+
+    <main class="games-page">
+
+
+        <!-- CABECERA -->
+
+        <header class="games-header">
+
+            <h1>
+                🎮 Modo Juego
+            </h1>
+
+            <div class="games-line"></div>
+
+            <p>
+                Ponte a prueba, consigue puntos y demuestra
+                cuánto puedes aguantar.
+            </p>
+
+        </header>
+
+
+        <!-- =====================================================
+             JUEGOS
+        ====================================================== -->
+
+        <section class="games-grid">
+
+
+            <!-- =================================================
+                 SNAKE
+            ================================================== -->
+
+            <article class="game-card">
+
+                <div class="game-icon">
+                    🐍
+                </div>
+
+                <h2>
+                    Snake
+                </h2>
+
+                <p class="game-description">
+
+                    Come las manzanas, haz crecer
+                    la serpiente y consigue la mayor
+                    puntuación posible.
+
+                </p>
+
+                <a
+                    href="juegos/snake.html"
+                    class="game-button">
+
+                    ▶ Jugar
+
+                </a>
+
+            </article>
+
+        
+
+            <!-- =================================================
+                 PONG
+            ================================================== -->
+
+            <article class="game-card locked">
+
+                <div class="coming-soon">
+                    PRÓXIMAMENTE
+                </div>
+
+                <div class="game-icon">
+                    🏓
+                </div>
+
+                <h2>
+                    Pong
+                </h2>
+
+                <p class="game-description">
+
+                    Devuelve la pelota con tu pala, supera a tu rival 
+                    y consigue llegar a 5 puntos antes que él.
+
+                </p>
+
+                <span
+                    class="game-button locked-button">
+
+                    🔒 Próximamente
+
+                </span>
+
+            </article>
+
+            <!-- =================================================
+                 TETRIS
+            ================================================== -->
+
+            <article class="game-card locked">
+
+                <div class="coming-soon">
+                    PRÓXIMAMENTE
+                </div>
+
+                <div class="game-icon">
+                    🧱
+                </div>
+
+                <h2>
+                    Tetris
+                </h2>
+
+                <p class="game-description">
+
+                    Encaja las piezas, completa líneas
+                    y consigue la máxima puntuación.
+
+                </p>
+
+                <span
+                    class="game-button locked-button">
+
+                    🔒 Próximamente
+
+                </span>
+
+            </article>
+
+
+            <!-- =================================================
+                 DRAGON RUNNER
+            ================================================== -->
+
+            <article class="game-card locked">
+
+                <div class="coming-soon">
+                    PRÓXIMAMENTE
+                </div>
+
+                <div class="game-icon">
+                    🐉
+                </div>
+
+                <h2>
+                    Dragon Runner
+                </h2>
+
+                <p class="game-description">
+
+                    Corre, esquiva obstáculos y consigue
+                    llegar cada vez más lejos.
+
+                </p>
+
+                <span
+                    class="game-button locked-button">
+
+                    🔒 Próximamente
+
+                </span>
+
+            </article>
+
+
+        </section>
+
+
+        <!-- =====================================================
+             PIE
+        ====================================================== -->
+
+        <footer class="games-footer">
+
+            <p>
+                🎯 Más juegos próximamente...
+            </p>
+
+        </footer>
+
+
+    </main>
+
+
+</body>
+
+</html>

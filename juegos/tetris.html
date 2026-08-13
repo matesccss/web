@@ -1,0 +1,2330 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>🧱 Tetris · Modo Juego</title>
+
+    <link rel="stylesheet" href="../styles.css">
+
+    <style>
+
+        /* =========================================================
+           PÁGINA TETRIS
+        ========================================================= */
+
+        .tetris-page {
+            min-height: calc(100vh - 70px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 15px 50px;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            min-height: 100%;
+        }
+
+        body {
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+
+        /* =========================================================
+           CONTENEDOR DEL JUEGO
+        ========================================================= */
+
+        .tetris-game {
+
+            position: relative;
+
+            width: min(94vw, 560px);
+
+            padding: 18px 25px 14px;
+
+            box-sizing: border-box;
+
+            border-radius: 28px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #0f172a,
+                    #111827
+                );
+
+            border:
+                1px solid rgba(0,195,255,.25);
+
+            box-shadow:
+                0 20px 50px rgba(0,0,0,.25),
+                0 0 30px rgba(0,195,255,.08);
+
+            color: white;
+
+            text-align: center;
+
+        }
+
+
+        /* =========================================================
+           CABECERA
+        ========================================================= */
+
+        .tetris-header {
+
+            margin-bottom: 10px;
+
+        }
+
+
+        .tetris-header h1 {
+
+            margin: 0;
+
+            font-size:
+                clamp(1.6rem, 4vw, 2.2rem);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #6a5acd,
+                    #00c3ff
+                );
+
+            -webkit-background-clip: text;
+
+            -webkit-text-fill-color: transparent;
+
+        }
+
+
+        .tetris-header p {
+
+            margin: 4px 0 0;
+
+            color: #cbd5e1;
+
+            font-size: .8rem;
+
+        }
+
+
+        /* =========================================================
+           PANTALLAS
+        ========================================================= */
+
+        .tetris-screen {
+
+            text-align: center;
+
+        }
+
+
+        .tetris-screen h2 {
+
+            margin:
+                0 0 12px;
+
+            color: #00c3ff;
+
+            font-size: 1.6rem;
+
+            text-shadow:
+                0 0 12px
+                rgba(0,195,255,.5);
+
+        }
+
+
+        .tetris-screen p {
+
+            color: #cbd5e1;
+
+            line-height: 1.55;
+
+            font-size: .95rem;
+
+            margin:
+                0 auto 20px;
+
+            max-width: 390px;
+
+        }
+
+
+        /* =========================================================
+           BOTONES PRINCIPALES
+        ========================================================= */
+
+        .tetris-btn {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            min-height: 46px;
+
+            padding:
+                10px 24px;
+
+            border: none;
+
+            border-radius: 999px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #6a5acd,
+                    #00c3ff
+                );
+
+            color: white;
+
+            font-size: .95rem;
+
+            font-weight: 800;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 0 15px
+                rgba(0,195,255,.4);
+
+            transition:
+                transform .2s ease,
+                box-shadow .2s ease;
+
+            touch-action: manipulation;
+
+        }
+
+
+        .tetris-btn:hover {
+
+            transform: scale(1.05);
+
+            box-shadow:
+                0 0 22px
+                rgba(0,195,255,.6);
+
+        }
+
+
+        .tetris-btn:active {
+
+            transform: scale(.95);
+
+        }
+
+
+        /* =========================================================
+           NOMBRE
+        ========================================================= */
+
+        .name-input {
+
+            display: block;
+
+            width: min(100%, 300px);
+
+            box-sizing: border-box;
+
+            margin:
+                0 auto 15px;
+
+            padding:
+                12px 15px;
+
+            border:
+                2px solid rgba(0,195,255,.3);
+
+            border-radius: 12px;
+
+            outline: none;
+
+            background: #020617;
+
+            color: white;
+
+            font-size: 16px;
+
+            text-align: center;
+
+            transition:
+                border-color .2s ease,
+                box-shadow .2s ease;
+
+        }
+
+
+        .name-input:focus {
+
+            border-color:
+                #00c3ff;
+
+            box-shadow:
+                0 0 12px
+                rgba(0,195,255,.25);
+
+        }
+
+
+        .name-input::placeholder {
+
+            color: #64748b;
+
+        }
+
+
+        .name-error {
+
+            min-height: 20px;
+
+            margin:
+                0 0 10px;
+
+            color: #fb7185;
+
+            font-size: .85rem;
+
+        }
+
+
+        /* =========================================================
+           ZONA DEL JUEGO
+        ========================================================= */
+
+        .game-area {
+
+            display: none;
+
+            position: relative;
+
+            width: 100%;
+
+        }
+
+
+        /* =========================================================
+           CANVAS TETRIS
+        ========================================================= */
+
+        #gameCanvas {
+
+            display: block;
+
+            width:
+                min(100%, 300px);
+
+            height: auto;
+
+            aspect-ratio: 1 / 2;
+
+            margin:
+                0 auto;
+
+            background: #000;
+
+            border:
+                2px solid #fff;
+
+            border-radius: 10px;
+
+            box-shadow:
+                0 0 15px
+                rgba(106,90,205,.6),
+
+                0 0 25px
+                rgba(0,195,255,.4);
+
+            image-rendering: pixelated;
+
+        }
+
+
+        /* =========================================================
+           MARCADOR
+        ========================================================= */
+
+        .score-box {
+
+            position: absolute;
+
+            top: 10px;
+
+            left: 10px;
+
+            z-index: 5;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #6a5acd,
+                    #00c3ff
+                );
+
+            border-radius: 9px;
+
+            padding:
+                5px 10px;
+
+            min-width: 45px;
+
+            box-sizing: border-box;
+
+            font-family:
+                "Courier New",
+                monospace;
+
+            font-size: .9rem;
+
+            font-weight: bold;
+
+            color: white;
+
+            text-shadow:
+                0 0 6px
+                rgba(0,195,255,.8);
+
+            box-shadow:
+                0 0 8px
+                rgba(106,90,205,.6),
+
+                0 0 12px
+                rgba(0,195,255,.5);
+
+        }
+
+
+        /* =========================================================
+           CONTROLES TÁCTILES
+        ========================================================= */
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            margin-top: 14px;
+        }
+
+
+        .controls-row {
+
+            display: flex;
+
+            gap: 5px;
+
+        }
+
+
+        .controls button {
+
+            width: 44px;
+
+            height: 40px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 0;
+
+            border: none;
+
+            border-radius: 9px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #6a5acd,
+                    #00c3ff
+                );
+
+            color: white;
+
+            font-size: 18px;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 0 10px
+                rgba(0,195,255,.5);
+
+            touch-action: manipulation;
+
+            -webkit-tap-highlight-color:
+                transparent;
+
+            user-select: none;
+
+            -webkit-user-select: none;
+
+        }
+
+
+        .controls button:active {
+
+            transform:
+                scale(.9);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #5a4abb,
+                    #00aaff
+                );
+
+        }
+
+
+        /* =========================================================
+           PANTALLA FINAL
+        ========================================================= */
+
+        #endScreen {
+
+            display: none;
+
+        }
+
+
+        #endMessage {
+
+            margin-bottom: 20px;
+
+        }
+
+
+        /* =========================================================
+           VOLVER
+        ========================================================= */
+
+        .back-games {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            margin-top: 10px;
+
+            padding:
+                8px 17px;
+
+            border-radius: 999px;
+
+            border:
+                1px solid
+                rgba(255,255,255,.15);
+
+            color: #cbd5e1;
+
+            text-decoration: none;
+
+            font-size: .8rem;
+
+            transition:
+                background .2s ease,
+                color .2s ease;
+
+        }
+
+
+        .back-games:hover {
+
+            background:
+                rgba(255,255,255,.08);
+
+            color: white;
+
+        }
+
+
+        /* =========================================================
+           ORDENADOR CON POCA ALTURA
+        ========================================================= */
+
+        @media (
+            max-height: 800px
+        ) and (
+            min-width: 601px
+        ) {
+
+            .tetris-page {
+
+                align-items:
+                    flex-start;
+
+                padding-top: 8px;
+
+            }
+
+
+            .tetris-game {
+
+                padding:
+                    12px 20px 12px;
+
+            }
+
+
+            .tetris-header {
+
+                margin-bottom:
+                    6px;
+
+            }
+
+
+            .tetris-header h1 {
+
+                font-size:
+                    1.7rem;
+
+            }
+
+
+            .tetris-header p {
+
+                font-size:
+                    .75rem;
+
+            }
+
+
+            #gameCanvas {
+
+                width:
+                    min(60vw, 240px);
+
+            }
+
+
+            .controls {
+
+                margin-top:
+                    6px;
+
+                gap:
+                    4px;
+
+            }
+
+
+            .controls-row {
+
+                gap:
+                    4px;
+
+            }
+
+
+            .controls button {
+
+                width:
+                    42px;
+
+                height:
+                    36px;
+
+                font-size:
+                    17px;
+
+            }
+
+
+            .back-games {
+
+                margin-top:
+                    7px;
+
+            }
+
+        }
+
+
+        /* =========================================================
+           MÓVIL
+        ========================================================= */
+
+        @media (max-width: 600px) {
+
+            .tetris-page {
+                min-height: calc(100vh - 60px);
+                padding: 15px 6px 50px;
+                align-items: center;
+                box-sizing: border-box;
+            }
+
+            .tetris-game {
+                width: 100%;
+                max-width: 400px;
+                padding: 14px 8px 20px;
+                border-radius: 20px;
+            }
+
+            .tetris-header {
+                margin-bottom: 7px;
+            }
+
+            .tetris-header h1 {
+                font-size: 1.6rem;
+            }
+
+            .tetris-header p {
+                font-size: .75rem;
+            }
+
+            .tetris-screen h2 {
+                font-size: 1.3rem;
+            }
+
+            .tetris-screen p {
+                font-size: .8rem;
+                margin-bottom: 12px;
+            }
+
+            #gameCanvas {
+                width: min(70vw, 250px);
+                max-width: 250px;
+                border-radius: 8px;
+            }
+
+            .controls {
+                margin-top: 14px;
+                gap: 4px;
+            }
+
+            .controls-row {
+                gap: 4px;
+            }
+
+            .controls button {
+                width: 44px;
+                height: 40px;
+                font-size: 17px;
+            }
+
+            .score-box {
+                top: 8px;
+                left: 8px;
+                padding: 4px 8px;
+                font-size: .85rem;
+            }
+
+            .back-games {
+                margin-top: 12px;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================================================
+         MENÚ
+    ========================================================== -->
+
+    <nav class="menu">
+
+        <a href="../index.html">
+            🏠 Inicio
+        </a>
+
+
+        <a
+            href="https://accounts.google.com/AccountChooser?continue=https://script.google.com/a/macros/g.educaand.es/s/AKfycbxHgTgZREPTg4a2gfi1Yx1B_kc4OnKDFsuaprH3JRdDZoyebyEu9oWwpw2aquCw6zf76Q/exec"
+            target="_blank">
+
+            📤 Entregas
+
+        </a>
+
+
+        <!-- CCSS I -->
+
+        <div class="menu-dropdown">
+
+            <button>
+                📘 CCSS I ▾
+            </button>
+
+            <div class="dropdown-content">
+
+                <a href="../ccss1/tema1.html">
+                    Tema 1
+                </a>
+
+                <a href="../ccss1/tema2.html">
+                    Tema 2
+                </a>
+
+                <a href="../ccss1/tema3.html">
+                    Tema 3
+                </a>
+
+                <a href="../ccss1/tema4.html">
+                    Tema 4
+                </a>
+
+                <a href="../ccss1/tema5.html">
+                    Tema 5
+                </a>
+
+                <a href="../ccss1/tema6.html">
+                    Tema 6
+                </a>
+
+                <a href="../ccss1/tema7.html">
+                    Tema 7
+                </a>
+
+                <a href="../ccss1/tema8.html">
+                    Tema 8
+                </a>
+
+                <a href="../ccss1/tema9.html">
+                    Tema 9
+                </a>
+
+                <a href="../ccss1/tema10.html">
+                    Tema 10
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- CCSS II -->
+
+        <div class="menu-dropdown">
+
+            <button>
+                📕 CCSS II ▾
+            </button>
+
+            <div class="dropdown-content">
+
+                <a href="../ccss2/tema1.html">
+                    Tema 1
+                </a>
+
+                <a href="../ccss2/tema2.html">
+                    Tema 2
+                </a>
+
+                <a href="../ccss2/tema3.html">
+                    Tema 3
+                </a>
+
+                <a href="../ccss2/tema4.html">
+                    Tema 4
+                </a>
+
+                <a href="../ccss2/tema5.html">
+                    Tema 5
+                </a>
+
+                <a href="../ccss2/tema6.html">
+                    Tema 6
+                </a>
+
+                <a href="../ccss2/tema7.html">
+                    Tema 7
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <a href="../cumpleanos.html">
+            🎂 Cumpleaños
+        </a>
+
+
+        <a href="../juegos.html">
+            🎮 Juegos
+        </a>
+
+
+        <a href="../reels.html">
+            🎬 Reels
+        </a>
+
+    </nav>
+
+
+    <!-- =========================================================
+         JUEGO
+    ========================================================== -->
+
+    <main class="tetris-page">
+
+        <section class="tetris-game">
+
+
+            <!-- CABECERA -->
+
+            <header class="tetris-header">
+
+                <h1>
+                    🧱 Tetris
+                </h1>
+
+                <p>
+                    Modo Juego · Matemáticas
+                </p>
+
+            </header>
+
+
+            <!-- =================================================
+                 PANTALLA INICIAL
+            ================================================== -->
+
+            <div
+                class="tetris-screen"
+                id="introScreen">
+
+                <p>
+
+                    Encaja las piezas que van cayendo
+                    y completa líneas para conseguir puntos.
+
+                    <br>
+
+                    ¡No dejes que las piezas lleguen
+                    hasta arriba! 🏆
+
+                </p>
+
+                <button
+                    class="tetris-btn"
+                    id="startBtn"
+                    type="button">
+
+                    ▶ Empezar
+
+                </button>
+
+            </div>
+
+
+            <!-- =================================================
+                 PANTALLA NOMBRE
+            ================================================== -->
+
+            <div
+                class="tetris-screen"
+                id="nameScreen"
+                style="display:none;">
+
+                <h2>
+                    📝 Tu nombre
+                </h2>
+
+                <p>
+                    Escribe tu nombre para guardar
+                    tu puntuación.
+                </p>
+
+                <input
+                    id="playerNameInput"
+                    class="name-input"
+                    type="text"
+                    placeholder="Tu nombre"
+                    maxlength="30"
+                    autocomplete="name">
+
+                <div
+                    id="nameError"
+                    class="name-error">
+                </div>
+
+                <button
+                    class="tetris-btn"
+                    id="confirmBtn"
+                    type="button">
+
+                    Comenzar
+
+                </button>
+
+            </div>
+
+
+            <!-- =================================================
+                 ZONA DEL JUEGO
+            ================================================== -->
+
+            <div
+                class="game-area"
+                id="gameArea">
+
+
+                <div
+                    class="score-box"
+                    id="scoreBox">
+
+                    0
+
+                </div>
+
+
+                <canvas
+                    id="gameCanvas">
+                </canvas>
+
+
+                <!-- CONTROLES TÁCTILES -->
+
+                <div
+                    class="controls"
+                    id="controls">
+
+
+                    <button
+                        type="button"
+                        data-action="rotate"
+                        aria-label="Girar">
+
+                        ↻
+
+                    </button>
+
+
+                    <div class="controls-row">
+
+                        <button
+                            type="button"
+                            data-action="left"
+                            aria-label="Izquierda">
+
+                            ◀
+
+                        </button>
+
+
+                        <button
+                            type="button"
+                            data-action="down"
+                            aria-label="Bajar">
+
+                            ▼
+
+                        </button>
+
+
+                        <button
+                            type="button"
+                            data-action="right"
+                            aria-label="Derecha">
+
+                            ▶
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 PANTALLA FINAL
+            ================================================== -->
+
+            <div
+                class="tetris-screen"
+                id="endScreen">
+
+                <h2 id="endMessage">
+                </h2>
+
+                <button
+                    class="tetris-btn"
+                    id="restartBtn"
+                    type="button">
+
+                    🔄 Reiniciar
+
+                </button>
+
+            </div>
+
+
+            <!-- VOLVER -->
+
+            <a
+                href="../juegos.html"
+                class="back-games">
+
+                ← Volver a Modo Juego
+
+            </a>
+
+
+        </section>
+
+    </main>
+
+
+    <script>
+
+        /* ========================================================
+           ELEMENTOS
+        ======================================================== */
+
+        const canvas =
+            document.getElementById("gameCanvas");
+
+        const ctx =
+            canvas.getContext("2d");
+
+        const introScreen =
+            document.getElementById("introScreen");
+
+        const nameScreen =
+            document.getElementById("nameScreen");
+
+        const endScreen =
+            document.getElementById("endScreen");
+
+        const endMessage =
+            document.getElementById("endMessage");
+
+        const gameArea =
+            document.getElementById("gameArea");
+
+        const scoreBox =
+            document.getElementById("scoreBox");
+
+        const controls =
+            document.getElementById("controls");
+
+        const startBtn =
+            document.getElementById("startBtn");
+
+        const confirmBtn =
+            document.getElementById("confirmBtn");
+
+        const restartBtn =
+            document.getElementById("restartBtn");
+
+        const playerNameInput =
+            document.getElementById("playerNameInput");
+
+        const nameError =
+            document.getElementById("nameError");
+
+
+        /* ========================================================
+           CONFIGURACIÓN
+        ======================================================== */
+
+        const SCRIPT_URL =
+            "https://script.google.com/macros/s/AKfycbxcRsulX7-NPEjf3M6EBsINZSL4pV9kZR3j9UkDBmq5Mrnczrjh9hTgADZE80R2Eb24/exec";
+
+
+        const COLS = 10;
+
+        const ROWS = 20;
+
+
+        /* ========================================================
+           VARIABLES
+        ======================================================== */
+
+        let board = [];
+
+        let piece = null;
+
+        let score = 0;
+
+        let playerName = "";
+
+        let gameLoop = null;
+
+        let lastTime = 0;
+
+        let dropCounter = 0;
+
+        let dropInterval = 1000;
+
+        let scoreSent = false;
+
+        let lastType = null;
+
+
+        /* ========================================================
+           PIEZAS
+        ======================================================== */
+
+        const SHAPES = [
+
+            [[1, 1, 1, 1]],
+
+            [[1, 1],
+             [1, 1]],
+
+            [[0, 1, 0],
+             [1, 1, 1]],
+
+            [[0, 1, 1],
+             [1, 1, 0]],
+
+            [[1, 1, 0],
+             [0, 1, 1]],
+
+            [[1, 0, 0],
+             [1, 1, 1]],
+
+            [[0, 0, 1],
+             [1, 1, 1]]
+
+        ];
+
+
+        const COLORS = [
+
+            "cyan",
+            "yellow",
+            "purple",
+            "green",
+            "red",
+            "blue",
+            "orange"
+
+        ];
+
+
+        /* ========================================================
+           REDIMENSIONAR CANVAS
+        ======================================================== */
+
+        function resizeCanvas() {
+
+            let height;
+            let width;
+
+
+            if (window.innerWidth <= 600) {
+
+                height =
+                    Math.min(
+                        window.innerHeight * 0.48,
+                        480
+                    );
+
+                width =
+                    height / 2;
+
+
+                width =
+                    Math.min(
+                        width,
+                        250
+                    );
+
+
+                height =
+                    width * 2;
+
+            } else {
+
+                height = 480;
+
+                width = 240;
+
+            }
+
+
+            canvas.width =
+                width;
+
+            canvas.height =
+                height;
+
+        }
+
+
+        /* ========================================================
+           CREAR TABLERO
+        ======================================================== */
+
+        function createBoard() {
+
+            board =
+                Array.from(
+                    {
+                        length: ROWS
+                    },
+                    () =>
+                        Array(COLS).fill(0)
+                );
+
+        }
+
+
+        /* ========================================================
+           CREAR PIEZA
+        ======================================================== */
+
+        function spawnPiece() {
+
+            let type;
+
+            do {
+
+                type =
+                    Math.floor(
+                        Math.random() *
+                        SHAPES.length
+                    );
+
+            } while (
+                SHAPES.length > 1 &&
+                type === lastType
+            );
+
+
+            lastType =
+                type;
+
+
+            piece = {
+
+                shape:
+                    SHAPES[type]
+                        .map(row => [...row]),
+
+                color:
+                    COLORS[type],
+
+                x:
+                    Math.floor(
+                        COLS / 2
+                    ) -
+                    Math.ceil(
+                        SHAPES[type][0].length / 2
+                    ),
+
+                y: 0
+
+            };
+
+
+            if (collide()) {
+
+                endGame(
+                    "Has perdido ❌<br>Puntuación: " +
+                    score
+                );
+
+            }
+
+        }
+
+
+        /* ========================================================
+           COLISIÓN
+        ======================================================== */
+
+        function collide() {
+
+            for (
+                let y = 0;
+                y < piece.shape.length;
+                y++
+            ) {
+
+                for (
+                    let x = 0;
+                    x < piece.shape[y].length;
+                    x++
+                ) {
+
+                    if (
+                        !piece.shape[y][x]
+                    ) {
+
+                        continue;
+
+                    }
+
+
+                    const newX =
+                        piece.x + x;
+
+                    const newY =
+                        piece.y + y;
+
+
+                    if (
+                        newX < 0 ||
+                        newX >= COLS ||
+                        newY >= ROWS
+                    ) {
+
+                        return true;
+
+                    }
+
+
+                    if (
+                        newY >= 0 &&
+                        board[newY][newX]
+                    ) {
+
+                        return true;
+
+                    }
+
+                }
+
+            }
+
+
+            return false;
+
+        }
+
+
+        /* ========================================================
+           UNIR PIEZA AL TABLERO
+        ======================================================== */
+
+        function merge() {
+
+            for (
+                let y = 0;
+                y < piece.shape.length;
+                y++
+            ) {
+
+                for (
+                    let x = 0;
+                    x < piece.shape[y].length;
+                    x++
+                ) {
+
+                    if (
+                        piece.shape[y][x]
+                    ) {
+
+                        const boardY =
+                            piece.y + y;
+
+                        const boardX =
+                            piece.x + x;
+
+
+                        if (
+                            boardY >= 0
+                        ) {
+
+                            board[boardY][boardX] =
+                                piece.color;
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+
+        /* ========================================================
+           MOVER PIEZA
+        ======================================================== */
+
+        function move(direction) {
+
+            if (!piece) {
+                return;
+            }
+
+
+            piece.x += direction;
+
+
+            if (collide()) {
+
+                piece.x -= direction;
+
+            }
+
+        }
+
+
+        /* ========================================================
+           BAJAR PIEZA
+        ======================================================== */
+
+        function drop() {
+
+            if (!piece) {
+                return;
+            }
+
+
+            piece.y++;
+
+
+            if (collide()) {
+
+                piece.y--;
+
+                merge();
+
+                clearLines();
+
+                spawnPiece();
+
+            }
+
+
+            dropCounter = 0;
+
+        }
+
+
+        /* ========================================================
+           ROTAR PIEZA
+        ======================================================== */
+
+        function rotate() {
+
+            if (!piece) {
+                return;
+            }
+
+
+            const oldShape =
+                piece.shape;
+
+
+            const newShape =
+                oldShape[0].map(
+                    (_, index) =>
+                        oldShape
+                            .map(row => row[index])
+                            .reverse()
+                );
+
+
+            piece.shape =
+                newShape;
+
+
+            if (collide()) {
+
+                piece.shape =
+                    oldShape;
+
+            }
+
+        }
+
+
+        /* ========================================================
+           LIMPIAR LÍNEAS
+        ======================================================== */
+
+        function clearLines() {
+
+            let lines = 0;
+
+
+            board =
+                board.filter(
+                    row => {
+
+                        if (
+                            row.every(
+                                cell => cell
+                            )
+                        ) {
+
+                            lines++;
+
+                            return false;
+
+                        }
+
+
+                        return true;
+
+                    }
+                );
+
+
+            while (
+                board.length < ROWS
+            ) {
+
+                board.unshift(
+                    Array(COLS).fill(0)
+                );
+
+            }
+
+
+            if (lines > 0) {
+
+                /*
+                    Puntuación original:
+                    100 puntos por línea.
+                */
+
+                score +=
+                    lines * 100;
+
+
+                scoreBox.textContent =
+                    score;
+
+
+                /*
+                    La velocidad aumenta
+                    progresivamente.
+                */
+
+                if (
+                    dropInterval > 200
+                ) {
+
+                    dropInterval -=
+                        lines * 50;
+
+
+                    if (
+                        dropInterval < 200
+                    ) {
+
+                        dropInterval = 200;
+
+                    }
+
+                }
+
+            }
+
+        }
+
+
+        /* ========================================================
+           DIBUJAR
+        ======================================================== */
+
+        function draw() {
+
+            ctx.fillStyle =
+                "#000";
+
+
+            ctx.fillRect(
+                0,
+                0,
+                canvas.width,
+                canvas.height
+            );
+
+
+            const scaleX =
+                canvas.width / COLS;
+
+
+            const scaleY =
+                canvas.height / ROWS;
+
+
+            /*
+                TABLERO
+            */
+
+            for (
+                let y = 0;
+                y < ROWS;
+                y++
+            ) {
+
+                for (
+                    let x = 0;
+                    x < COLS;
+                    x++
+                ) {
+
+                    if (
+                        board[y][x]
+                    ) {
+
+                        ctx.fillStyle =
+                            board[y][x];
+
+
+                        ctx.fillRect(
+                            x * scaleX,
+                            y * scaleY,
+                            scaleX - 1,
+                            scaleY - 1
+                        );
+
+                    }
+
+                }
+
+            }
+
+
+            /*
+                PIEZA ACTUAL
+            */
+
+            if (piece) {
+
+                for (
+                    let y = 0;
+                    y < piece.shape.length;
+                    y++
+                ) {
+
+                    for (
+                        let x = 0;
+                        x < piece.shape[y].length;
+                        x++
+                    ) {
+
+                        if (
+                            piece.shape[y][x]
+                        ) {
+
+                            ctx.fillStyle =
+                                piece.color;
+
+
+                            ctx.fillRect(
+                                (piece.x + x) * scaleX,
+                                (piece.y + y) * scaleY,
+                                scaleX - 1,
+                                scaleY - 1
+                            );
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+
+        /* ========================================================
+           GUARDAR PUNTUACIÓN
+        ======================================================== */
+
+        function enviarPuntuacion() {
+
+            if (scoreSent) {
+
+                return;
+
+            }
+
+
+            scoreSent = true;
+
+
+            const datos = {
+
+                juego:
+                    "Tetris",
+
+                nombre:
+                    playerName ||
+                    "Sin nombre",
+
+                puntuacion:
+                    score
+
+            };
+
+
+            console.log(
+                "Enviando puntuación:",
+                datos
+            );
+
+
+            fetch(
+                SCRIPT_URL,
+                {
+
+                    method:
+                        "POST",
+
+                    mode:
+                        "no-cors",
+
+                    headers: {
+
+                        "Content-Type":
+                            "text/plain;charset=utf-8"
+
+                    },
+
+                    body:
+                        JSON.stringify(
+                            datos
+                        )
+
+                }
+            )
+            .then(
+                function() {
+
+                    console.log(
+                        "Puntuación enviada al Apps Script."
+                    );
+
+                }
+            )
+            .catch(
+                function(error) {
+
+                    console.error(
+                        "Error al enviar puntuación:",
+                        error
+                    );
+
+
+                    scoreSent =
+                        false;
+
+                }
+            );
+
+        }
+
+
+        /* ========================================================
+           BUCLE DEL JUEGO
+        ======================================================== */
+
+        function update(time = 0) {
+
+            const delta =
+                time - lastTime;
+
+
+            lastTime =
+                time;
+
+
+            dropCounter +=
+                delta;
+
+
+            if (
+                dropCounter >
+                dropInterval
+            ) {
+
+                drop();
+
+            }
+
+
+            draw();
+
+
+            gameLoop =
+                requestAnimationFrame(
+                    update
+                );
+
+        }
+
+
+        /* ========================================================
+           INICIAR JUEGO
+        ======================================================== */
+
+        function startGame() {
+
+            resizeCanvas();
+
+
+            introScreen.style.display =
+                "none";
+
+
+            nameScreen.style.display =
+                "none";
+
+
+            endScreen.style.display =
+                "none";
+
+
+            gameArea.style.display =
+                "block";
+
+
+            canvas.style.display =
+                "block";
+
+
+            scoreBox.style.display =
+                "block";
+
+
+            controls.style.display =
+                "flex";
+
+
+            createBoard();
+
+
+            score =
+                0;
+
+
+            scoreSent =
+                false;
+
+
+            dropCounter =
+                0;
+
+
+            dropInterval =
+                1000;
+
+
+            lastTime =
+                0;
+
+
+            lastType =
+                null;
+
+
+            scoreBox.textContent =
+                "0";
+
+
+            cancelAnimationFrame(
+                gameLoop
+            );
+
+
+            spawnPiece();
+
+
+            gameLoop =
+                requestAnimationFrame(
+                    update
+                );
+
+        }
+
+
+        /* ========================================================
+           FINAL DEL JUEGO
+        ======================================================== */
+
+        function endGame(message) {
+
+            cancelAnimationFrame(
+                gameLoop
+            );
+
+
+            gameLoop =
+                null;
+
+
+            canvas.style.display =
+                "none";
+
+
+            scoreBox.style.display =
+                "none";
+
+
+            controls.style.display =
+                "none";
+
+
+            gameArea.style.display =
+                "none";
+
+
+            endScreen.style.display =
+                "block";
+
+
+            endMessage.innerHTML =
+                message;
+
+
+            enviarPuntuacion();
+
+        }
+
+
+        /* ========================================================
+           MOSTRAR PANTALLA DE NOMBRE
+        ======================================================== */
+
+        function showNameScreen() {
+
+            introScreen.style.display =
+                "none";
+
+
+            endScreen.style.display =
+                "none";
+
+
+            gameArea.style.display =
+                "none";
+
+
+            nameScreen.style.display =
+                "block";
+
+
+            playerNameInput.value =
+                "";
+
+
+            nameError.textContent =
+                "";
+
+
+            setTimeout(
+                function() {
+
+                    playerNameInput.focus();
+
+                },
+                100
+            );
+
+        }
+
+
+        /* ========================================================
+           CONFIRMAR NOMBRE
+        ======================================================== */
+
+        function confirmNameAndStart() {
+
+            const name =
+                (
+                    playerNameInput.value ||
+                    ""
+                ).trim();
+
+
+            if (!name) {
+
+                nameError.textContent =
+                    "⚠️ Escribe tu nombre para continuar.";
+
+
+                playerNameInput.focus();
+
+
+                return;
+
+            }
+
+
+            playerName =
+                name;
+
+
+            nameError.textContent =
+                "";
+
+
+            startGame();
+
+        }
+
+
+        /* ========================================================
+           REINICIAR
+        ======================================================== */
+
+        function restartGame() {
+
+            startGame();
+
+        }
+
+
+        /* ========================================================
+           BOTONES
+        ======================================================== */
+
+        startBtn.addEventListener(
+            "click",
+            showNameScreen
+        );
+
+
+        confirmBtn.addEventListener(
+            "click",
+            confirmNameAndStart
+        );
+
+
+        restartBtn.addEventListener(
+            "click",
+            restartGame
+        );
+
+
+        /* ========================================================
+           ENTER EN EL NOMBRE
+        ======================================================== */
+
+        playerNameInput.addEventListener(
+            "keydown",
+            function(event) {
+
+                if (
+                    event.key === "Enter"
+                ) {
+
+                    event.preventDefault();
+
+
+                    confirmNameAndStart();
+
+                }
+
+            }
+        );
+
+
+        /* ========================================================
+           CONTROLES DE TECLADO
+        ======================================================== */
+
+        document.addEventListener(
+            "keydown",
+            function(event) {
+
+                const keys = [
+
+                    "ArrowLeft",
+                    "ArrowRight",
+                    "ArrowDown",
+                    "ArrowUp",
+                    " "
+
+                ];
+
+
+                if (
+                    keys.includes(event.key)
+                ) {
+
+                    event.preventDefault();
+
+                }
+
+
+                if (
+                    event.key === "ArrowLeft"
+                ) {
+
+                    move(-1);
+
+                }
+
+
+                if (
+                    event.key === "ArrowRight"
+                ) {
+
+                    move(1);
+
+                }
+
+
+                if (
+                    event.key === "ArrowDown"
+                ) {
+
+                    drop();
+
+                }
+
+
+                if (
+                    event.key === "ArrowUp" ||
+                    event.key === " "
+                ) {
+
+                    rotate();
+
+                }
+
+            },
+            false
+        );
+
+
+        /* ========================================================
+           CONTROLES TÁCTILES
+        ======================================================== */
+
+        document
+            .querySelectorAll(
+                "#controls button"
+            )
+            .forEach(
+                function(button) {
+
+                    const action =
+                        button.dataset.action;
+
+
+                    const handleTouch =
+                        function(event) {
+
+                            event.preventDefault();
+
+
+                            if (
+                                action === "left"
+                            ) {
+
+                                move(-1);
+
+                            }
+
+
+                            if (
+                                action === "right"
+                            ) {
+
+                                move(1);
+
+                            }
+
+
+                            if (
+                                action === "down"
+                            ) {
+
+                                drop();
+
+                            }
+
+
+                            if (
+                                action === "rotate"
+                            ) {
+
+                                rotate();
+
+                            }
+
+                        };
+
+
+                    if (
+                        window.PointerEvent
+                    ) {
+
+                        button.addEventListener(
+                            "pointerdown",
+                            handleTouch,
+                            {
+                                passive: false
+                            }
+                        );
+
+                    } else {
+
+                        button.addEventListener(
+                            "touchstart",
+                            handleTouch,
+                            {
+                                passive: false
+                            }
+                        );
+
+                    }
+
+                }
+            );
+
+
+        /* ========================================================
+           REDIMENSIONAR
+        ======================================================== */
+
+        window.addEventListener(
+            "resize",
+            function() {
+
+                if (
+                    gameArea.style.display ===
+                    "block"
+                ) {
+
+                    resizeCanvas();
+
+                }
+
+            }
+        );
+
+
+        /* ========================================================
+           INICIALIZACIÓN
+        ======================================================== */
+
+        resizeCanvas();
+
+    </script>
+
+
+</body>
+
+</html>

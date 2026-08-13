@@ -1,0 +1,493 @@
+<footer class="footer">
+
+    <!-- FRASE -->
+    <div class="footer-frase-area">
+
+        <span class="footer-frase-mark">“</span>
+
+        <p id="footer-text"
+           class="footer-frase"
+           aria-live="polite"></p>
+
+    </div>
+
+
+    <!-- LÍNEA -->
+    <div class="footer-line"></div>
+
+
+    <!-- PARTE INFERIOR -->
+    <div class="footer-bottom">
+
+        <div class="footer-centro">
+
+            <span class="footer-centro-nombre">
+                IES El Molinillo
+            </span>
+
+            <span class="footer-centro-departamento">
+                Departamento de Matemáticas
+            </span>
+
+        </div>
+
+
+        <div class="footer-derecha">
+
+            <span class="footer-year">
+                © 2026
+            </span>
+
+            <a href="#"
+               id="footer-app"
+               class="footer-app">
+                📱 App
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- FIRMA -->
+    <div class="footer-final">
+        Aprender · descubrir · avanzar
+    </div>
+
+</footer>
+
+
+<style>
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.footer {
+
+    position: relative;
+
+    margin-top: 55px;
+
+    padding: 45px 40px 25px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #0f172a 0%,
+            #020617 100%
+        );
+
+    color: #fff;
+
+    overflow: hidden;
+
+}
+
+
+/* =========================================================
+   BRILLO SUPERIOR
+========================================================= */
+
+.footer::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: -120px;
+    left: 50%;
+
+    width: 500px;
+    height: 220px;
+
+    transform: translateX(-50%);
+
+    background:
+        radial-gradient(
+            ellipse,
+            rgba(56, 189, 248, 0.10),
+            transparent 70%
+        );
+
+    pointer-events: none;
+
+}
+
+
+/* =========================================================
+   FRASE
+========================================================= */
+
+.footer-frase-area {
+
+    position: relative;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: flex-start;
+
+    max-width: 950px;
+
+    min-height: 55px;
+
+    margin: 0 auto;
+
+    padding: 0 30px;
+
+}
+
+
+.footer-frase-mark {
+
+    position: absolute;
+
+    left: 0;
+    top: -12px;
+
+    font-family: Georgia, serif;
+
+    font-size: 3.5em;
+
+    line-height: 1;
+
+    color: #38bdf8;
+
+    opacity: 0.35;
+
+}
+
+
+.footer-frase {
+
+    margin: 0;
+
+    max-width: 850px;
+
+    text-align: center;
+
+    font-size: 0.95em;
+
+    line-height: 1.6;
+
+    font-style: italic;
+
+    color: #cbd5e1;
+
+}
+
+
+/* =========================================================
+   ANIMACIÓN
+========================================================= */
+
+.fade-out {
+
+    opacity: 0;
+
+    transform: translateY(7px);
+
+    transition:
+        opacity 0.45s ease,
+        transform 0.45s ease;
+
+}
+
+
+.fade-in {
+
+    opacity: 1;
+
+    transform: translateY(0);
+
+    transition:
+        opacity 0.45s ease,
+        transform 0.45s ease;
+
+}
+
+
+/* =========================================================
+   LÍNEA
+========================================================= */
+
+.footer-line {
+
+    width: 100%;
+
+    max-width: 1000px;
+
+    height: 1px;
+
+    margin: 30px auto 22px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(148, 163, 184, 0.25),
+            transparent
+        );
+
+}
+
+
+/* =========================================================
+   PARTE INFERIOR
+========================================================= */
+
+.footer-bottom {
+
+    width: 100%;
+
+    max-width: 1000px;
+
+    margin: 0 auto;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+}
+
+
+/* =========================================================
+   CENTRO
+========================================================= */
+
+.footer-centro {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 3px;
+
+}
+
+
+.footer-centro-nombre {
+
+    font-size: 0.8em;
+
+    font-weight: 600;
+
+    color: #e2e8f0;
+
+}
+
+
+.footer-centro-departamento {
+
+    font-size: 0.68em;
+
+    color: #64748b;
+
+}
+
+
+/* =========================================================
+   DERECHA
+========================================================= */
+
+.footer-derecha {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+
+}
+
+
+.footer-year {
+
+    font-size: 0.68em;
+
+    color: #64748b;
+
+}
+
+
+/* =========================================================
+   APP
+========================================================= */
+
+.footer-app {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    padding: 6px 12px;
+
+    border: 1px solid rgba(56, 189, 248, 0.25);
+
+    border-radius: 20px;
+
+    color: #7dd3fc;
+
+    text-decoration: none;
+
+    font-size: 0.68em;
+
+    background:
+        rgba(56, 189, 248, 0.05);
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+
+}
+
+
+.footer-app:hover {
+
+    background:
+        rgba(56, 189, 248, 0.12);
+
+    border-color:
+        rgba(56, 189, 248, 0.45);
+
+    transform: translateY(-1px);
+
+}
+
+
+/* =========================================================
+   FIRMA
+========================================================= */
+
+.footer-final {
+
+    margin-top: 28px;
+
+    text-align: center;
+
+    font-size: 0.68em;
+
+    color: #64748b;
+
+    letter-spacing: 0.6px;
+
+    opacity: 0.9;
+
+}
+
+
+/* =========================================================
+   MÓVIL
+========================================================= */
+
+@media (max-width: 767px) {
+
+    .footer {
+
+        margin-top: 35px;
+
+        padding: 32px 18px 20px;
+
+    }
+
+
+    .footer-frase-area {
+
+        min-height: 70px;
+
+        padding: 0 20px;
+
+    }
+
+
+    .footer-frase {
+
+        font-size: 0.78em;
+
+        line-height: 1.5;
+
+    }
+
+
+    .footer-frase-mark {
+
+        left: -2px;
+
+        top: -8px;
+
+        font-size: 2.7em;
+
+    }
+
+
+    .footer-line {
+
+        margin: 22px auto 18px;
+
+    }
+
+
+    .footer-bottom {
+
+        align-items: flex-start;
+
+    }
+
+
+    .footer-centro-nombre {
+
+        font-size: 0.68em;
+
+    }
+
+
+    .footer-centro-departamento {
+
+        font-size: 0.57em;
+
+    }
+
+
+    .footer-derecha {
+
+        gap: 8px;
+
+    }
+
+
+    .footer-year {
+
+        font-size: 0.55em;
+
+    }
+
+
+    .footer-app {
+
+        padding: 5px 9px;
+
+        font-size: 0.58em;
+
+    }
+
+
+    .footer-final {
+
+        margin-top: 22px;
+
+        font-size: 0.55em;
+
+        letter-spacing: 0.4px;
+
+    }
+
+}
+
+</style>

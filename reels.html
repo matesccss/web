@@ -1,0 +1,1976 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>🎬 Reels · Matemáticas</title>
+
+    <link rel="stylesheet"
+        href="styles.css">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
+
+
+    <style>
+
+        /* =========================================================
+           PÁGINA REELS
+        ========================================================= */
+
+        .reels-page {
+
+            max-width: 1200px;
+
+            margin: 0 auto;
+
+            padding:
+                20px
+                20px
+                60px;
+
+            font-family:
+                'Poppins',
+                sans-serif;
+
+        }
+
+
+        /* =========================================================
+           CABECERA
+        ========================================================= */
+
+        .reels-header {
+
+            text-align: center;
+
+            margin:
+                20px auto
+                30px;
+
+        }
+
+
+        .titulo-reels {
+
+            margin: 0;
+
+            font-size:
+                clamp(
+                    2.2rem,
+                    5vw,
+                    3.2rem
+                );
+
+            font-weight: 800;
+
+            letter-spacing: .5px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #8b5cf6,
+                    #ec4899,
+                    #f59e0b
+                );
+
+            -webkit-background-clip: text;
+
+            -webkit-text-fill-color:
+                transparent;
+
+        }
+
+
+        .reels-line {
+
+            width: 180px;
+
+            height: 5px;
+
+            margin:
+                12px auto
+                18px;
+
+            border-radius:
+                999px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #8b5cf6,
+                    #ec4899,
+                    #f59e0b
+                );
+
+            box-shadow:
+                0 0 15px
+                rgba(
+                    236,
+                    72,
+                    153,
+                    .3
+                );
+
+        }
+
+
+        .reels-subtitle {
+
+            margin:
+                0 auto;
+
+            max-width:
+                650px;
+
+            color:
+                #64748b;
+
+            font-size:
+                .95rem;
+
+            line-height:
+                1.6;
+
+        }
+
+
+        /* =========================================================
+           TARJETA PARA ENVIAR REELS
+        ========================================================= */
+
+        .send-reel-box {
+
+            max-width:
+                700px;
+
+            margin:
+                0 auto 35px;
+
+            padding:
+                18px 22px;
+
+            box-sizing:
+                border-box;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                space-between;
+
+            gap:
+                20px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(139,92,246,.08),
+                    rgba(236,72,153,.08)
+                );
+
+            border:
+                1px solid
+                rgba(
+                    139,
+                    92,
+                    246,
+                    .15
+                );
+
+            border-radius:
+                20px;
+
+            box-shadow:
+                0 8px 22px
+                rgba(
+                    15,
+                    23,
+                    42,
+                    .07
+                );
+
+        }
+
+
+        .send-reel-text {
+
+            text-align:
+                left;
+
+        }
+
+
+        .send-reel-text strong {
+
+            display:
+                block;
+
+            margin-bottom:
+                3px;
+
+            color:
+                #1e293b;
+
+            font-size:
+                1rem;
+
+            font-weight:
+                800;
+
+        }
+
+
+        .send-reel-text span {
+
+            color:
+                #64748b;
+
+            font-size:
+                .8rem;
+
+            line-height:
+                1.4;
+
+        }
+
+
+        .send-reel-button {
+
+            flex-shrink:
+                0;
+
+            display:
+                inline-flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            padding:
+                11px 20px;
+
+            border-radius:
+                999px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #8b5cf6,
+                    #ec4899
+                );
+
+            color:
+                white;
+
+            text-decoration:
+                none;
+
+            font-size:
+                .85rem;
+
+            font-weight:
+                800;
+
+            box-shadow:
+                0 6px 16px
+                rgba(
+                    139,
+                    92,
+                    246,
+                    .25
+                );
+
+            transition:
+                transform .2s ease,
+                box-shadow .2s ease;
+
+        }
+
+
+        .send-reel-button:hover {
+
+            transform:
+                translateY(-2px);
+
+            box-shadow:
+                0 9px 22px
+                rgba(
+                    139,
+                    92,
+                    246,
+                    .35
+                );
+
+        }
+
+
+        /* =========================================================
+           GALERÍA
+        ========================================================= */
+
+        .reels-grid {
+
+            display:
+                grid;
+
+            grid-template-columns:
+                repeat(
+                    2,
+                    minmax(
+                        0,
+                        1fr
+                    )
+                );
+
+            gap:
+                25px;
+
+            align-items:
+                start;
+
+        }
+
+
+        /* =========================================================
+           TARJETA DE RED SOCIAL
+        ========================================================= */
+
+        .video-card {
+
+            width:
+                100%;
+
+            box-sizing:
+                border-box;
+
+            background:
+                #ffffff;
+
+            border-radius:
+                22px;
+
+            padding:
+                18px;
+
+            box-shadow:
+                0 10px 24px
+                rgba(
+                    15,
+                    23,
+                    42,
+                    .10
+                );
+
+            display:
+                flex;
+
+            flex-direction:
+                column;
+
+            align-items:
+                center;
+
+        }
+
+
+        /* =========================================================
+           TÍTULOS
+        ========================================================= */
+
+        .video-card h2 {
+
+            margin:
+                0 0 18px;
+
+            font-size:
+                1.8rem;
+
+            font-weight:
+                800;
+
+        }
+
+
+        .instagram-title {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #833AB4,
+                    #FD1D1D,
+                    #FCAF45
+                );
+
+            -webkit-background-clip:
+                text;
+
+            -webkit-text-fill-color:
+                transparent;
+
+        }
+
+
+        .tiktok-title {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #25F4EE,
+                    #000000,
+                    #FE2C55
+                );
+
+            -webkit-background-clip:
+                text;
+
+            -webkit-text-fill-color:
+                transparent;
+
+        }
+
+
+        /* =========================================================
+           CONTENEDOR DEL VÍDEO
+        ========================================================= */
+
+        .video-container {
+
+            width:
+                100%;
+
+            display:
+                flex;
+
+            justify-content:
+                center;
+
+            align-items:
+                flex-start;
+
+            overflow:
+                visible;
+
+            border-radius:
+                18px;
+
+            background:
+                #f1f5f9;
+
+        }
+
+
+        /* =========================================================
+           INSTAGRAM
+        ========================================================= */
+
+        #instagram-video-container iframe {
+
+            display:
+                block;
+
+            width:
+                100%;
+
+            max-width:
+                540px;
+
+            height:
+                760px;
+
+            min-height:
+                760px;
+
+            border:
+                none;
+
+            border-radius:
+                18px;
+
+            overflow:
+                auto;
+
+        }
+
+
+        /* =========================================================
+           TIKTOK
+        ========================================================= */
+
+        #tiktok-video-container iframe {
+
+            display:
+                block;
+
+            width:
+                100%;
+
+            max-width:
+                540px;
+
+            height:
+                760px;
+
+            min-height:
+                760px;
+
+            border:
+                none;
+
+            border-radius:
+                18px;
+
+            overflow:
+                auto;
+
+        }
+
+
+        /* =========================================================
+           MENSAJE DE ERROR / CARGA
+        ========================================================= */
+
+        .video-loading {
+
+            width:
+                100%;
+
+            min-height:
+                300px;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            text-align:
+                center;
+
+            color:
+                #64748b;
+
+            font-size:
+                .9rem;
+
+            padding:
+                30px;
+
+            box-sizing:
+                border-box;
+
+        }
+
+
+        /* =========================================================
+           COMENTARIO
+        ========================================================= */
+
+        .video-comment {
+
+            width:
+                100%;
+
+            min-height:
+                0;
+
+            margin:
+                16px 0 0;
+
+            padding:
+                12px 15px;
+
+            box-sizing:
+                border-box;
+
+            background:
+                #f8fafc;
+
+            border-radius:
+                12px;
+
+            color:
+                #475569;
+
+            font-size:
+                14px;
+
+            line-height:
+                1.5;
+
+            text-align:
+                center;
+
+        }
+
+
+        /* =========================================================
+           CONTROLES
+        ========================================================= */
+
+        .video-controls {
+
+            width:
+                100%;
+
+            display:
+                flex;
+
+            gap:
+                10px;
+
+            margin-top:
+                18px;
+
+        }
+
+
+        .video-controls button {
+
+            flex:
+                1;
+
+            padding:
+                12px;
+
+            border:
+                none;
+
+            border-radius:
+                14px;
+
+            cursor:
+                pointer;
+
+            color:
+                white;
+
+            font-size:
+                14px;
+
+            font-weight:
+                700;
+
+            transition:
+                transform .2s ease,
+                box-shadow .2s ease;
+
+        }
+
+
+        .video-controls button:hover {
+
+            transform:
+                translateY(-2px);
+
+        }
+
+
+        /* =========================================================
+           INSTAGRAM CONTROLES
+        ========================================================= */
+
+        .instagram-controls button {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #833AB4,
+                    #E1306C
+                );
+
+        }
+
+
+        .instagram-controls button:hover {
+
+            box-shadow:
+                0 8px 18px
+                rgba(
+                    225,
+                    48,
+                    108,
+                    .30
+                );
+
+        }
+
+
+        /* =========================================================
+           TIKTOK CONTROLES
+        ========================================================= */
+
+        .tiktok-controls button {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #25F4EE,
+                    #FE2C55
+                );
+
+        }
+
+
+        .tiktok-controls button:hover {
+
+            box-shadow:
+                0 8px 18px
+                rgba(
+                    254,
+                    44,
+                    85,
+                    .30
+                );
+
+        }
+
+
+        /* =========================================================
+           BOTONES PARA ABRIR RED SOCIAL
+        ========================================================= */
+
+        .app-button {
+
+            margin-top:
+                16px;
+
+            padding:
+                12px 20px;
+
+            border:
+                none;
+
+            border-radius:
+                14px;
+
+            cursor:
+                pointer;
+
+            color:
+                white;
+
+            font-size:
+                14px;
+
+            font-weight:
+                700;
+
+            transition:
+                transform .2s ease,
+                box-shadow .2s ease;
+
+        }
+
+
+        .instagram-app {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #833AB4,
+                    #FD1D1D,
+                    #FCAF45
+                );
+
+        }
+
+
+        .tiktok-app {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #25F4EE,
+                    #FE2C55
+                );
+
+        }
+
+
+        .app-button:hover {
+
+            transform:
+                translateY(-2px);
+
+            box-shadow:
+                0 8px 18px
+                rgba(
+                    0,
+                    0,
+                    0,
+                    .15
+                );
+
+        }
+
+
+        /* =========================================================
+           PIE
+        ========================================================= */
+
+        .reels-footer {
+
+            text-align:
+                center;
+
+            margin-top:
+                40px;
+
+            color:
+                #94a3b8;
+
+            font-size:
+                .85rem;
+
+        }
+
+
+        /* =========================================================
+           TABLET
+        ========================================================= */
+
+        @media (max-width: 900px) {
+
+            .reels-grid {
+
+                grid-template-columns:
+                    1fr;
+
+                max-width:
+                    600px;
+
+                margin:
+                    0 auto;
+
+            }
+
+        }
+
+
+        /* =========================================================
+           MÓVIL
+        ========================================================= */
+
+        @media (max-width: 600px) {
+
+            .reels-page {
+
+                padding:
+                    15px
+                    10px
+                    40px;
+
+            }
+
+
+            .reels-header {
+
+                margin:
+                    15px auto
+                    25px;
+
+            }
+
+
+            .titulo-reels {
+
+                font-size:
+                    2.15rem;
+
+            }
+
+
+            .reels-line {
+
+                width:
+                    150px;
+
+                height:
+                    4px;
+
+            }
+
+
+            .reels-subtitle {
+
+                font-size:
+                    .85rem;
+
+            }
+
+
+            /* TARJETA FORMULARIO */
+
+            .send-reel-box {
+
+                flex-direction:
+                    column;
+
+                text-align:
+                    center;
+
+                padding:
+                    17px;
+
+                gap:
+                    12px;
+
+                margin-bottom:
+                    25px;
+
+            }
+
+
+            .send-reel-text {
+
+                text-align:
+                    center;
+
+            }
+
+
+            .send-reel-button {
+
+                width:
+                    100%;
+
+                max-width:
+                    260px;
+
+            }
+
+
+            /* TARJETA VÍDEO */
+
+            .video-card {
+
+                padding:
+                    12px;
+
+                border-radius:
+                    18px;
+
+            }
+
+
+            .video-card h2 {
+
+                font-size:
+                    1.5rem;
+
+            }
+
+
+            #instagram-video-container iframe,
+            #tiktok-video-container iframe {
+
+                width:
+                    100%;
+
+                height:
+                    700px;
+
+                min-height:
+                    700px;
+
+            }
+
+
+            .video-controls {
+
+                flex-direction:
+                    column;
+
+            }
+
+
+            .video-controls button {
+
+                width:
+                    100%;
+
+            }
+
+
+            .app-button {
+
+                width:
+                    100%;
+
+            }
+
+        }
+
+
+        /* =========================================================
+           MÓVIL PEQUEÑO
+        ========================================================= */
+
+        @media (max-width: 400px) {
+
+            #instagram-video-container iframe,
+            #tiktok-video-container iframe {
+
+                height:
+                    680px;
+
+                min-height:
+                    680px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================================================
+         MENÚ
+    ========================================================== -->
+
+    <nav class="menu">
+
+        <a href="index.html">
+            🏠 Inicio
+        </a>
+
+
+        <a
+            href="https://accounts.google.com/AccountChooser?continue=https://script.google.com/a/macros/g.educaand.es/s/AKfycbxHgTgZREPTg4a2gfi1Yx1B_kc4OnKDFsuaprH3JRdDZoyebyEu9oWwpw2aquCw6zf76Q/exec"
+            target="_blank">
+
+            📤 Entregas
+
+        </a>
+
+
+        <!-- CCSS I -->
+
+        <div class="menu-dropdown">
+
+            <button>
+                📘 CCSS I ▾
+            </button>
+
+            <div class="dropdown-content">
+
+                <a href="ccss1/tema1.html">Tema 1</a>
+                <a href="ccss1/tema2.html">Tema 2</a>
+                <a href="ccss1/tema3.html">Tema 3</a>
+                <a href="ccss1/tema4.html">Tema 4</a>
+                <a href="ccss1/tema5.html">Tema 5</a>
+                <a href="ccss1/tema6.html">Tema 6</a>
+                <a href="ccss1/tema7.html">Tema 7</a>
+                <a href="ccss1/tema8.html">Tema 8</a>
+                <a href="ccss1/tema9.html">Tema 9</a>
+                <a href="ccss1/tema10.html">Tema 10</a>
+
+            </div>
+
+        </div>
+
+
+        <!-- CCSS II -->
+
+        <div class="menu-dropdown">
+
+            <button>
+                📕 CCSS II ▾
+            </button>
+
+            <div class="dropdown-content">
+
+                <a href="ccss2/tema1.html">Tema 1</a>
+                <a href="ccss2/tema2.html">Tema 2</a>
+                <a href="ccss2/tema3.html">Tema 3</a>
+                <a href="ccss2/tema4.html">Tema 4</a>
+                <a href="ccss2/tema5.html">Tema 5</a>
+                <a href="ccss2/tema6.html">Tema 6</a>
+                <a href="ccss2/tema7.html">Tema 7</a>
+
+            </div>
+
+        </div>
+
+
+        <a href="cumpleanos.html">
+            🎂 Cumpleaños
+        </a>
+
+
+        <a href="juegos.html">
+            🎮 Juegos
+        </a>
+
+
+        <a href="reels.html">
+            🎬 Reels
+        </a>
+
+    </nav>
+
+
+    <!-- =========================================================
+         CONTENIDO
+    ========================================================== -->
+
+    <main class="reels-page">
+
+
+        <!-- =====================================================
+             CABECERA
+        ====================================================== -->
+
+        <header class="reels-header">
+
+            <h1 class="titulo-reels">
+                🎬 Galería de Reels
+            </h1>
+
+
+            <div class="reels-line"></div>
+
+
+            <p class="reels-subtitle">
+
+                Una selección de Reels de Instagram y TikTok
+                que merece la pena compartir.
+
+            </p>
+
+        </header>
+
+
+        <!-- =====================================================
+             FORMULARIO
+        ====================================================== -->
+
+        <section class="send-reel-box">
+
+
+            <div class="send-reel-text">
+
+                <strong>
+                    📤 Recomiéndanos un Reel
+                </strong>
+
+                <span>
+
+                    ¿Has encontrado un vídeo interesante
+                    en Instagram o TikTok?
+                    Envíanoslo para que pueda aparecer aquí.
+
+                </span>
+
+            </div>
+
+
+            <a
+                href="https://forms.gle/TdYRAFqjnWbZjfuWA"
+                target="_blank"
+                class="send-reel-button">
+
+                📤 Enviar Reel
+
+            </a>
+
+
+        </section>
+
+
+        <!-- =====================================================
+             GALERÍAS
+        ====================================================== -->
+
+        <section class="reels-grid">
+
+
+            <!-- =================================================
+                 INSTAGRAM
+            ================================================== -->
+
+            <article class="video-card">
+
+
+                <h2 class="instagram-title">
+
+                    📸 Instagram
+
+                </h2>
+
+
+                <div
+                    id="instagram-video-container"
+                    class="video-container">
+
+                    <div class="video-loading">
+                        ⏳ Cargando Instagram...
+                    </div>
+
+                </div>
+
+
+                <p
+                    id="instagram-comment"
+                    class="video-comment">
+                </p>
+
+
+                <div
+                    class="video-controls instagram-controls">
+
+
+                    <button
+                        type="button"
+                        onclick="prevInstagramVideo()">
+
+                        ⬅ Anterior
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        onclick="nextInstagramVideo()">
+
+                        Siguiente ➡
+
+                    </button>
+
+
+                </div>
+
+
+                <a
+                    id="open-in-app-instagram"
+                    href="#"
+                    target="_blank">
+
+
+                    <button
+                        type="button"
+                        class="app-button instagram-app">
+
+                        📸 Ver en Instagram
+
+                    </button>
+
+
+                </a>
+
+
+            </article>
+
+
+            <!-- =================================================
+                 TIKTOK
+            ================================================== -->
+
+            <article class="video-card">
+
+
+                <h2 class="tiktok-title">
+
+                    🎵 TikTok
+
+                </h2>
+
+
+                <div
+                    id="tiktok-video-container"
+                    class="video-container">
+
+                    <div class="video-loading">
+                        ⏳ Cargando TikTok...
+                    </div>
+
+                </div>
+
+
+                <p
+                    id="tiktok-comment"
+                    class="video-comment">
+                </p>
+
+
+                <div
+                    class="video-controls tiktok-controls">
+
+
+                    <button
+                        type="button"
+                        onclick="prevTikTokVideo()">
+
+                        ⬅ Anterior
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        onclick="nextTikTokVideo()">
+
+                        Siguiente ➡
+
+                    </button>
+
+
+                </div>
+
+
+                <a
+                    id="open-in-app-tiktok"
+                    href="#"
+                    target="_blank">
+
+
+                    <button
+                        type="button"
+                        class="app-button tiktok-app">
+
+                        🎵 Ver en TikTok
+
+                    </button>
+
+
+                </a>
+
+
+            </article>
+
+
+        </section>
+
+
+        <!-- =====================================================
+             PIE
+        ====================================================== -->
+
+        <footer class="reels-footer">
+
+            🎬 Descubre, comparte y disfruta.
+
+        </footer>
+
+
+    </main>
+
+
+    <!-- =========================================================
+         JAVASCRIPT
+    ========================================================== -->
+
+    <script>
+
+
+        /* =========================================================
+           URL GOOGLE APPS SCRIPT
+        ========================================================= */
+
+        const REELS_API =
+            "https://script.google.com/macros/s/AKfycbx6Ra-11-XX7e-dh6MuHyBIg1ePD5jhNGY_GovjluSx_LjiUs8dbWuS-rOLNKGG2yT_/exec";
+
+
+        /* =========================================================
+           INSTAGRAM
+        ========================================================= */
+
+        let instagramData = [];
+
+        let instagramIndex = 0;
+
+
+        async function loadInstagram() {
+
+            const container =
+                document.getElementById(
+                    "instagram-video-container"
+                );
+
+            const comment =
+                document.getElementById(
+                    "instagram-comment"
+                );
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        REELS_API,
+                        {
+                            method: "GET",
+                            cache: "no-store"
+                        }
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "HTTP " +
+                        response.status
+                    );
+
+                }
+
+
+                const data =
+                    await response.json();
+
+
+                console.log(
+                    "Datos recibidos:",
+                    data
+                );
+
+
+                instagramData =
+                    Array.isArray(
+                        data.instagram
+                    )
+                        ? [
+                            ...data.instagram
+                        ].reverse()
+                        : [];
+
+
+                instagramIndex = 0;
+
+
+                showInstagramVideo(
+                    instagramIndex
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    "Error cargando Instagram:",
+                    error
+                );
+
+
+                container.innerHTML =
+                    `
+                    <div class="video-loading">
+                        ❌ No se han podido cargar
+                        los vídeos de Instagram.
+                    </div>
+                    `;
+
+                comment.textContent =
+                    "Comprueba que el servicio de Google Apps Script esté disponible.";
+
+            }
+
+        }
+
+
+        function showInstagramVideo(index) {
+
+
+            const container =
+                document.getElementById(
+                    "instagram-video-container"
+                );
+
+
+            const comment =
+                document.getElementById(
+                    "instagram-comment"
+                );
+
+
+            container.innerHTML =
+                "";
+
+
+            comment.textContent =
+                "";
+
+
+            if (
+                !instagramData.length
+            ) {
+
+
+                container.innerHTML =
+                    `
+                    <div class="video-loading">
+                        📭 No hay Reels de Instagram publicados.
+                    </div>
+                    `;
+
+
+                return;
+
+            }
+
+
+            if (
+                index < 0 ||
+                index >= instagramData.length
+            ) {
+
+                index = 0;
+
+            }
+
+
+            const video =
+                instagramData[index];
+
+
+            if (
+                !video ||
+                !video.id
+            ) {
+
+                container.innerHTML =
+                    `
+                    <div class="video-loading">
+                        ⚠️ El Reel no tiene un ID válido.
+                    </div>
+                    `;
+
+                return;
+
+            }
+
+
+            const iframe =
+                document.createElement(
+                    "iframe"
+                );
+
+
+            iframe.title =
+                "Reel de Instagram";
+
+
+            iframe.allow =
+                "autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share";
+
+
+            iframe.setAttribute(
+                "allowfullscreen",
+                ""
+            );
+
+
+            iframe.src =
+                "https://www.instagram.com/p/" +
+                encodeURIComponent(video.id) +
+                "/embed/";
+
+
+            container.appendChild(
+                iframe
+            );
+
+
+            if (
+                video.comment
+            ) {
+
+                comment.textContent =
+                    video.comment;
+
+            }
+
+
+            document.getElementById(
+                "open-in-app-instagram"
+            ).href =
+                "https://www.instagram.com/p/" +
+                encodeURIComponent(video.id) +
+                "/";
+
+        }
+
+
+        function prevInstagramVideo() {
+
+
+            if (
+                !instagramData.length
+            ) {
+
+                return;
+
+            }
+
+
+            instagramIndex =
+                (
+                    instagramIndex -
+                    1 +
+                    instagramData.length
+                ) %
+                instagramData.length;
+
+
+            showInstagramVideo(
+                instagramIndex
+            );
+
+        }
+
+
+        function nextInstagramVideo() {
+
+
+            if (
+                !instagramData.length
+            ) {
+
+                return;
+
+            }
+
+
+            instagramIndex =
+                (
+                    instagramIndex +
+                    1
+                ) %
+                instagramData.length;
+
+
+            showInstagramVideo(
+                instagramIndex
+            );
+
+        }
+
+
+        /* =========================================================
+           TIKTOK
+        ========================================================= */
+
+        let tiktokData = [];
+
+        let tiktokIndex = 0;
+
+
+        async function loadTikTok() {
+
+
+            try {
+
+
+                const response =
+                    await fetch(
+                        REELS_API,
+                        {
+                            method: "GET",
+                            cache: "no-store"
+                        }
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "HTTP " +
+                        response.status
+                    );
+
+                }
+
+
+                const data =
+                    await response.json();
+
+
+                console.log(
+                    "Datos TikTok:",
+                    data
+                );
+
+
+                tiktokData =
+                    Array.isArray(
+                        data.tiktok
+                    )
+                        ? [
+                            ...data.tiktok
+                        ].reverse()
+                        : [];
+
+
+                tiktokIndex = 0;
+
+
+                showTikTokVideo(
+                    tiktokIndex
+                );
+
+
+            } catch (error) {
+
+
+                console.error(
+                    "Error cargando TikTok:",
+                    error
+                );
+
+
+                document.getElementById(
+                    "tiktok-video-container"
+                ).innerHTML =
+                    `
+                    <div class="video-loading">
+                        ❌ No se han podido cargar
+                        los vídeos de TikTok.
+                    </div>
+                    `;
+
+
+                document.getElementById(
+                    "tiktok-comment"
+                ).textContent =
+                    "Comprueba que el servicio de Google Apps Script esté disponible.";
+
+            }
+
+        }
+
+
+        function showTikTokVideo(index) {
+
+
+            const container =
+                document.getElementById(
+                    "tiktok-video-container"
+                );
+
+
+            const comment =
+                document.getElementById(
+                    "tiktok-comment"
+                );
+
+
+            container.innerHTML =
+                "";
+
+
+            comment.textContent =
+                "";
+
+
+            if (
+                !tiktokData.length
+            ) {
+
+
+                container.innerHTML =
+                    `
+                    <div class="video-loading">
+                        📭 No hay vídeos de TikTok publicados.
+                    </div>
+                    `;
+
+
+                return;
+
+            }
+
+
+            if (
+                index < 0 ||
+                index >= tiktokData.length
+            ) {
+
+                index = 0;
+
+            }
+
+
+            const video =
+                tiktokData[index];
+
+
+            if (
+                !video ||
+                !video.id
+            ) {
+
+                container.innerHTML =
+                    `
+                    <div class="video-loading">
+                        ⚠️ El vídeo no tiene un ID válido.
+                    </div>
+                    `;
+
+                return;
+
+            }
+
+
+            const iframe =
+                document.createElement(
+                    "iframe"
+                );
+
+
+            iframe.title =
+                "Vídeo de TikTok";
+
+
+            iframe.allow =
+                "autoplay; encrypted-media; picture-in-picture";
+
+
+            iframe.setAttribute(
+                "allowfullscreen",
+                ""
+            );
+
+
+            iframe.src =
+                "https://www.tiktok.com/embed/v2/" +
+                encodeURIComponent(video.id);
+
+
+            container.appendChild(
+                iframe
+            );
+
+
+            if (
+                video.comment
+            ) {
+
+                comment.textContent =
+                    video.comment;
+
+            }
+
+
+            const user =
+                video.user ||
+                "";
+
+
+            if (user) {
+
+                document.getElementById(
+                    "open-in-app-tiktok"
+                ).href =
+                    "https://www.tiktok.com/@" +
+                    encodeURIComponent(user) +
+                    "/video/" +
+                    encodeURIComponent(video.id);
+
+            } else {
+
+                document.getElementById(
+                    "open-in-app-tiktok"
+                ).href =
+                    "https://www.tiktok.com/";
+
+            }
+
+        }
+
+
+        function prevTikTokVideo() {
+
+
+            if (
+                !tiktokData.length
+            ) {
+
+                return;
+
+            }
+
+
+            tiktokIndex =
+                (
+                    tiktokIndex -
+                    1 +
+                    tiktokData.length
+                ) %
+                tiktokData.length;
+
+
+            showTikTokVideo(
+                tiktokIndex
+            );
+
+        }
+
+
+        function nextTikTokVideo() {
+
+
+            if (
+                !tiktokData.length
+            ) {
+
+                return;
+
+            }
+
+
+            tiktokIndex =
+                (
+                    tiktokIndex +
+                    1
+                ) %
+                tiktokData.length;
+
+
+            showTikTokVideo(
+                tiktokIndex
+            );
+
+        }
+
+
+        /* =========================================================
+           INICIAR
+        ========================================================= */
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+                loadInstagram();
+
+                loadTikTok();
+
+            }
+        );
+
+
+    </script>
+
+
+</body>
+
+</html>

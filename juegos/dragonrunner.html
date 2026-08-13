@@ -1,0 +1,2040 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>🐉 Dragon Runner · Modo Juego</title>
+
+    <link rel="stylesheet" href="../styles.css">
+
+    <style>
+
+        /* =========================================================
+           PÁGINA DRAGON RUNNER
+        ========================================================= */
+
+        .dragon-page {
+
+            min-height: calc(100vh - 70px);
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            padding: 10px 15px 20px;
+
+            box-sizing: border-box;
+
+        }
+
+
+        /* =========================================================
+           CONTENEDOR DEL JUEGO
+        ========================================================= */
+
+        .dragon-game {
+
+            position: relative;
+
+            width: min(94vw, 700px);
+
+            padding: 18px 25px 20px;
+
+            box-sizing: border-box;
+
+            border-radius: 28px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #0f172a,
+                    #111827
+                );
+
+            border:
+                1px solid rgba(0,195,255,.25);
+
+            box-shadow:
+                0 20px 50px rgba(0,0,0,.25),
+                0 0 30px rgba(0,195,255,.08);
+
+            color: white;
+
+            text-align: center;
+
+        }
+
+
+        /* =========================================================
+           CABECERA
+        ========================================================= */
+
+        .dragon-header {
+
+            margin-bottom: 10px;
+
+        }
+
+
+        .dragon-header h1 {
+
+            margin: 0;
+
+            font-size:
+                clamp(1.6rem, 4vw, 2.2rem);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #6a5acd,
+                    #00c3ff
+                );
+
+            -webkit-background-clip: text;
+
+            -webkit-text-fill-color: transparent;
+
+        }
+
+
+        .dragon-header p {
+
+            margin: 4px 0 0;
+
+            color: #cbd5e1;
+
+            font-size: .8rem;
+
+        }
+
+
+        /* =========================================================
+           PANTALLAS
+        ========================================================= */
+
+        .dragon-screen {
+
+            text-align: center;
+
+        }
+
+
+        .dragon-screen h2 {
+
+            margin:
+                0 0 12px;
+
+            color: #00c3ff;
+
+            font-size: 1.6rem;
+
+            text-shadow:
+                0 0 12px
+                rgba(0,195,255,.5);
+
+        }
+
+
+        .dragon-screen p {
+
+            color: #cbd5e1;
+
+            line-height: 1.55;
+
+            font-size: .95rem;
+
+            margin:
+                0 auto 20px;
+
+            max-width: 450px;
+
+        }
+
+
+        /* =========================================================
+           BOTONES PRINCIPALES
+        ========================================================= */
+
+        .dragon-btn {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            min-height: 46px;
+
+            padding:
+                10px 24px;
+
+            border: none;
+
+            border-radius: 999px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #6a5acd,
+                    #00c3ff
+                );
+
+            color: white;
+
+            font-size: .95rem;
+
+            font-weight: 800;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 0 15px
+                rgba(0,195,255,.4);
+
+            transition:
+                transform .2s ease,
+                box-shadow .2s ease;
+
+            touch-action: manipulation;
+
+        }
+
+
+        .dragon-btn:hover {
+
+            transform: scale(1.05);
+
+            box-shadow:
+                0 0 22px
+                rgba(0,195,255,.6);
+
+        }
+
+
+        .dragon-btn:active {
+
+            transform: scale(.95);
+
+        }
+
+
+        /* =========================================================
+           NOMBRE
+        ========================================================= */
+
+        .name-input {
+
+            display: block;
+
+            width: min(100%, 300px);
+
+            box-sizing: border-box;
+
+            margin:
+                0 auto 10px;
+
+            padding:
+                12px 15px;
+
+            border:
+                2px solid rgba(0,195,255,.3);
+
+            border-radius: 12px;
+
+            outline: none;
+
+            background: #020617;
+
+            color: white;
+
+            font-size: 16px;
+
+            text-align: center;
+
+            transition:
+                border-color .2s ease,
+                box-shadow .2s ease;
+
+        }
+
+
+        .name-input:focus {
+
+            border-color:
+                #00c3ff;
+
+            box-shadow:
+                0 0 12px
+                rgba(0,195,255,.25);
+
+        }
+
+
+        .name-input::placeholder {
+
+            color: #64748b;
+
+        }
+
+
+        .name-error {
+
+            min-height: 20px;
+
+            margin:
+                0 0 10px;
+
+            color: #fb7185;
+
+            font-size: .85rem;
+
+        }
+
+
+        /* =========================================================
+           ZONA DE JUEGO
+        ========================================================= */
+
+        .game-area {
+
+            display: none;
+
+            position: relative;
+
+            width: 100%;
+
+        }
+
+
+        /* =========================================================
+           CANVAS
+        ========================================================= */
+
+        #gameCanvas {
+
+            display: block;
+
+            width:
+                min(100%, 600px);
+
+            height: auto;
+
+            aspect-ratio: 2 / 1;
+
+            margin:
+                0 auto;
+
+            background: #000;
+
+            border:
+                2px solid #fff;
+
+            border-radius: 10px;
+
+            box-shadow:
+                0 0 15px
+                rgba(106,90,205,.6),
+
+                0 0 25px
+                rgba(0,195,255,.4);
+
+            image-rendering: auto;
+
+        }
+
+
+        /* =========================================================
+           MARCADOR
+        ========================================================= */
+
+        .score-box {
+
+            position: absolute;
+
+            top: 10px;
+
+            left: 10px;
+
+            z-index: 5;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #6a5acd,
+                    #00c3ff
+                );
+
+            border-radius: 9px;
+
+            padding:
+                5px 10px;
+
+            min-width: 45px;
+
+            box-sizing: border-box;
+
+            font-family:
+                "Courier New",
+                monospace;
+
+            font-size: .9rem;
+
+            font-weight: bold;
+
+            color: white;
+
+            text-shadow:
+                0 0 6px
+                rgba(0,195,255,.8);
+
+            box-shadow:
+                0 0 8px
+                rgba(106,90,205,.6),
+
+                0 0 12px
+                rgba(0,195,255,.5);
+
+        }
+
+
+        /* =========================================================
+           CONTROLES
+        ========================================================= */
+
+        .controls {
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+
+            gap: 5px;
+
+            margin-top: 8px;
+
+        }
+
+
+        .controls button {
+
+            min-width: 90px;
+
+            height: 40px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 0 15px;
+
+            border: none;
+
+            border-radius: 9px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #6a5acd,
+                    #00c3ff
+                );
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 0 10px
+                rgba(0,195,255,.5);
+
+            touch-action: manipulation;
+
+            -webkit-tap-highlight-color:
+                transparent;
+
+            user-select: none;
+
+            -webkit-user-select: none;
+
+        }
+
+
+        .controls button:active {
+
+            transform:
+                scale(.9);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #5a4abb,
+                    #00aaff
+                );
+
+        }
+
+
+        /* =========================================================
+           PANTALLA FINAL
+        ========================================================= */
+
+        #endScreen {
+
+            display: none;
+
+        }
+
+
+        #endMessage {
+
+            margin-bottom: 20px;
+
+        }
+
+
+        /* =========================================================
+           VOLVER
+        ========================================================= */
+
+        .back-games {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            margin-top: 10px;
+
+            padding:
+                8px 17px;
+
+            border-radius: 999px;
+
+            border:
+                1px solid
+                rgba(255,255,255,.15);
+
+            color: #cbd5e1;
+
+            text-decoration: none;
+
+            font-size: .8rem;
+
+            transition:
+                background .2s ease,
+                color .2s ease;
+
+        }
+
+
+        .back-games:hover {
+
+            background:
+                rgba(255,255,255,.08);
+
+            color: white;
+
+        }
+
+
+        /* =========================================================
+           ORDENADOR CON POCA ALTURA
+        ========================================================= */
+
+        @media (
+            max-height: 800px
+        ) and (
+            min-width: 601px
+        ) {
+
+            .dragon-page {
+
+                align-items:
+                    flex-start;
+
+                padding-top: 8px;
+
+            }
+
+
+            .dragon-game {
+
+                padding:
+                    12px 20px 12px;
+
+            }
+
+
+            .dragon-header {
+
+                margin-bottom:
+                    6px;
+
+            }
+
+
+            .dragon-header h1 {
+
+                font-size:
+                    1.7rem;
+
+            }
+
+
+            .dragon-header p {
+
+                font-size:
+                    .75rem;
+
+            }
+
+
+            #gameCanvas {
+
+                width:
+                    min(75vw, 600px);
+
+            }
+
+
+            .controls {
+
+                margin-top:
+                    6px;
+
+            }
+
+
+            .controls button {
+
+                height:
+                    36px;
+
+                font-size:
+                    15px;
+
+            }
+
+
+            .back-games {
+
+                margin-top:
+                    7px;
+
+            }
+
+        }
+
+
+        /* =========================================================
+           MÓVIL
+        ========================================================= */
+
+        @media (max-width: 600px) {
+
+            .dragon-page {
+
+                min-height:
+                    calc(100vh - 60px);
+
+                padding:
+                    8px 6px 15px;
+
+                align-items:
+                    flex-start;
+
+            }
+
+
+            .dragon-game {
+
+                width: 100%;
+
+                max-width: 400px;
+
+                padding:
+                    14px 8px 15px;
+
+                border-radius:
+                    20px;
+
+            }
+
+
+            .dragon-header {
+
+                margin-bottom:
+                    7px;
+
+            }
+
+
+            .dragon-header h1 {
+
+                font-size:
+                    1.6rem;
+
+            }
+
+
+            .dragon-header p {
+
+                font-size:
+                    .75rem;
+
+            }
+
+
+            .dragon-screen h2 {
+
+                font-size:
+                    1.3rem;
+
+            }
+
+
+            .dragon-screen p {
+
+                font-size:
+                    .8rem;
+
+                margin-bottom:
+                    12px;
+
+            }
+
+
+            #gameCanvas {
+
+                width:
+                    min(92vw, 380px);
+
+                max-width:
+                    380px;
+
+                aspect-ratio:
+                    2 / 1.3;
+
+                border-radius:
+                    8px;
+
+            }
+
+
+            .controls {
+
+                margin-top:
+                    8px;
+
+                gap:
+                    4px;
+
+            }
+
+
+            .controls button {
+
+                width:
+                    100px;
+
+                height:
+                    40px;
+
+                font-size:
+                    16px;
+
+            }
+
+
+            .score-box {
+
+                top:
+                    8px;
+
+                left:
+                    8px;
+
+                padding:
+                    4px 8px;
+
+                font-size:
+                    .85rem;
+
+            }
+
+
+            .back-games {
+
+                margin-top:
+                    8px;
+
+            }
+
+        }
+
+
+        /* =========================================================
+           MÓVIL PEQUEÑO
+        ========================================================= */
+
+        @media (
+            max-width: 600px
+        ) and (
+            max-height: 700px
+        ) {
+
+            .dragon-game {
+
+                padding:
+                    10px 8px;
+
+            }
+
+
+            .dragon-header h1 {
+
+                font-size:
+                    1.4rem;
+
+            }
+
+
+            .dragon-header p {
+
+                display:
+                    none;
+
+            }
+
+
+            #gameCanvas {
+
+                width:
+                    min(88vw, 330px);
+
+                max-width:
+                    330px;
+
+            }
+
+
+            .controls {
+
+                margin-top:
+                    5px;
+
+            }
+
+
+            .controls button {
+
+                width:
+                    90px;
+
+                height:
+                    36px;
+
+                font-size:
+                    15px;
+
+            }
+
+
+            .back-games {
+
+                margin-top:
+                    6px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================================================
+         MENÚ
+    ========================================================== -->
+
+    <nav class="menu">
+
+        <a href="../index.html">
+            🏠 Inicio
+        </a>
+
+
+        <a
+            href="https://accounts.google.com/AccountChooser?continue=https://script.google.com/a/macros/g.educaand.es/s/AKfycbxHgTgZREPTg4a2gfi1Yx1B_kc4OnKDFsuaprH3JRdDZoyebyEu9oWwpw2aquCw6zf76Q/exec"
+            target="_blank">
+
+            📤 Entregas
+
+        </a>
+
+
+        <!-- CCSS I -->
+
+        <div class="menu-dropdown">
+
+            <button>
+                📘 CCSS I ▾
+            </button>
+
+            <div class="dropdown-content">
+
+                <a href="../ccss1/tema1.html">
+                    Tema 1
+                </a>
+
+                <a href="../ccss1/tema2.html">
+                    Tema 2
+                </a>
+
+                <a href="../ccss1/tema3.html">
+                    Tema 3
+                </a>
+
+                <a href="../ccss1/tema4.html">
+                    Tema 4
+                </a>
+
+                <a href="../ccss1/tema5.html">
+                    Tema 5
+                </a>
+
+                <a href="../ccss1/tema6.html">
+                    Tema 6
+                </a>
+
+                <a href="../ccss1/tema7.html">
+                    Tema 7
+                </a>
+
+                <a href="../ccss1/tema8.html">
+                    Tema 8
+                </a>
+
+                <a href="../ccss1/tema9.html">
+                    Tema 9
+                </a>
+
+                <a href="../ccss1/tema10.html">
+                    Tema 10
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- CCSS II -->
+
+        <div class="menu-dropdown">
+
+            <button>
+                📕 CCSS II ▾
+            </button>
+
+            <div class="dropdown-content">
+
+                <a href="../ccss2/tema1.html">
+                    Tema 1
+                </a>
+
+                <a href="../ccss2/tema2.html">
+                    Tema 2
+                </a>
+
+                <a href="../ccss2/tema3.html">
+                    Tema 3
+                </a>
+
+                <a href="../ccss2/tema4.html">
+                    Tema 4
+                </a>
+
+                <a href="../ccss2/tema5.html">
+                    Tema 5
+                </a>
+
+                <a href="../ccss2/tema6.html">
+                    Tema 6
+                </a>
+
+                <a href="../ccss2/tema7.html">
+                    Tema 7
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <a href="../cumpleanos.html">
+            🎂 Cumpleaños
+        </a>
+
+
+        <a href="../juegos.html">
+            🎮 Juegos
+        </a>
+
+
+        <a href="../reels.html">
+            🎬 Reels
+        </a>
+
+    </nav>
+
+
+    <!-- =========================================================
+         JUEGO
+    ========================================================== -->
+
+    <main class="dragon-page">
+
+        <section class="dragon-game">
+
+
+            <!-- CABECERA -->
+
+            <header class="dragon-header">
+
+                <h1>
+                    🐉 Dragon Runner
+                </h1>
+
+                <p>
+                    Modo Juego · Matemáticas
+                </p>
+
+            </header>
+
+
+            <!-- =================================================
+                 PANTALLA INICIAL
+            ================================================== -->
+
+            <div
+                class="dragon-screen"
+                id="introScreen">
+
+                    Toca el botón o pulsa
+                    <strong>espacio</strong>
+                    para saltar.
+
+                    <br>
+
+                    Esquiva los cactus y consigue
+                    la máxima puntuación posible.
+
+                    <br>
+
+                    ¡Puedes hacer doble salto! 🏆
+
+                </p>
+
+                <button
+                    class="dragon-btn"
+                    id="startBtn"
+                    type="button">
+
+                    ▶ Empezar
+
+                </button>
+
+            </div>
+
+
+            <!-- =================================================
+                 PANTALLA NOMBRE
+            ================================================== -->
+
+            <div
+                class="dragon-screen"
+                id="nameScreen"
+                style="display:none;">
+
+                <h2>
+                    📝 Tu nombre
+                </h2>
+
+                <p>
+                    Escribe tu nombre para guardar
+                    tu puntuación.
+                </p>
+
+                <input
+                    id="playerNameInput"
+                    class="name-input"
+                    type="text"
+                    placeholder="Tu nombre"
+                    maxlength="30"
+                    autocomplete="name">
+
+                <div
+                    id="nameError"
+                    class="name-error">
+                </div>
+
+                <button
+                    class="dragon-btn"
+                    id="confirmBtn"
+                    type="button">
+
+                    Comenzar
+
+                </button>
+
+            </div>
+
+
+            <!-- =================================================
+                 ZONA DEL JUEGO
+            ================================================== -->
+
+            <div
+                class="game-area"
+                id="gameArea">
+
+                <div
+                    class="score-box"
+                    id="scoreBox">
+
+                    0
+
+                </div>
+
+
+                <canvas
+                    id="gameCanvas">
+                </canvas>
+
+
+                <!-- CONTROLES TÁCTILES -->
+
+                <div
+                    class="controls"
+                    id="controls">
+
+                    <button
+                        type="button"
+                        id="jumpBtn">
+
+                        ⬆ Saltar
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 PANTALLA FINAL
+            ================================================== -->
+
+            <div
+                class="dragon-screen"
+                id="endScreen">
+
+                <h2 id="endMessage">
+                </h2>
+
+                <button
+                    class="dragon-btn"
+                    id="restartBtn"
+                    type="button">
+
+                    🔄 Reiniciar
+
+                </button>
+
+            </div>
+
+
+            <!-- VOLVER A JUEGOS -->
+
+            <a
+                href="../juegos.html"
+                class="back-games">
+
+                ← Volver a Modo Juego
+
+            </a>
+
+
+        </section>
+
+    </main>
+
+
+    <script>
+
+        /* ========================================================
+           ELEMENTOS
+        ======================================================== */
+
+        const canvas =
+            document.getElementById("gameCanvas");
+
+        const ctx =
+            canvas.getContext("2d");
+
+        const introScreen =
+            document.getElementById("introScreen");
+
+        const nameScreen =
+            document.getElementById("nameScreen");
+
+        const endScreen =
+            document.getElementById("endScreen");
+
+        const endMessage =
+            document.getElementById("endMessage");
+
+        const gameArea =
+            document.getElementById("gameArea");
+
+        const scoreBox =
+            document.getElementById("scoreBox");
+
+        const controls =
+            document.getElementById("controls");
+
+        const jumpBtn =
+            document.getElementById("jumpBtn");
+
+        const startBtn =
+            document.getElementById("startBtn");
+
+        const confirmBtn =
+            document.getElementById("confirmBtn");
+
+        const restartBtn =
+            document.getElementById("restartBtn");
+
+        const playerNameInput =
+            document.getElementById("playerNameInput");
+
+        const nameError =
+            document.getElementById("nameError");
+
+
+        /* ========================================================
+           CONFIGURACIÓN
+        ======================================================== */
+
+        const GS_URL =
+            "https://script.google.com/macros/s/AKfycbwRUgdN0ySSfweiBqAWsDrqdYm7gxjWqKuIlhcuW1mlVOJeMGs-oBlcZ7pS3ybVKWFgJQ/exec";
+
+
+        /* ========================================================
+           VARIABLES DEL JUEGO
+        ======================================================== */
+
+        let dino;
+
+        let obstacles;
+
+        let score;
+
+        let gameLoop;
+
+        let gravity = 1.3;
+
+        let lift = -17;
+
+        let velocity = 0;
+
+        let jumpsLeft;
+
+        let coyoteTime;
+
+        let coyoteCounter;
+
+        let obstacleTimer = 0;
+
+        let nextObstacle = 60;
+
+        let playerName = "";
+
+        let scoreSent = false;
+
+
+        /* ========================================================
+           MOSTRAR PANTALLA DE NOMBRE
+        ======================================================== */
+
+        function showNameScreen() {
+
+            introScreen.style.display =
+                "none";
+
+            endScreen.style.display =
+                "none";
+
+            gameArea.style.display =
+                "none";
+
+            nameScreen.style.display =
+                "block";
+
+            playerNameInput.value =
+                "";
+
+            nameError.textContent =
+                "";
+
+            setTimeout(
+                function() {
+
+                    playerNameInput.focus();
+
+                },
+                100
+            );
+
+        }
+
+
+        /* ========================================================
+           CONFIRMAR NOMBRE
+        ======================================================== */
+
+        function confirmNameAndStart() {
+
+            const name =
+                (
+                    playerNameInput.value ||
+                    ""
+                ).trim();
+
+
+            if (!name) {
+
+                nameError.textContent =
+                    "⚠️ Escribe tu nombre para continuar.";
+
+                playerNameInput.focus();
+
+                return;
+
+            }
+
+
+            playerName =
+                name;
+
+            nameError.textContent =
+                "";
+
+            startGame();
+
+        }
+
+
+        /* ========================================================
+           TAMAÑO DEL CANVAS
+        ======================================================== */
+
+        function resizeCanvas() {
+
+            let size =
+                Math.min(
+                    window.innerWidth * 0.9,
+                    600
+                );
+
+
+            canvas.width =
+                size;
+
+
+            canvas.height =
+                size * 0.5;
+
+
+            if (
+                window.innerWidth <= 480
+            ) {
+
+                canvas.height =
+                    size * 0.65;
+
+            }
+
+        }
+
+
+        /* ========================================================
+           SALTO
+        ======================================================== */
+
+        function jump() {
+
+            if (
+                jumpsLeft > 0 ||
+                coyoteCounter > 0
+            ) {
+
+                velocity =
+                    lift;
+
+
+                if (
+                    coyoteCounter <= 0
+                ) {
+
+                    jumpsLeft--;
+
+                }
+
+
+                coyoteCounter =
+                    0;
+
+            }
+
+        }
+
+
+        /* ========================================================
+           TECLADO
+        ======================================================== */
+
+        document.addEventListener(
+            "keydown",
+            function(event) {
+
+                if (
+                    event.code === "Space"
+                ) {
+
+                    event.preventDefault();
+
+                    jump();
+
+                }
+
+            }
+        );
+
+
+        /* ========================================================
+           INICIAR JUEGO
+        ======================================================== */
+
+        function startGame() {
+
+            resizeCanvas();
+
+
+            introScreen.style.display =
+                "none";
+
+            nameScreen.style.display =
+                "none";
+
+            endScreen.style.display =
+                "none";
+
+            gameArea.style.display =
+                "block";
+
+            canvas.style.display =
+                "block";
+
+            scoreBox.style.display =
+                "block";
+
+            controls.style.display =
+                "flex";
+
+
+            dino = {
+
+                x: 50,
+
+                y:
+                    canvas.height - 40,
+
+                w: 30,
+
+                h: 30,
+
+                grounded: true
+
+            };
+
+
+            obstacles = [];
+
+            score = 0;
+
+            velocity = 0;
+
+            jumpsLeft = 2;
+
+            coyoteTime = 6;
+
+            coyoteCounter = 0;
+
+            scoreSent = false;
+
+            scoreBox.textContent =
+                score;
+
+            obstacleTimer = 0;
+
+            nextObstacle = 60;
+
+
+            clearInterval(
+                gameLoop
+            );
+
+
+            gameLoop =
+                setInterval(
+                    update,
+                    20
+                );
+
+        }
+
+
+        /* ========================================================
+           ACTUALIZAR JUEGO
+        ======================================================== */
+
+        function update() {
+
+            /* FONDO */
+
+            ctx.fillStyle =
+                "#000";
+
+            ctx.fillRect(
+                0,
+                0,
+                canvas.width,
+                canvas.height
+            );
+
+
+            /* FÍSICA */
+
+            velocity +=
+                gravity;
+
+            dino.y +=
+                velocity;
+
+
+            /* SUELO */
+
+            if (
+                dino.y + dino.h >=
+                canvas.height
+            ) {
+
+                dino.y =
+                    canvas.height - dino.h;
+
+                velocity =
+                    0;
+
+                dino.grounded =
+                    true;
+
+                jumpsLeft =
+                    2;
+
+                coyoteCounter =
+                    coyoteTime;
+
+            } else {
+
+                dino.grounded =
+                    false;
+
+                if (
+                    coyoteCounter > 0
+                ) {
+
+                    coyoteCounter--;
+
+                }
+
+            }
+
+
+            /* DRAGÓN */
+
+            let scale =
+                window.innerWidth <= 480
+                    ? 1.0
+                    : 1.2;
+
+
+            const emSize =
+                Math.floor(
+                    dino.h * scale
+                );
+
+
+            ctx.font =
+                `${emSize}px system-ui, "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif`;
+
+            ctx.textBaseline =
+                "bottom";
+
+
+            ctx.fillText(
+                "🐉",
+                dino.x -
+                    Math.floor(
+                        dino.w * 0.15
+                    ),
+                dino.y + dino.h
+            );
+
+
+            /* GENERAR OBSTÁCULOS */
+
+            obstacleTimer++;
+
+
+            if (
+                obstacleTimer > nextObstacle
+            ) {
+
+                let h =
+                    20 +
+                    Math.random() * 30;
+
+
+                obstacles.push({
+
+                    x:
+                        canvas.width,
+
+                    y:
+                        canvas.height - h,
+
+                    w:
+                        20,
+
+                    h:
+                        h
+
+                });
+
+
+                obstacleTimer =
+                    0;
+
+
+                let dificultad =
+                    Math.min(
+                        70,
+                        Math.floor(
+                            score / 100
+                        )
+                    );
+
+
+                nextObstacle =
+                    30 +
+                    Math.floor(
+                        Math.random() *
+                        (70 - dificultad)
+                    );
+
+            }
+
+
+            /* MOVER OBSTÁCULOS */
+
+            for (
+                let i = 0;
+                i < obstacles.length;
+                i++
+            ) {
+
+                let o =
+                    obstacles[i];
+
+
+                o.x -=
+                    3 +
+                    score * 0.01;
+
+
+                /* CACTUS */
+
+                ctx.fillStyle =
+                    "#22c55e";
+
+
+                ctx.fillRect(
+                    o.x,
+                    o.y,
+                    o.w,
+                    o.h
+                );
+
+
+                /* DETALLES DEL CACTUS */
+
+                ctx.fillStyle =
+                    "#16a34a";
+
+
+                ctx.fillRect(
+                    o.x + 4,
+                    o.y + 5,
+                    4,
+                    o.h - 5
+                );
+
+
+                /* COLISIÓN */
+
+                if (
+
+                    dino.x <
+                    o.x + o.w &&
+
+                    dino.x + dino.w >
+                    o.x &&
+
+                    dino.y <
+                    o.y + o.h &&
+
+                    dino.y + dino.h >
+                    o.y
+
+                ) {
+
+                    endGame(
+                        "Game Over ❌<br>Puntuación: " +
+                        score
+                    );
+
+                    return;
+
+                }
+
+            }
+
+
+            /* ELIMINAR OBSTÁCULOS */
+
+            obstacles =
+                obstacles.filter(
+                    function(o) {
+
+                        return (
+                            o.x + o.w > 0
+                        );
+
+                    }
+                );
+
+
+            /* PUNTUACIÓN */
+
+            score++;
+
+
+            scoreBox.textContent =
+                score;
+
+        }
+
+
+        /* ========================================================
+           FINAL DEL JUEGO
+        ======================================================== */
+
+        function endGame(message) {
+
+            clearInterval(
+                gameLoop
+            );
+
+
+            gameLoop =
+                null;
+
+
+            canvas.style.display =
+                "none";
+
+            scoreBox.style.display =
+                "none";
+
+            controls.style.display =
+                "none";
+
+            endScreen.style.display =
+                "block";
+
+
+            endMessage.innerHTML =
+                message;
+
+
+            enviarPuntuacion();
+
+        }
+
+
+        /* ========================================================
+           GUARDAR PUNTUACIÓN
+        ======================================================== */
+
+        function enviarPuntuacion() {
+
+            if (
+                scoreSent
+            ) {
+
+                console.log(
+                    "La puntuación ya había sido enviada."
+                );
+
+                return;
+
+            }
+
+
+            if (
+                !playerName
+            ) {
+
+                return;
+
+            }
+
+
+            scoreSent =
+                true;
+
+
+            const datos = {
+
+                juego:
+                    "DragonRunner",
+
+                nombre:
+                    playerName,
+
+                puntuacion:
+                    score
+
+            };
+
+
+            console.log(
+                "Enviando puntuación:",
+                datos
+            );
+
+
+            fetch(
+                GS_URL,
+                {
+
+                    method:
+                        "POST",
+
+                    body:
+                        new URLSearchParams(
+                            datos
+                        )
+
+                }
+            )
+            .then(
+                function(res) {
+
+                    return res.text();
+
+                }
+            )
+            .then(
+                function(txt) {
+
+                    console.log(
+                        "Respuesta del servidor:",
+                        txt
+                    );
+
+                }
+            )
+            .catch(
+                function(error) {
+
+                    console.error(
+                        "Error enviando puntuación:",
+                        error
+                    );
+
+
+                    scoreSent =
+                        false;
+
+                }
+            );
+
+        }
+
+
+        /* ========================================================
+           REINICIAR
+        ======================================================== */
+
+        function restartGame() {
+
+            startGame();
+
+        }
+
+
+        /* ========================================================
+           BOTONES
+        ======================================================== */
+
+        startBtn.addEventListener(
+            "click",
+            showNameScreen
+        );
+
+
+        confirmBtn.addEventListener(
+            "click",
+            confirmNameAndStart
+        );
+
+
+        restartBtn.addEventListener(
+            "click",
+            restartGame
+        );
+
+
+        /* ========================================================
+           ENTER EN NOMBRE
+        ======================================================== */
+
+        playerNameInput.addEventListener(
+            "keydown",
+            function(event) {
+
+                if (
+                    event.key === "Enter"
+                ) {
+
+                    event.preventDefault();
+
+                    confirmNameAndStart();
+
+                }
+
+            }
+        );
+
+
+        /* ========================================================
+           CONTROL TÁCTIL
+        ======================================================== */
+
+        function handleJump(event) {
+
+            event.preventDefault();
+
+            jump();
+
+        }
+
+
+        if (
+            window.PointerEvent
+        ) {
+
+            jumpBtn.addEventListener(
+                "pointerdown",
+                handleJump,
+                {
+                    passive: false
+                }
+            );
+
+        } else {
+
+            jumpBtn.addEventListener(
+                "touchstart",
+                handleJump,
+                {
+                    passive: false
+                }
+            );
+
+        }
+
+
+        /* ========================================================
+           REDIMENSIONAR
+        ======================================================== */
+
+        window.addEventListener(
+            "resize",
+            function() {
+
+                if (
+                    gameArea.style.display ===
+                    "block"
+                ) {
+
+                    resizeCanvas();
+
+                }
+
+            }
+        );
+
+
+        /* ========================================================
+           INICIALIZACIÓN
+        ======================================================== */
+
+        resizeCanvas();
+
+    </script>
+
+
+</body>
+
+</html>

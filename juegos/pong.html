@@ -1,0 +1,2043 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>🏓 Pong · Modo Juego</title>
+
+    <link rel="stylesheet" href="../styles.css">
+
+    <style>
+
+        /* =========================================================
+           PÁGINA PONG
+        ========================================================= */
+
+        .pong-page {
+
+            min-height: calc(100vh - 70px);
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            padding: 10px 15px 20px;
+
+            box-sizing: border-box;
+
+        }
+
+
+        /* =========================================================
+           CONTENEDOR
+        ========================================================= */
+
+        .pong-game {
+
+            position: relative;
+
+            width: min(94vw, 700px);
+
+            padding: 18px 25px 20px;
+
+            box-sizing: border-box;
+
+            border-radius: 28px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #0f172a,
+                    #111827
+                );
+
+            border:
+                1px solid rgba(0,195,255,.25);
+
+            box-shadow:
+                0 20px 50px rgba(0,0,0,.25),
+                0 0 30px rgba(0,195,255,.08);
+
+            color: white;
+
+            text-align: center;
+
+        }
+
+
+        /* =========================================================
+           CABECERA
+        ========================================================= */
+
+        .pong-header {
+
+            margin-bottom: 10px;
+
+        }
+
+
+        .pong-header h1 {
+
+            margin: 0;
+
+            font-size:
+                clamp(1.6rem, 4vw, 2.2rem);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #6a5acd,
+                    #00c3ff
+                );
+
+            -webkit-background-clip: text;
+
+            -webkit-text-fill-color: transparent;
+
+        }
+
+
+        .pong-header p {
+
+            margin: 4px 0 0;
+
+            color: #cbd5e1;
+
+            font-size: .8rem;
+
+        }
+
+
+        /* =========================================================
+           PANTALLAS
+        ========================================================= */
+
+        .pong-screen {
+
+            text-align: center;
+
+        }
+
+
+        .pong-screen h2 {
+
+            margin:
+                0 0 12px;
+
+            color: #00c3ff;
+
+            font-size: 1.6rem;
+
+            text-shadow:
+                0 0 12px
+                rgba(0,195,255,.5);
+
+        }
+
+
+        .pong-screen p {
+
+            color: #cbd5e1;
+
+            line-height: 1.55;
+
+            font-size: .95rem;
+
+            margin:
+                0 auto 20px;
+
+            max-width: 400px;
+
+        }
+
+
+        /* =========================================================
+           BOTONES PRINCIPALES
+        ========================================================= */
+
+        .pong-btn {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            min-height: 46px;
+
+            padding:
+                10px 24px;
+
+            border: none;
+
+            border-radius: 999px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #6a5acd,
+                    #00c3ff
+                );
+
+            color: white;
+
+            font-size: .95rem;
+
+            font-weight: 800;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 0 15px
+                rgba(0,195,255,.4);
+
+            transition:
+                transform .2s ease,
+                box-shadow .2s ease;
+
+            touch-action: manipulation;
+
+        }
+
+
+        .pong-btn:hover {
+
+            transform: scale(1.05);
+
+            box-shadow:
+                0 0 22px
+                rgba(0,195,255,.6);
+
+        }
+
+
+        .pong-btn:active {
+
+            transform: scale(.95);
+
+        }
+
+
+        /* =========================================================
+           ZONA DEL JUEGO
+        ========================================================= */
+
+        .game-area {
+
+            display: none;
+
+            position: relative;
+
+            width: 100%;
+
+        }
+
+
+        /* =========================================================
+           MARCADOR
+        ========================================================= */
+
+        .score-box {
+
+            position: absolute;
+
+            top: 10px;
+
+            left: 50%;
+
+            transform:
+                translateX(-50%);
+
+            z-index: 10;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #6a5acd,
+                    #00c3ff
+                );
+
+            border-radius: 9px;
+
+            padding:
+                5px 14px;
+
+            font-family:
+                "Courier New",
+                monospace;
+
+            font-size: .95rem;
+
+            font-weight: bold;
+
+            color: white;
+
+            text-shadow:
+                0 0 6px
+                rgba(0,195,255,.8);
+
+            box-shadow:
+                0 0 8px
+                rgba(106,90,205,.6),
+
+                0 0 12px
+                rgba(0,195,255,.5);
+
+        }
+
+
+        /* =========================================================
+           CANVAS
+        ========================================================= */
+
+        #gameCanvas {
+
+            display: block;
+
+            width:
+                min(100%, 520px);
+
+            height: auto;
+
+            aspect-ratio:
+                4 / 3;
+
+            margin:
+                0 auto;
+
+            background: #000;
+
+            border:
+                2px solid white;
+
+            border-radius: 10px;
+
+            box-shadow:
+                0 0 15px
+                rgba(106,90,205,.6),
+
+                0 0 25px
+                rgba(0,195,255,.4);
+
+        }
+
+
+        /* =========================================================
+           CONTROLES
+        ========================================================= */
+
+        .controls {
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            gap: 12px;
+
+            margin-top: 8px;
+
+        }
+
+
+        .controls button {
+
+            width: 52px;
+
+            height: 42px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #6a5acd,
+                    #00c3ff
+                );
+
+            color: white;
+
+            font-size: 18px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 0 10px
+                rgba(0,195,255,.5);
+
+            touch-action: none;
+
+            user-select: none;
+
+            -webkit-user-select: none;
+
+            -webkit-tap-highlight-color:
+                transparent;
+
+        }
+
+
+        .controls button:active {
+
+            transform:
+                scale(.92);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #5a4abb,
+                    #00aaff
+                );
+
+        }
+
+
+        /* =========================================================
+           INFORMACIÓN TECLADO
+        ========================================================= */
+
+        .keyboard-info {
+
+            margin-top: 5px;
+
+            color: #64748b;
+
+            font-size: .7rem;
+
+        }
+
+
+        /* =========================================================
+           PANTALLA FINAL
+        ========================================================= */
+
+        #endScreen {
+
+            display: none;
+
+        }
+
+
+        #endMessage {
+
+            margin-bottom: 20px;
+
+        }
+
+
+        #endMessage small {
+
+            color: #cbd5e1;
+
+            font-size: 1rem;
+
+        }
+
+
+        /* =========================================================
+           VOLVER
+        ========================================================= */
+
+        .back-games {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            margin-top: 15px;
+
+            padding:
+                8px 17px;
+
+            border-radius: 999px;
+
+            border:
+                1px solid
+                rgba(255,255,255,.15);
+
+            color: #cbd5e1;
+
+            text-decoration: none;
+
+            font-size: .8rem;
+
+            transition:
+                background .2s ease,
+                color .2s ease;
+
+        }
+
+
+        .back-games:hover {
+
+            background:
+                rgba(255,255,255,.08);
+
+            color: white;
+
+        }
+
+
+        /* =========================================================
+           PANTALLAS CON POCA ALTURA
+        ========================================================= */
+
+        @media (
+            max-height: 800px
+        ) and (
+            min-width: 601px
+        ) {
+
+            .pong-page {
+
+                align-items:
+                    flex-start;
+
+                padding-top: 8px;
+
+            }
+
+
+            .pong-game {
+
+                padding:
+                    12px 20px 12px;
+
+            }
+
+
+            .pong-header {
+
+                margin-bottom: 6px;
+
+            }
+
+
+            .pong-header h1 {
+
+                font-size:
+                    1.7rem;
+
+            }
+
+
+            .pong-header p {
+
+                font-size:
+                    .75rem;
+
+            }
+
+
+            #gameCanvas {
+
+                width:
+                    min(75vw, 480px);
+
+            }
+
+
+            .controls {
+
+                margin-top: 6px;
+
+            }
+
+
+            .controls button {
+
+                width: 48px;
+
+                height: 38px;
+
+            }
+
+
+            .keyboard-info {
+
+                margin-top: 3px;
+
+            }
+
+
+            .back-games {
+
+                margin-top: 8px;
+
+            }
+
+        }
+
+
+        /* =========================================================
+           MÓVIL
+        ========================================================= */
+
+        @media (max-width: 600px) {
+
+            .pong-page {
+
+                min-height:
+                    calc(100vh - 60px);
+
+                padding:
+                    8px 6px 15px;
+
+                align-items:
+                    flex-start;
+
+            }
+
+
+            .pong-game {
+
+                width: 100%;
+
+                max-width: 400px;
+
+                padding:
+                    14px 8px 15px;
+
+                border-radius:
+                    20px;
+
+            }
+
+
+            .pong-header {
+
+                margin-bottom:
+                    7px;
+
+            }
+
+
+            .pong-header h1 {
+
+                font-size:
+                    1.6rem;
+
+            }
+
+
+            .pong-header p {
+
+                font-size:
+                    .75rem;
+
+            }
+
+
+            .pong-screen h2 {
+
+                font-size:
+                    1.3rem;
+
+            }
+
+
+            .pong-screen p {
+
+                font-size:
+                    .8rem;
+
+                margin-bottom:
+                    12px;
+
+            }
+
+
+            #gameCanvas {
+
+                width:
+                    min(88vw, 330px);
+
+                max-width:
+                    330px;
+
+                border-radius:
+                    8px;
+
+            }
+
+
+            .controls {
+
+                margin-top:
+                    8px;
+
+                gap:
+                    8px;
+
+            }
+
+
+            .controls button {
+
+                width:
+                    52px;
+
+                height:
+                    42px;
+
+                font-size:
+                    17px;
+
+            }
+
+
+            .keyboard-info {
+
+                display:
+                    none;
+
+            }
+
+
+            .back-games {
+
+                margin-top:
+                    10px;
+
+            }
+
+        }
+
+
+        /* =========================================================
+           MÓVIL PEQUEÑO
+        ========================================================= */
+
+        @media (
+            max-width: 600px
+        ) and (
+            max-height: 700px
+        ) {
+
+            .pong-game {
+
+                padding:
+                    10px 8px;
+
+            }
+
+
+            .pong-header h1 {
+
+                font-size:
+                    1.4rem;
+
+            }
+
+
+            .pong-header p {
+
+                display:
+                    none;
+
+            }
+
+
+            #gameCanvas {
+
+                width:
+                    min(82vw, 290px);
+
+                max-width:
+                    290px;
+
+            }
+
+
+            .controls {
+
+                margin-top:
+                    5px;
+
+            }
+
+
+            .controls button {
+
+                width:
+                    48px;
+
+                height:
+                    40px;
+
+            }
+
+
+            .back-games {
+
+                margin-top:
+                    6px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================================================
+         MENÚ
+    ========================================================= -->
+
+    <nav class="menu">
+
+        <a href="../index.html">
+            🏠 Inicio
+        </a>
+
+
+        <a
+            href="https://accounts.google.com/AccountChooser?continue=https://script.google.com/a/macros/g.educaand.es/s/AKfycbxHgTgZREPTg4a2gfi1Yx1B_kc4OnKDFsuaprH3JRdDZoyebyEu9oWwpw2aquCw6zf76Q/exec"
+            target="_blank">
+
+            📤 Entregas
+
+        </a>
+
+
+        <div class="menu-dropdown">
+
+            <button>
+                📘 CCSS I ▾
+            </button>
+
+            <div class="dropdown-content">
+
+                <a href="../ccss1/tema1.html">
+                    Tema 1
+                </a>
+
+                <a href="../ccss1/tema2.html">
+                    Tema 2
+                </a>
+
+                <a href="../ccss1/tema3.html">
+                    Tema 3
+                </a>
+
+                <a href="../ccss1/tema4.html">
+                    Tema 4
+                </a>
+
+                <a href="../ccss1/tema5.html">
+                    Tema 5
+                </a>
+
+                <a href="../ccss1/tema6.html">
+                    Tema 6
+                </a>
+
+                <a href="../ccss1/tema7.html">
+                    Tema 7
+                </a>
+
+                <a href="../ccss1/tema8.html">
+                    Tema 8
+                </a>
+
+                <a href="../ccss1/tema9.html">
+                    Tema 9
+                </a>
+
+                <a href="../ccss1/tema10.html">
+                    Tema 10
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="menu-dropdown">
+
+            <button>
+                📕 CCSS II ▾
+            </button>
+
+            <div class="dropdown-content">
+
+                <a href="../ccss2/tema1.html">
+                    Tema 1
+                </a>
+
+                <a href="../ccss2/tema2.html">
+                    Tema 2
+                </a>
+
+                <a href="../ccss2/tema3.html">
+                    Tema 3
+                </a>
+
+                <a href="../ccss2/tema4.html">
+                    Tema 4
+                </a>
+
+                <a href="../ccss2/tema5.html">
+                    Tema 5
+                </a>
+
+                <a href="../ccss2/tema6.html">
+                    Tema 6
+                </a>
+
+                <a href="../ccss2/tema7.html">
+                    Tema 7
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <a href="../cumpleanos.html">
+            🎂 Cumpleaños
+        </a>
+
+
+        <a href="../juegos.html">
+            🎮 Juegos
+        </a>
+
+
+        <a href="../reels.html">
+            🎬 Reels
+        </a>
+
+    </nav>
+
+
+    <!-- =========================================================
+         JUEGO
+    ========================================================= -->
+
+    <main class="pong-page">
+
+        <section class="pong-game">
+
+
+            <!-- CABECERA -->
+
+            <header class="pong-header">
+
+                <h1>
+                    🏓 Pong
+                </h1>
+
+                <p>
+                    Modo Juego · Matemáticas
+                </p>
+
+            </header>
+
+
+            <!-- =================================================
+                 PANTALLA INICIAL
+            ================================================== -->
+
+            <div
+                class="pong-screen"
+                id="introScreen">
+
+                <p>
+
+                    Mueve tu pala para devolver
+                    la pelota.
+
+                    <br>
+
+                    Evita que el rival marque.
+
+                    <br>
+
+                    El primero en llegar a
+                    <strong>5 puntos</strong> gana.
+
+                </p>
+
+
+                <button
+                    class="pong-btn"
+                    id="startBtn"
+                    type="button">
+
+                    ▶ Empezar
+
+                </button>
+
+            </div>
+
+
+            <!-- =================================================
+                 ZONA DEL JUEGO
+            ================================================== -->
+
+            <div
+                class="game-area"
+                id="gameArea">
+
+
+                <!-- MARCADOR -->
+
+                <div
+                    class="score-box"
+                    id="scoreBox">
+
+                    0 - 0
+
+                </div>
+
+
+                <!-- TABLERO -->
+
+                <canvas
+                    id="gameCanvas">
+                </canvas>
+
+
+                <!-- CONTROLES -->
+
+                <div
+                    class="controls"
+                    id="controls">
+
+
+                    <button
+                        type="button"
+                        data-direction="up"
+                        aria-label="Mover arriba">
+
+                        ▲
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        data-direction="down"
+                        aria-label="Mover abajo">
+
+                        ▼
+
+                    </button>
+
+                </div>
+
+
+                <div class="keyboard-info">
+
+                    ⌨️ Usa las teclas ↑ y ↓
+                    para mover la pala
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 PANTALLA FINAL
+            ================================================== -->
+
+            <div
+                class="pong-screen"
+                id="endScreen">
+
+                <h2
+                    id="endMessage">
+                </h2>
+
+
+                <button
+                    class="pong-btn"
+                    id="restartBtn"
+                    type="button">
+
+                    🔄 Reiniciar
+
+                </button>
+
+            </div>
+
+
+            <!-- VOLVER -->
+
+            <a
+                href="../juegos.html"
+                class="back-games">
+
+                ← Volver a Modo Juego
+
+            </a>
+
+
+        </section>
+
+    </main>
+
+
+    <script>
+
+        /* ========================================================
+           ELEMENTOS
+        ======================================================== */
+
+        const canvas =
+            document.getElementById(
+                "gameCanvas"
+            );
+
+
+        const ctx =
+            canvas.getContext("2d");
+
+
+        const introScreen =
+            document.getElementById(
+                "introScreen"
+            );
+
+
+        const gameArea =
+            document.getElementById(
+                "gameArea"
+            );
+
+
+        const endScreen =
+            document.getElementById(
+                "endScreen"
+            );
+
+
+        const endMessage =
+            document.getElementById(
+                "endMessage"
+            );
+
+
+        const scoreBox =
+            document.getElementById(
+                "scoreBox"
+            );
+
+
+        const controls =
+            document.getElementById(
+                "controls"
+            );
+
+
+        const startBtn =
+            document.getElementById(
+                "startBtn"
+            );
+
+
+        const restartBtn =
+            document.getElementById(
+                "restartBtn"
+            );
+
+
+        /* ========================================================
+           VARIABLES
+        ======================================================== */
+
+        let paddleHeight;
+
+        let paddleWidth;
+
+        let ballSize;
+
+        let leftPaddle;
+
+        let rightPaddle;
+
+        let ball;
+
+        let playerScore = 0;
+
+        let cpuScore = 0;
+
+        let game = null;
+
+        let keys = {};
+
+        let touchInterval = null;
+
+
+        /* ========================================================
+           CONFIGURACIÓN
+        ======================================================== */
+
+        const WIN_SCORE = 5;
+
+
+        const isMobile =
+            /Android|iPhone|iPad|iPod/i
+            .test(navigator.userAgent);
+
+
+        const paddleSpeed =
+            isMobile
+                ? 6
+                : 9;
+
+
+        const ballSpeed =
+            isMobile
+                ? 4.5
+                : 6.5;
+
+
+        /* ========================================================
+           REDIMENSIONAR
+        ======================================================== */
+
+        function resizeCanvas() {
+
+            let width;
+
+
+            if (
+                window.innerWidth <= 600
+            ) {
+
+                width =
+                    Math.min(
+                        window.innerWidth * 0.88,
+                        330
+                    );
+
+            } else {
+
+                width =
+                    Math.min(
+                        window.innerWidth * 0.70,
+                        520
+                    );
+
+            }
+
+
+            canvas.width =
+                Math.floor(width);
+
+
+            canvas.height =
+                Math.floor(
+                    width * 0.75
+                );
+
+
+            paddleHeight =
+                canvas.height / 5;
+
+
+            paddleWidth =
+                Math.max(
+                    7,
+                    canvas.width / 40
+                );
+
+
+            ballSize =
+                Math.max(
+                    8,
+                    canvas.width / 40
+                );
+
+        }
+
+
+        /* ========================================================
+           INICIAR
+        ======================================================== */
+
+        function startGame() {
+
+            resizeCanvas();
+
+
+            introScreen.style.display =
+                "none";
+
+
+            endScreen.style.display =
+                "none";
+
+
+            gameArea.style.display =
+                "block";
+
+
+            canvas.style.display =
+                "block";
+
+
+            scoreBox.style.display =
+                "block";
+
+
+            controls.style.display =
+                "flex";
+
+
+            playerScore = 0;
+
+            cpuScore = 0;
+
+
+            scoreBox.textContent =
+                "0 - 0";
+
+
+            leftPaddle = {
+
+                x: 10,
+
+                y:
+                    canvas.height / 2 -
+                    paddleHeight / 2
+
+            };
+
+
+            rightPaddle = {
+
+                x:
+                    canvas.width -
+                    paddleWidth -
+                    10,
+
+                y:
+                    canvas.height / 2 -
+                    paddleHeight / 2
+
+            };
+
+
+            ball = {
+
+                x:
+                    canvas.width / 2 -
+                    ballSize / 2,
+
+                y:
+                    canvas.height / 2 -
+                    ballSize / 2,
+
+                dx:
+                    ballSpeed,
+
+                dy:
+                    Math.random() > 0.5
+                        ? ballSpeed
+                        : -ballSpeed
+
+            };
+
+
+            if (game) {
+
+                clearInterval(game);
+
+            }
+
+
+            game =
+                setInterval(
+                    draw,
+                    30
+                );
+
+        }
+
+
+        /* ========================================================
+           DIBUJAR
+        ======================================================== */
+
+        function draw() {
+
+            /* FONDO */
+
+            ctx.fillStyle =
+                "#000";
+
+            ctx.fillRect(
+                0,
+                0,
+                canvas.width,
+                canvas.height
+            );
+
+
+            /* LÍNEA CENTRAL */
+
+            ctx.strokeStyle =
+                "rgba(255,255,255,.5)";
+
+            ctx.setLineDash(
+                [6, 10]
+            );
+
+            ctx.beginPath();
+
+            ctx.moveTo(
+                canvas.width / 2,
+                0
+            );
+
+            ctx.lineTo(
+                canvas.width / 2,
+                canvas.height
+            );
+
+            ctx.stroke();
+
+            ctx.setLineDash([]);
+
+
+            /* PALAS */
+
+            ctx.fillStyle =
+                "white";
+
+
+            ctx.fillRect(
+                leftPaddle.x,
+                leftPaddle.y,
+                paddleWidth,
+                paddleHeight
+            );
+
+
+            ctx.fillRect(
+                rightPaddle.x,
+                rightPaddle.y,
+                paddleWidth,
+                paddleHeight
+            );
+
+
+            /* PELOTA */
+
+            ctx.fillRect(
+                ball.x,
+                ball.y,
+                ballSize,
+                ballSize
+            );
+
+
+            /* MOVIMIENTO PELOTA */
+
+            ball.x +=
+                ball.dx;
+
+
+            ball.y +=
+                ball.dy;
+
+
+            /* PARED SUPERIOR / INFERIOR */
+
+            if (
+                ball.y <= 0
+                ||
+                ball.y + ballSize >=
+                    canvas.height
+            ) {
+
+                ball.dy *= -1;
+
+            }
+
+
+            /* COLISIÓN PALA JUGADOR */
+
+            if (
+
+                ball.x <=
+                    leftPaddle.x +
+                    paddleWidth
+
+                &&
+
+                ball.x + ballSize >=
+                    leftPaddle.x
+
+                &&
+
+                ball.y + ballSize >=
+                    leftPaddle.y
+
+                &&
+
+                ball.y <=
+                    leftPaddle.y +
+                    paddleHeight
+
+            ) {
+
+                ball.dx =
+                    Math.abs(
+                        ball.dx
+                    );
+
+                ball.x =
+                    leftPaddle.x +
+                    paddleWidth;
+
+            }
+
+
+            /* COLISIÓN CPU */
+
+            if (
+
+                ball.x + ballSize >=
+                    rightPaddle.x
+
+                &&
+
+                ball.x <=
+                    rightPaddle.x +
+                    paddleWidth
+
+                &&
+
+                ball.y + ballSize >=
+                    rightPaddle.y
+
+                &&
+
+                ball.y <=
+                    rightPaddle.y +
+                    paddleHeight
+
+            ) {
+
+                ball.dx =
+                    -Math.abs(
+                        ball.dx
+                    );
+
+                ball.x =
+                    rightPaddle.x -
+                    ballSize;
+
+            }
+
+
+            /* PUNTO CPU */
+
+            if (
+                ball.x < 0
+            ) {
+
+                cpuScore++;
+
+
+                scoreBox.textContent =
+                    `${playerScore} - ${cpuScore}`;
+
+
+                if (
+                    checkGameOver()
+                ) {
+
+                    return;
+
+                }
+
+
+                resetBall();
+
+            }
+
+
+            /* PUNTO JUGADOR */
+
+            else if (
+                ball.x >
+                canvas.width
+            ) {
+
+                playerScore++;
+
+
+                scoreBox.textContent =
+                    `${playerScore} - ${cpuScore}`;
+
+
+                if (
+                    checkGameOver()
+                ) {
+
+                    return;
+
+                }
+
+
+                resetBall();
+
+            }
+
+
+            /* CONTROL JUGADOR */
+
+            if (
+                keys["ArrowUp"]
+            ) {
+
+                leftPaddle.y -=
+                    paddleSpeed;
+
+            }
+
+
+            if (
+                keys["ArrowDown"]
+            ) {
+
+                leftPaddle.y +=
+                    paddleSpeed;
+
+            }
+
+
+            /* CPU */
+
+            const targetY =
+                ball.y -
+                paddleHeight / 2 +
+                ballSize / 2;
+
+
+            rightPaddle.y +=
+                (
+                    targetY -
+                    rightPaddle.y
+                ) * 0.09;
+
+
+            /* LIMITES JUGADOR */
+
+            leftPaddle.y =
+                Math.max(
+                    0,
+                    Math.min(
+                        canvas.height -
+                        paddleHeight,
+                        leftPaddle.y
+                    )
+                );
+
+
+            /* LIMITES CPU */
+
+            rightPaddle.y =
+                Math.max(
+                    0,
+                    Math.min(
+                        canvas.height -
+                        paddleHeight,
+                        rightPaddle.y
+                    )
+                );
+
+        }
+
+
+        /* ========================================================
+           COMPROBAR FINAL
+        ======================================================== */
+
+        function checkGameOver() {
+
+            if (
+
+                playerScore >=
+                    WIN_SCORE
+
+                ||
+
+                cpuScore >=
+                    WIN_SCORE
+
+            ) {
+
+                endGame(
+
+                    playerScore >=
+                        WIN_SCORE
+
+                        ?
+
+                    "🎉 ¡Has ganado!"
+
+                        :
+
+                    "😢 Has perdido"
+
+                );
+
+
+                return true;
+
+            }
+
+
+            return false;
+
+        }
+
+
+        /* ========================================================
+           REINICIAR PELOTA
+        ======================================================== */
+
+        function resetBall() {
+
+            ball.x =
+                canvas.width / 2 -
+                ballSize / 2;
+
+
+            ball.y =
+                canvas.height / 2 -
+                ballSize / 2;
+
+
+            ball.dx =
+                ball.dx > 0
+                    ? -ballSpeed
+                    : ballSpeed;
+
+
+            ball.dy =
+                Math.random() > 0.5
+                    ? ballSpeed
+                    : -ballSpeed;
+
+        }
+
+
+        /* ========================================================
+           FINAL DEL JUEGO
+        ======================================================== */
+
+        function endGame(
+            message
+        ) {
+
+            clearInterval(
+                game
+            );
+
+
+            game = null;
+
+
+            canvas.style.display =
+                "none";
+
+
+            scoreBox.style.display =
+                "none";
+
+
+            controls.style.display =
+                "none";
+
+
+            gameArea.style.display =
+                "none";
+
+
+            endScreen.style.display =
+                "block";
+
+
+            endMessage.innerHTML =
+                message +
+                "<br><small>" +
+                playerScore +
+                " - " +
+                cpuScore +
+                "</small>";
+
+        }
+
+
+        /* ========================================================
+           TECLADO
+        ======================================================== */
+
+        document.addEventListener(
+            "keydown",
+            function(event) {
+
+                if (
+
+                    event.key ===
+                        "ArrowUp"
+
+                    ||
+
+                    event.key ===
+                        "ArrowDown"
+
+                ) {
+
+                    event.preventDefault();
+
+                    keys[event.key] =
+                        true;
+
+                }
+
+            }
+        );
+
+
+        document.addEventListener(
+            "keyup",
+            function(event) {
+
+                if (
+
+                    event.key ===
+                        "ArrowUp"
+
+                    ||
+
+                    event.key ===
+                        "ArrowDown"
+
+                ) {
+
+                    event.preventDefault();
+
+                    keys[event.key] =
+                        false;
+
+                }
+
+            }
+        );
+
+
+        /* ========================================================
+           CONTROLES TÁCTILES
+        ======================================================== */
+
+        function startTouch(
+            direction
+        ) {
+
+            stopTouch();
+
+
+            function move() {
+
+                if (
+                    !leftPaddle
+                ) {
+
+                    return;
+
+                }
+
+
+                if (
+                    direction ===
+                    "up"
+                ) {
+
+                    leftPaddle.y -=
+                        paddleSpeed;
+
+                }
+
+
+                if (
+                    direction ===
+                    "down"
+                ) {
+
+                    leftPaddle.y +=
+                        paddleSpeed;
+
+                }
+
+
+                leftPaddle.y =
+                    Math.max(
+                        0,
+                        Math.min(
+                            canvas.height -
+                            paddleHeight,
+                            leftPaddle.y
+                        )
+                    );
+
+            }
+
+
+            move();
+
+
+            touchInterval =
+                setInterval(
+                    move,
+                    30
+                );
+
+        }
+
+
+        function stopTouch() {
+
+            if (
+                touchInterval
+            ) {
+
+                clearInterval(
+                    touchInterval
+                );
+
+                touchInterval =
+                    null;
+
+            }
+
+        }
+
+
+        document
+            .querySelectorAll(
+                "#controls button"
+            )
+            .forEach(
+                function(button) {
+
+                    const direction =
+                        button.dataset
+                            .direction;
+
+
+                    button.addEventListener(
+                        "pointerdown",
+                        function(event) {
+
+                            event.preventDefault();
+
+                            startTouch(
+                                direction
+                            );
+
+                        }
+                    );
+
+
+                    button.addEventListener(
+                        "pointerup",
+                        function(event) {
+
+                            event.preventDefault();
+
+                            stopTouch();
+
+                        }
+                    );
+
+
+                    button.addEventListener(
+                        "pointercancel",
+                        stopTouch
+                    );
+
+
+                    button.addEventListener(
+                        "pointerleave",
+                        stopTouch
+                    );
+
+                }
+            );
+
+
+        /* ========================================================
+           BOTONES
+        ======================================================== */
+
+        startBtn.addEventListener(
+            "click",
+            startGame
+        );
+
+
+        restartBtn.addEventListener(
+            "click",
+            startGame
+        );
+
+
+        /* ========================================================
+           REDIMENSIONAR
+        ======================================================== */
+
+        window.addEventListener(
+            "resize",
+            function() {
+
+                if (
+                    gameArea.style.display ===
+                    "block"
+                ) {
+
+                    resizeCanvas();
+
+                }
+
+            }
+        );
+
+
+        /* ========================================================
+           INICIALIZACIÓN
+        ======================================================== */
+
+        resizeCanvas();
+
+    </script>
+
+</body>
+
+</html>
