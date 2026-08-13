@@ -1,107 +1,174 @@
 <nav class="menu">
 
-    <button class="menu-hamburguesa" id="menuHamburguesa" aria-label="Abrir menú">
+    <!-- BOTÓN HAMBURGUESA -->
+
+    <button
+        class="menu-hamburguesa"
+        id="menuHamburguesa"
+        aria-label="Abrir menú"
+        aria-expanded="false">
+
         ☰
+
     </button>
 
-    <div class="menu-contenido" id="menuContenido">
 
-        <a href="index.html">🏠 Inicio</a>
+    <!-- CONTENIDO DEL MENÚ -->
 
-        <a href="https://accounts.google.com/AccountChooser?continue=https://script.google.com/a/macros/g.educaand.es/s/AKfycbxHgTgZREPTg4a2gfi1Yx1B_kc4OnKDFsuaprH3JRdDZoyebyEu9oWwpw2aquCw6zf76Q/exec"
-           target="_blank">
-            📤 Entregas
+    <div
+        class="menu-contenido"
+        id="menuContenido">
+
+
+        <!-- INICIO -->
+
+        <a href="index.html">
+            🏠 Inicio
         </a>
 
+
+        <!-- ENTREGAS -->
+
+        <a
+            href="https://accounts.google.com/AccountChooser?continue=https://script.google.com/a/macros/g.educaand.es/s/AKfycbxHgTgZREPTg4a2gfi1Yx1B_kc4OnKDFsuaprH3JRdDZoyebyEu9oWwpw2aquCw6zf76Q/exec"
+            target="_blank">
+
+            📤 Entregas
+
+        </a>
+
+
+        <!-- CCSS I -->
+
         <div class="menu-dropdown">
 
-            <button class="dropdown-btn">
-                📘 CCSS I <span>▾</span>
+            <button
+                class="dropdown-btn"
+                type="button">
+
+                📘 CCSS I
+                <span>▾</span>
+
             </button>
 
+
             <div class="dropdown-content">
-                <a href="ccss1/tema1.html">Tema 1</a>
-                <a href="ccss1/tema2.html">Tema 2</a>
-                <a href="ccss1/tema3.html">Tema 3</a>
-                <a href="ccss1/tema4.html">Tema 4</a>
-                <a href="ccss1/tema5.html">Tema 5</a>
-                <a href="ccss1/tema6.html">Tema 6</a>
-                <a href="ccss1/tema7.html">Tema 7</a>
-                <a href="ccss1/tema8.html">Tema 8</a>
-                <a href="ccss1/tema9.html">Tema 9</a>
-                <a href="ccss1/tema10.html">Tema 10</a>
+
+                <a href="ccss1/tema1.html">
+                    Tema 1
+                </a>
+
+                <a href="ccss1/tema2.html">
+                    Tema 2
+                </a>
+
+                <a href="ccss1/tema3.html">
+                    Tema 3
+                </a>
+
+                <a href="ccss1/tema4.html">
+                    Tema 4
+                </a>
+
+                <a href="ccss1/tema5.html">
+                    Tema 5
+                </a>
+
+                <a href="ccss1/tema6.html">
+                    Tema 6
+                </a>
+
+                <a href="ccss1/tema7.html">
+                    Tema 7
+                </a>
+
+                <a href="ccss1/tema8.html">
+                    Tema 8
+                </a>
+
+                <a href="ccss1/tema9.html">
+                    Tema 9
+                </a>
+
+                <a href="ccss1/tema10.html">
+                    Tema 10
+                </a>
+
             </div>
 
         </div>
 
+
+        <!-- CCSS II -->
+
         <div class="menu-dropdown">
 
-            <button class="dropdown-btn">
-                📕 CCSS II <span>▾</span>
+            <button
+                class="dropdown-btn"
+                type="button">
+
+                📕 CCSS II
+                <span>▾</span>
+
             </button>
 
+
             <div class="dropdown-content">
-                <a href="ccss2/tema1.html">Tema 1</a>
-                <a href="ccss2/tema2.html">Tema 2</a>
-                <a href="ccss2/tema3.html">Tema 3</a>
-                <a href="ccss2/tema4.html">Tema 4</a>
-                <a href="ccss2/tema5.html">Tema 5</a>
-                <a href="ccss2/tema6.html">Tema 6</a>
-                <a href="ccss2/tema7.html">Tema 7</a>
+
+                <a href="ccss2/tema1.html">
+                    Tema 1
+                </a>
+
+                <a href="ccss2/tema2.html">
+                    Tema 2
+                </a>
+
+                <a href="ccss2/tema3.html">
+                    Tema 3
+                </a>
+
+                <a href="ccss2/tema4.html">
+                    Tema 4
+                </a>
+
+                <a href="ccss2/tema5.html">
+                    Tema 5
+                </a>
+
+                <a href="ccss2/tema6.html">
+                    Tema 6
+                </a>
+
+                <a href="ccss2/tema7.html">
+                    Tema 7
+                </a>
+
             </div>
 
         </div>
 
-        <a href="cumpleanos.html">🎂 Cumpleaños</a>
 
-        <a href="juegos.html">🎮 Juegos</a>
+        <!-- CUMPLEAÑOS -->
 
-        <a href="reels.html">🎬 Reels</a>
+        <a href="cumpleanos.html">
+            🎂 Cumpleaños
+        </a>
+
+
+        <!-- JUEGOS -->
+
+        <a href="juegos.html">
+            🎮 Juegos
+        </a>
+
+
+        <!-- REELS -->
+
+        <a href="reels.html">
+            🎬 Reels
+        </a>
+
 
     </div>
 
 </nav>
-
-<script>
-
-document.addEventListener("DOMContentLoaded", () => {
-
-    const boton = document.getElementById("menuHamburguesa");
-    const contenido = document.getElementById("menuContenido");
-
-    if (!boton || !contenido) return;
-
-    boton.addEventListener("click", () => {
-
-        contenido.classList.toggle("menu-abierto");
-
-        boton.classList.toggle("activo");
-
-    });
-
-
-    const desplegables =
-        document.querySelectorAll(".dropdown-btn");
-
-    desplegables.forEach(boton => {
-
-        boton.addEventListener("click", event => {
-
-            if (window.innerWidth <= 768) {
-
-                event.stopPropagation();
-
-                const dropdown =
-                    boton.parentElement;
-
-                dropdown.classList.toggle("abierto");
-
-            }
-
-        });
-
-    });
-
-});
-
-</script>
