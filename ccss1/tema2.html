@@ -20,70 +20,24 @@
          MENÚ
     =========================== -->
 
-    <nav class="menu">
+    <div id="menu-container"></div>
 
-        <a href="../index.html">🏠 Inicio</a>
+    <script>
 
-        <a href="https://accounts.google.com/AccountChooser?continue=https://script.google.com/a/macros/g.educaand.es/s/AKfycbxHgTgZREPTg4a2gfi1Yx1B_kc4OnKDFsuaprH3JRdDZoyebyEu9oWwpw2aquCw6zf76Q/exec"
-           target="_blank">
-            📤 Entregas
-        </a>
+    fetch("menu.html")
+        .then(response => response.text())
+        .then(html => {
 
+            document.getElementById("menu-container").innerHTML = html;
 
-        <!-- CCSS I -->
+        })
+        .catch(error => {
 
-        <div class="menu-dropdown">
+            console.error("Error cargando el menú:", error);
 
-            <button>📘 CCSS I ▾</button>
+        });
 
-            <div class="dropdown-content">
-
-                <a href="/ccss1/tema1.html">Tema 1</a>
-                <a href="/ccss1/tema2.html">Tema 2</a>
-                <a href="/ccss1/tema3.html">Tema 3</a>
-                <a href="/ccss1/tema4.html">Tema 4</a>
-                <a href="/ccss1/tema5.html">Tema 5</a>
-                <a href="/ccss1/tema6.html">Tema 6</a>
-                <a href="/ccss1/tema7.html">Tema 7</a>
-                <a href="/ccss1/tema8.html">Tema 8</a>
-                <a href="/ccss1/tema9.html">Tema 9</a>
-                <a href="/ccss1/tema10.html">Tema 10</a>
-
-            </div>
-
-        </div>
-
-
-        <!-- CCSS II -->
-
-        <div class="menu-dropdown">
-
-            <button>📕 CCSS II ▾</button>
-
-            <div class="dropdown-content">
-
-                <a href="/ccss2/tema1.html">Tema 1</a>
-                <a href="/ccss2/tema2.html">Tema 2</a>
-                <a href="/ccss2/tema3.html">Tema 3</a>
-                <a href="/ccss2/tema4.html">Tema 4</a>
-                <a href="/ccss2/tema5.html">Tema 5</a>
-                <a href="/ccss2/tema6.html">Tema 6</a>
-                <a href="/ccss2/tema7.html">Tema 7</a>
-
-            </div>
-
-        </div>
-
-
-        <a href="../cumpleanos.html">🎂 Cumpleaños</a>
-
-        <a href="../juegos.html">🎮 Juegos</a>
-
-        <a href="../reels.html">🎬 Reels</a>
-
-    </nav>
-
-
+    </script>
 
     <main class="pagina-tema">
 
