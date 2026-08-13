@@ -22,132 +22,24 @@
 
 <body>
 
-<!-- ==========================
-     MENÚ
-=========================== -->
+    <div id="menu-container"></div>
 
-<div id="menu-container"></div>
+    <script>
 
-<script>
+    fetch("menu.html")
+        .then(response => response.text())
+        .then(html => {
 
-fetch("menu.html")
-    .then(response => {
+            document.getElementById("menu-container").innerHTML = html;
 
-        if (!response.ok) {
-            throw new Error(
-                "No se pudo cargar menu.html"
-            );
-        }
+        })
+        .catch(error => {
 
-        return response.text();
-
-    })
-    .then(html => {
-
-        const contenedor =
-            document.getElementById("menu-container");
-
-        contenedor.innerHTML = html;
-
-
-        /* =====================================================
-           BOTÓN HAMBURGUESA
-        ===================================================== */
-
-        const boton =
-            document.getElementById("menuHamburguesa");
-
-        const contenido =
-            document.getElementById("menuContenido");
-
-
-        if (!boton || !contenido) {
-
-            console.error(
-                "❌ No se encontró el botón o el contenido del menú"
-            );
-
-            return;
-
-        }
-
-
-        boton.addEventListener("click", function () {
-
-            const abierto =
-                contenido.classList.toggle(
-                    "menu-abierto"
-                );
-
-            boton.classList.toggle(
-                "activo",
-                abierto
-            );
-
-            boton.setAttribute(
-                "aria-expanded",
-                abierto
-            );
+            console.error("Error cargando el menú:", error);
 
         });
 
-
-        /* =====================================================
-           DESPLEGABLES CCSS EN MÓVIL
-        ===================================================== */
-
-        const desplegables =
-            contenido.querySelectorAll(
-                ".dropdown-btn"
-            );
-
-
-        desplegables.forEach(
-            botonDropdown => {
-
-                botonDropdown.addEventListener(
-                    "click",
-                    function (event) {
-
-                        if (
-                            window.innerWidth <= 768
-                        ) {
-
-                            event.preventDefault();
-
-                            event.stopPropagation();
-
-
-                            const dropdown =
-                                botonDropdown.parentElement;
-
-
-                            dropdown.classList.toggle(
-                                "abierto"
-                            );
-
-                        }
-
-                    }
-                );
-
-            }
-        );
-
-
-        console.log("✅ Menú cargado correctamente");
-
-    })
-    .catch(error => {
-
-        console.error(
-            "❌ Error cargando el menú:",
-            error
-        );
-
-    });
-
-</script>
+    </script>
 
     <main>
 

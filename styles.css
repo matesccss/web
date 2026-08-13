@@ -919,21 +919,21 @@ line-height:1.25;
 
     margin: 0 auto 20px;
 
+    padding: 8px;
+
+    box-sizing: border-box;
+
     display: flex;
 
     align-items: center;
 
     justify-content: center;
 
-    gap: 8px;
-
     background: #ffffff;
 
     border: 1px solid #e5e7eb;
 
     border-radius: 16px;
-
-    padding: 8px;
 
     box-shadow:
         0 6px 18px rgba(0,0,0,.08);
@@ -952,19 +952,7 @@ line-height:1.25;
 
 
 /* =========================================================
-   HAMBURGUESA
-   OCULTA EN ORDENADOR
-========================================================= */
-
-.menu-hamburguesa {
-
-    display: none;
-
-}
-
-
-/* =========================================================
-   MENÚ NORMAL — ORDENADOR
+   CONTENIDO
 ========================================================= */
 
 .menu-contenido {
@@ -975,19 +963,25 @@ line-height:1.25;
 
     justify-content: center;
 
-    gap: 8px;
+    gap: 6px;
+
+    width: 100%;
 
 }
 
+
+/* =========================================================
+   ENLACES Y BOTONES
+========================================================= */
 
 .menu-contenido > a,
 .menu-contenido .dropdown-btn {
 
     border: none;
 
-    background: none;
+    background: transparent;
 
-    padding: 10px 14px;
+    padding: 9px 12px;
 
     border-radius: 10px;
 
@@ -995,9 +989,11 @@ line-height:1.25;
 
     color: #334155;
 
-    font-size: .9rem;
+    font-size: .88rem;
 
     font-weight: 600;
+
+    white-space: nowrap;
 
     cursor: pointer;
 
@@ -1019,12 +1015,14 @@ line-height:1.25;
 
 
 /* =========================================================
-   DESPLEGABLES — ORDENADOR
+   DROPDOWN
 ========================================================= */
 
 .menu-dropdown {
 
     position: relative;
+
+    flex-shrink: 0;
 
 }
 
@@ -1084,6 +1082,8 @@ line-height:1.25;
 
     font-size: .85rem;
 
+    white-space: nowrap;
+
 }
 
 
@@ -1096,262 +1096,123 @@ line-height:1.25;
 }
 
 
-/* SOLO ORDENADOR */
+/* ORDENADOR */
 
-@media (min-width: 769px) {
+.menu-dropdown:hover .dropdown-content {
 
-    .menu-dropdown:hover .dropdown-content {
-
-        display: block;
-
-    }
+    display: block;
 
 }
 
 
 /* =========================================================
    MÓVIL
-   MENÚ FLOTANTE
-========================================================= */
-
-/* =========================================================
-   MÓVIL — BARRA DE MENÚ
 ========================================================= */
 
 @media (max-width: 768px) {
 
-    /* -----------------------------------------------------
-       BARRA SUPERIOR
-    ----------------------------------------------------- */
-
     .menu {
-
-        position: relative;
 
         width: 100%;
 
-        box-sizing: border-box;
-
         margin: 0 0 16px;
 
-        padding: 7px 12px;
+        padding: 6px 0;
 
-        display: flex;
+        border-left: none;
 
-        justify-content: flex-start;
-
-        align-items: center;
-
-        background: #ffffff;
-
-        border: none;
+        border-right: none;
 
         border-radius: 0;
 
-        box-shadow:
-            0 3px 12px rgba(0,0,0,.08);
+        overflow: visible;
 
     }
 
-
-    /* -----------------------------------------------------
-       BOTÓN HAMBURGUESA
-    ----------------------------------------------------- */
-
-    .menu-hamburguesa {
-
-        display: flex;
-
-        align-items: center;
-
-        justify-content: center;
-
-        width: 42px;
-
-        height: 42px;
-
-        padding: 0;
-
-        border: none;
-
-        border-radius: 11px;
-
-        background: #f8fafc;
-
-        color: #334155;
-
-        font-size: 24px;
-
-        line-height: 1;
-
-        cursor: pointer;
-
-        transition:
-            background .2s ease,
-            color .2s ease;
-
-        -webkit-tap-highlight-color: transparent;
-
-    }
-
-
-    .menu-hamburguesa:active {
-
-        transform: scale(.95);
-
-    }
-
-
-    .menu-hamburguesa.activo {
-
-        background: #2563eb;
-
-        color: #ffffff;
-
-    }
-
-
-    /* -----------------------------------------------------
-       MENÚ OCULTO
-    ----------------------------------------------------- */
 
     .menu-contenido {
 
-        display: none;
+        width: 100%;
 
-        position: absolute;
-
-        top: 52px;
-
-        left: 10px;
-
-        width: 250px;
-
-        max-height: calc(100vh - 70px);
-
-        overflow-y: auto;
-
-        box-sizing: border-box;
-
-        padding: 8px;
-
-        flex-direction: column;
-
-        align-items: stretch;
+        justify-content: flex-start;
 
         gap: 3px;
 
-        background: #ffffff;
+        padding: 0 8px;
 
-        border: 1px solid #e5e7eb;
+        box-sizing: border-box;
 
-        border-radius: 16px;
+        overflow-x: auto;
 
-        box-shadow:
-            0 14px 35px rgba(0,0,0,.16);
+        overflow-y: visible;
 
-        z-index: 99999;
+        -webkit-overflow-scrolling: touch;
 
-    }
-
-
-    /* -----------------------------------------------------
-       MENÚ ABIERTO
-    ----------------------------------------------------- */
-
-    .menu-contenido.menu-abierto {
-
-        display: flex;
+        scrollbar-width: none;
 
     }
 
 
-    /* -----------------------------------------------------
-       ENLACES
-    ----------------------------------------------------- */
+    /* Ocultar barra de desplazamiento */
+
+    .menu-contenido::-webkit-scrollbar {
+
+        display: none;
+
+    }
+
 
     .menu-contenido > a,
     .menu-contenido .dropdown-btn {
 
-        width: 100%;
+        flex-shrink: 0;
 
-        min-height: 43px;
+        padding: 9px 10px;
 
-        box-sizing: border-box;
+        font-size: .82rem;
 
-        display: flex;
-
-        align-items: center;
-
-        justify-content: flex-start;
-
-        padding: 10px 12px;
-
-        border: none;
-
-        border-radius: 10px;
-
-        background: transparent;
-
-        color: #334155;
-
-        text-decoration: none;
-
-        font-size: .88rem;
-
-        font-weight: 600;
-
-        text-align: left;
+        border-radius: 9px;
 
     }
 
 
-    .menu-contenido > a:active,
-    .menu-contenido .dropdown-btn:active {
-
-        background: #eff6ff;
-
-        color: #2563eb;
-
-    }
-
-
-    /* -----------------------------------------------------
-       DESPLEGABLES
-    ----------------------------------------------------- */
+    /* =====================================================
+       DROPDOWN MÓVIL
+    ===================================================== */
 
     .menu-dropdown {
 
-        width: 100%;
+        flex-shrink: 0;
 
     }
 
 
     .menu-dropdown .dropdown-content {
 
-        display: none;
+        top: calc(100% + 4px);
 
-        position: static;
-
-        width: 100%;
-
-        min-width: 0;
-
-        box-sizing: border-box;
-
-        margin: 2px 0 4px;
-
-        padding: 4px;
+        left: 0;
 
         transform: none;
 
-        background: #f8fafc;
+        min-width: 160px;
 
-        border: 1px solid #eef2f7;
+        max-height: 60vh;
 
-        border-radius: 10px;
+        overflow-y: auto;
 
-        box-shadow: none;
+    }
+
+
+    /*
+       En móvil no dependemos del hover.
+       Al tocar CCSS se abrirá mediante el JS
+       que ya tienes en el index.
+    */
+
+    .menu-dropdown:hover .dropdown-content {
+
+        display: none;
 
     }
 
@@ -1362,79 +1223,30 @@ line-height:1.25;
 
     }
 
-
-    .menu-dropdown .dropdown-content a {
-
-        display: block;
-
-        width: 100%;
-
-        box-sizing: border-box;
-
-        padding: 9px 12px;
-
-        border-radius: 8px;
-
-        color: #475569;
-
-        text-decoration: none;
-
-        font-size: .83rem;
-
-        font-weight: 500;
-
-    }
-
-
-    /* No abrir por hover en móvil */
-
-    .menu-dropdown:hover .dropdown-content {
-
-        display: none;
-
-    }
-
-
-    .menu-dropdown.abierto:hover .dropdown-content {
-
-        display: block;
-
-    }
-
 }
 
 
 /* =========================================================
-   MÓVILES PEQUEÑOS
+   MÓVILES MUY PEQUEÑOS
 ========================================================= */
 
-@media (max-width: 380px) {
-
-    .menu {
-
-        padding-left: 10px;
-
-        padding-right: 10px;
-
-    }
-
-
-    .menu-hamburguesa {
-
-        width: 40px;
-
-        height: 40px;
-
-        font-size: 22px;
-
-    }
-
+@media (max-width: 420px) {
 
     .menu-contenido {
 
-        left: 8px;
+        padding-left: 6px;
 
-        width: 235px;
+        padding-right: 6px;
+
+    }
+
+
+    .menu-contenido > a,
+    .menu-contenido .dropdown-btn {
+
+        padding: 8px 9px;
+
+        font-size: .78rem;
 
     }
 
