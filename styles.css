@@ -914,66 +914,57 @@ line-height:1.25;
 ========================================================= */
 
 .menu {
+
     width: 92%;
+
     margin: 0 auto 20px;
 
     display: flex;
+
     align-items: center;
+
     justify-content: center;
+
+    gap: 8px;
 
     background: #ffffff;
 
     border: 1px solid #e5e7eb;
+
     border-radius: 16px;
 
     padding: 8px;
 
-    box-shadow: 0 6px 18px rgba(0,0,0,.08);
+    box-shadow:
+        0 6px 18px rgba(0,0,0,.08);
 
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
 
     position: relative;
+
     z-index: 1000;
 
-    box-sizing: border-box;
 }
 
 
 /* =========================================================
    HAMBURGUESA
+   OCULTA EN ORDENADOR
 ========================================================= */
 
 .menu-hamburguesa {
 
     display: none;
 
-    border: 0;
-
-    width: 44px;
-    height: 44px;
-
-    align-items: center;
-    justify-content: center;
-
-    border-radius: 12px;
-
-    background: #f1f5f9;
-
-    color: #334155;
-
-    font-size: 26px;
-    line-height: 1;
-
-    cursor: pointer;
-
-    padding: 0;
-
-    box-sizing: border-box;
 }
 
 
 /* =========================================================
-   MENÚ NORMAL
+   MENÚ NORMAL — ORDENADOR
 ========================================================= */
 
 .menu-contenido {
@@ -981,50 +972,39 @@ line-height:1.25;
     display: flex;
 
     align-items: center;
+
     justify-content: center;
 
-    gap: 6px;
+    gap: 8px;
 
-    width: auto;
 }
 
-
-/* ENLACES Y BOTONES */
 
 .menu-contenido > a,
 .menu-contenido .dropdown-btn {
 
-    display: flex;
+    border: none;
 
-    align-items: center;
-
-    justify-content: center;
-
-    border: 0;
-
-    background: transparent;
+    background: none;
 
     padding: 10px 14px;
 
     border-radius: 10px;
 
-    color: #334155;
+    text-decoration: none;
 
-    font-family: inherit;
+    color: #334155;
 
     font-size: .9rem;
 
     font-weight: 600;
 
-    text-decoration: none;
-
     cursor: pointer;
-
-    box-sizing: border-box;
 
     transition:
         background .2s ease,
         color .2s ease;
+
 }
 
 
@@ -1039,7 +1019,7 @@ line-height:1.25;
 
 
 /* =========================================================
-   DESPLEGABLE
+   DESPLEGABLES — ORDENADOR
 ========================================================= */
 
 .menu-dropdown {
@@ -1062,13 +1042,13 @@ line-height:1.25;
 
     position: absolute;
 
-    top: calc(100% + 5px);
+    top: calc(100% + 4px);
 
     left: 50%;
 
     transform: translateX(-50%);
 
-    width: 180px;
+    min-width: 170px;
 
     padding: 6px;
 
@@ -1078,9 +1058,10 @@ line-height:1.25;
 
     border-radius: 12px;
 
-    box-shadow: 0 10px 25px rgba(0,0,0,.12);
+    box-shadow:
+        0 10px 25px rgba(0,0,0,.12);
 
-    box-sizing: border-box;
+    z-index: 2000;
 
 }
 
@@ -1091,17 +1072,17 @@ line-height:1.25;
 
     width: 100%;
 
-    padding: 9px 12px;
+    box-sizing: border-box;
+
+    padding: 9px 10px;
 
     border-radius: 8px;
 
-    color: #334155;
-
     text-decoration: none;
 
-    font-size: .85rem;
+    color: #334155;
 
-    box-sizing: border-box;
+    font-size: .85rem;
 
 }
 
@@ -1115,7 +1096,7 @@ line-height:1.25;
 }
 
 
-/* ORDENADOR */
+/* SOLO ORDENADOR */
 
 @media (min-width: 769px) {
 
@@ -1130,44 +1111,110 @@ line-height:1.25;
 
 /* =========================================================
    MÓVIL
+   MENÚ FLOTANTE
 ========================================================= */
 
 @media (max-width: 768px) {
 
+
+    /* -----------------------------------------------------
+       LA BARRA DEL MENÚ DESAPARECE
+       NO OCUPA ESPACIO
+    ----------------------------------------------------- */
+
     .menu {
 
-        width: 94%;
+        position: fixed;
 
-        margin-bottom: 15px;
+        top: 14px;
 
-        justify-content: flex-start;
+        left: 14px;
 
-        padding: 6px;
+        width: auto;
+
+        height: auto;
+
+        margin: 0;
+
+        padding: 0;
+
+        background: transparent;
+
+        border: none;
+
+        box-shadow: none;
+
+        z-index: 99999;
 
     }
 
 
-    /* MOSTRAR HAMBURGUESA */
+    /* -----------------------------------------------------
+       BOTÓN HAMBURGUESA
+    ----------------------------------------------------- */
 
     .menu-hamburguesa {
 
         display: flex;
 
+        align-items: center;
+
+        justify-content: center;
+
+        width: 46px;
+
+        height: 46px;
+
+        padding: 0;
+
+        border: 1px solid #e2e8f0;
+
+        border-radius: 14px;
+
+        background: rgba(255,255,255,.96);
+
+        color: #334155;
+
+        box-shadow:
+            0 6px 20px rgba(0,0,0,.14);
+
+        font-size: 25px;
+
+        line-height: 1;
+
+        cursor: pointer;
+
+        transition:
+            background .2s ease,
+            color .2s ease,
+            transform .2s ease;
+
+        -webkit-tap-highlight-color: transparent;
+
     }
 
 
-    /* BOTÓN ACTIVO */
+    .menu-hamburguesa:active {
+
+        transform: scale(.94);
+
+    }
+
 
     .menu-hamburguesa.activo {
 
         background: #2563eb;
+
+        border-color: #2563eb;
 
         color: #ffffff;
 
     }
 
 
-    /* MENÚ CERRADO */
+    /* -----------------------------------------------------
+       MENÚ DESPLEGADO
+    ----------------------------------------------------- */
 
     .menu-contenido {
 
@@ -1175,13 +1222,17 @@ line-height:1.25;
 
         position: absolute;
 
-        top: calc(100% + 6px);
+        top: 54px;
 
         left: 0;
 
         width: 250px;
 
-        max-width: calc(100vw - 30px);
+        max-height: calc(100vh - 80px);
+
+        overflow-y: auto;
+
+        box-sizing: border-box;
 
         padding: 8px;
 
@@ -1193,20 +1244,23 @@ line-height:1.25;
 
         gap: 3px;
 
-        background: #ffffff;
+        background: rgba(255,255,255,.98);
 
-        border: 1px solid #e5e7eb;
+        border: 1px solid #e2e8f0;
 
-        border-radius: 16px;
+        border-radius: 18px;
 
-        box-shadow: 0 15px 35px rgba(0,0,0,.16);
+        box-shadow:
+            0 18px 45px rgba(0,0,0,.18);
 
-        box-sizing: border-box;
+        backdrop-filter: blur(12px);
+
+        -webkit-backdrop-filter: blur(12px);
 
     }
 
 
-    /* MENÚ ABIERTO */
+    /* ABIERTO */
 
     .menu-contenido.menu-abierto {
 
@@ -1215,14 +1269,18 @@ line-height:1.25;
     }
 
 
-    /* ENLACES */
+    /* -----------------------------------------------------
+       ENLACES
+    ----------------------------------------------------- */
 
     .menu-contenido > a,
     .menu-contenido .dropdown-btn {
 
         width: 100%;
 
-        min-height: 42px;
+        min-height: 44px;
+
+        box-sizing: border-box;
 
         display: flex;
 
@@ -1230,13 +1288,15 @@ line-height:1.25;
 
         justify-content: flex-start;
 
-        padding: 10px 12px;
+        padding: 10px 13px;
 
-        border-radius: 10px;
+        border: none;
 
-        color: #334155;
+        border-radius: 11px;
 
         background: transparent;
+
+        color: #334155;
 
         text-decoration: none;
 
@@ -1244,22 +1304,26 @@ line-height:1.25;
 
         font-weight: 600;
 
+        line-height: 1.2;
+
         text-align: left;
 
     }
 
 
-    .menu-contenido > a:hover,
-    .menu-contenido .dropdown-btn:hover {
+    .menu-contenido > a:active,
+    .menu-contenido .dropdown-btn:active {
 
-        background: #f1f5f9;
+        background: #eff6ff;
 
         color: #2563eb;
 
     }
 
 
-    /* DESPLEGABLE */
+    /* -----------------------------------------------------
+       DROPDOWN MÓVIL
+    ----------------------------------------------------- */
 
     .menu-dropdown {
 
@@ -1274,23 +1338,25 @@ line-height:1.25;
 
         position: static;
 
-        transform: none;
-
         width: 100%;
+
+        min-width: 0;
+
+        box-sizing: border-box;
 
         margin: 2px 0 4px;
 
         padding: 4px;
 
+        transform: none;
+
         background: #f8fafc;
 
         border: 1px solid #eef2f7;
 
-        border-radius: 10px;
+        border-radius: 11px;
 
         box-shadow: none;
-
-        box-sizing: border-box;
 
     }
 
@@ -1304,7 +1370,7 @@ line-height:1.25;
     }
 
 
-    /* ENLACES DE LOS TEMAS */
+    /* ENLACES INTERNOS */
 
     .menu-dropdown .dropdown-content a {
 
@@ -1312,7 +1378,11 @@ line-height:1.25;
 
         width: 100%;
 
+        box-sizing: border-box;
+
         padding: 9px 12px;
+
+        border-radius: 8px;
 
         color: #475569;
 
@@ -1322,27 +1392,20 @@ line-height:1.25;
 
         font-weight: 500;
 
-        border-radius: 8px;
-
-        box-sizing: border-box;
-
     }
 
 
-    .menu-dropdown .dropdown-content a:hover {
+    .menu-dropdown .dropdown-content a:active {
 
-        background: #e2e8f0;
+        background: #e0edff;
 
         color: #2563eb;
 
     }
 
 
-    /*
-       IMPORTANTE:
-       En móvil no usamos hover para abrir
-       los desplegables.
-    */
+    /* IMPORTANTE:
+       NO usar hover para abrir dropdown en móvil */
 
     .menu-dropdown:hover .dropdown-content {
 
@@ -1361,31 +1424,34 @@ line-height:1.25;
 
 
 /* =========================================================
-   MÓVILES PEQUEÑOS
+   MÓVILES MUY PEQUEÑOS
 ========================================================= */
 
-@media (max-width: 480px) {
+@media (max-width: 380px) {
 
     .menu {
 
-        width: 94%;
+        top: 10px;
+
+        left: 10px;
 
     }
 
 
     .menu-hamburguesa {
 
-        width: 42px;
-        height: 42px;
+        width: 43px;
 
-        font-size: 24px;
+        height: 43px;
+
+        font-size: 23px;
 
     }
 
 
     .menu-contenido {
 
-        width: 240px;
+        width: 235px;
 
     }
 

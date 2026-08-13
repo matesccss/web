@@ -1,33 +1,55 @@
 <nav class="menu">
 
-    <!-- HAMBURGUESA -->
+    <!-- BOTÓN HAMBURGUESA -->
+
     <button
         class="menu-hamburguesa"
         id="menuHamburguesa"
         type="button"
         aria-label="Abrir menú"
         aria-expanded="false">
+
         ☰
+
     </button>
 
 
-    <!-- MENÚ -->
-    <div class="menu-contenido" id="menuContenido">
+    <!-- CONTENIDO DEL MENÚ -->
 
-        <a href="index.html">🏠 Inicio</a>
+    <div
+        class="menu-contenido"
+        id="menuContenido">
+
+
+        <!-- INICIO -->
+
+        <a href="index.html">
+            🏠 Inicio
+        </a>
+
+
+        <!-- ENTREGAS -->
 
         <a
             href="https://accounts.google.com/AccountChooser?continue=https://script.google.com/a/macros/g.educaand.es/s/AKfycbxHgTgZREPTg4a2gfi1Yx1B_kc4OnKDFsuaprH3JRdDZoyebyEu9oWwpw2aquCw6zf76Q/exec"
-            target="_blank">
+            target="_blank"
+            rel="noopener">
+
             📤 Entregas
+
         </a>
 
 
         <!-- CCSS I -->
+
         <div class="menu-dropdown">
 
-            <button class="dropdown-btn" type="button">
+            <button
+                class="dropdown-btn"
+                type="button">
+
                 📘 CCSS I <span>▾</span>
+
             </button>
 
             <div class="dropdown-content">
@@ -49,10 +71,15 @@
 
 
         <!-- CCSS II -->
+
         <div class="menu-dropdown">
 
-            <button class="dropdown-btn" type="button">
+            <button
+                class="dropdown-btn"
+                type="button">
+
                 📕 CCSS II <span>▾</span>
+
             </button>
 
             <div class="dropdown-content">
@@ -70,91 +97,27 @@
         </div>
 
 
-        <a href="cumpleanos.html">🎂 Cumpleaños</a>
+        <!-- CUMPLEAÑOS -->
 
-        <a href="juegos.html">🎮 Juegos</a>
+        <a href="cumpleanos.html">
+            🎂 Cumpleaños
+        </a>
 
-        <a href="reels.html">🎬 Reels</a>
+
+        <!-- JUEGOS -->
+
+        <a href="juegos.html">
+            🎮 Juegos
+        </a>
+
+
+        <!-- REELS -->
+
+        <a href="reels.html">
+            🎬 Reels
+        </a>
+
 
     </div>
 
 </nav>
-
-
-<script>
-
-(function () {
-
-    function iniciarMenu() {
-
-        const boton =
-            document.getElementById("menuHamburguesa");
-
-        const menu =
-            document.getElementById("menuContenido");
-
-        if (!boton || !menu) return;
-
-
-        /* HAMBURGUESA */
-
-        boton.addEventListener("click", function (event) {
-
-            event.stopPropagation();
-
-            const abierto =
-                menu.classList.toggle("menu-abierto");
-
-            boton.classList.toggle("activo", abierto);
-
-            boton.setAttribute(
-                "aria-expanded",
-                abierto
-            );
-
-        });
-
-
-        /* DESPLEGABLES */
-
-        const desplegables =
-            menu.querySelectorAll(".dropdown-btn");
-
-
-        desplegables.forEach(function (botonDropdown) {
-
-            botonDropdown.addEventListener(
-                "click",
-                function (event) {
-
-                    if (window.innerWidth > 768) return;
-
-                    event.preventDefault();
-                    event.stopPropagation();
-
-                    const padre =
-                        botonDropdown.parentElement;
-
-                    padre.classList.toggle("abierto");
-
-                }
-            );
-
-        });
-
-    }
-
-
-    /*
-       IMPORTANTE:
-
-       menu.html se carga mediante fetch(),
-       por lo que DOMContentLoaded ya puede
-       haber ocurrido cuando este script se ejecuta.
-    */
-
-    iniciarMenu();
-
-})();
-
-</script>
