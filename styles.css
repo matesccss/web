@@ -909,30 +909,55 @@ line-height:1.25;
 
 }
 
-/* =========================
+/* =========================================================
    MENÚ PRINCIPAL
-   ========================= */
+========================================================= */
 
 .menu{
   width:92%;
   margin:0 auto 20px;
+
   display:flex;
   align-items:center;
   justify-content:center;
   gap:8px;
 
   background:#ffffff;
+
   border:1px solid #e5e7eb;
   border-radius:16px;
+
   padding:8px;
 
   box-shadow:0 6px 18px rgba(0,0,0,.08);
 
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+
+  position:relative;
+  z-index:1000;
 }
 
-.menu a,
-.menu button{
+
+/* =========================================================
+   MENÚ NORMAL — ORDENADOR
+========================================================= */
+
+.menu-hamburguesa{
+  display:none;
+}
+
+
+.menu-contenido{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+}
+
+
+.menu-contenido > a,
+.menu-contenido .dropdown-btn{
+
   border:none;
   background:none;
 
@@ -941,6 +966,7 @@ line-height:1.25;
   border-radius:10px;
 
   text-decoration:none;
+
   color:#334155;
 
   font-size:.9rem;
@@ -951,23 +977,36 @@ line-height:1.25;
   transition:.2s;
 }
 
-.menu a:hover,
-.menu button:hover{
+
+.menu-contenido > a:hover,
+.menu-contenido .dropdown-btn:hover{
+
   background:#f1f5f9;
   color:#2563eb;
+
 }
 
 
-/* DESPLEGABLE */
+/* =========================================================
+   DESPLEGABLES — ORDENADOR
+========================================================= */
 
 .menu-dropdown{
   position:relative;
 }
 
+
+.dropdown-btn{
+  white-space:nowrap;
+}
+
+
 .dropdown-content{
+
   display:none;
 
   position:absolute;
+
   top:100%;
   left:50%;
 
@@ -978,6 +1017,7 @@ line-height:1.25;
   background:#ffffff;
 
   border:1px solid #e5e7eb;
+
   border-radius:12px;
 
   box-shadow:0 10px 25px rgba(0,0,0,.12);
@@ -985,52 +1025,275 @@ line-height:1.25;
   padding:6px;
 
   z-index:1000;
+
 }
+
 
 .dropdown-content a{
+
   display:block;
+
   width:100%;
+
   box-sizing:border-box;
+
+  padding:9px 10px;
+
+  border-radius:8px;
+
+  text-decoration:none;
+
+  color:#334155;
+
+  font-size:.85rem;
+
 }
+
+
+.dropdown-content a:hover{
+
+  background:#f1f5f9;
+  color:#2563eb;
+
+}
+
 
 .menu-dropdown:hover .dropdown-content{
+
   display:block;
+
 }
 
 
-/* MÓVIL */
+/* =========================================================
+   TABLET / MÓVIL — HAMBURGUESA
+========================================================= */
 
 @media(max-width:768px){
 
   .menu{
+
     width:94%;
-    flex-wrap:wrap;
-    gap:4px;
+
+    justify-content:flex-start;
+
     padding:6px;
+
   }
 
-  .menu a,
-  .menu button{
-    font-size:.78rem;
-    padding:8px 9px;
+
+  /* MOSTRAR HAMBURGUESA */
+
+  .menu-hamburguesa{
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    width:44px;
+    height:44px;
+
+    border:none;
+    border-radius:12px;
+
+    background:#f8fafc;
+
+    color:#334155;
+
+    font-size:25px;
+
+    cursor:pointer;
+
+    transition:.2s ease;
+
+  }
+
+
+  .menu-hamburguesa:hover{
+
+    background:#eff6ff;
+    color:#2563eb;
+
+  }
+
+
+  .menu-hamburguesa.activo{
+
+    background:#2563eb;
+    color:#ffffff;
+
+  }
+
+
+  /* OCULTAR MENÚ */
+
+  .menu-contenido{
+
+    display:none;
+
+    position:absolute;
+
+    top:58px;
+    left:0;
+
+    width:230px;
+
+    box-sizing:border-box;
+
+    padding:8px;
+
+    flex-direction:column;
+
+    align-items:stretch;
+
+    gap:4px;
+
+    background:#ffffff;
+
+    border:1px solid #e5e7eb;
+
+    border-radius:16px;
+
+    box-shadow:0 14px 30px rgba(0,0,0,.14);
+
+  }
+
+
+  /* MOSTRAR AL PULSAR */
+
+  .menu-contenido.menu-abierto{
+
+    display:flex;
+
+  }
+
+
+  .menu-contenido > a,
+  .menu-contenido .dropdown-btn{
+
+    width:100%;
+
+    box-sizing:border-box;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:flex-start;
+
+    padding:11px 12px;
+
+    font-size:.88rem;
+
+  }
+
+
+  /* DESPLEGABLE MÓVIL */
+
+  .menu-dropdown{
+
+    width:100%;
+
+  }
+
+
+  .menu-dropdown .dropdown-content{
+
+    display:none;
+
+    position:static;
+
+    transform:none;
+
+    width:100%;
+
+    min-width:0;
+
+    margin-top:2px;
+
+    padding:4px;
+
+    box-sizing:border-box;
+
+    background:#f8fafc;
+
+    border:1px solid #eef2f7;
+
+    border-radius:10px;
+
+    box-shadow:none;
+
+  }
+
+
+  .menu-dropdown.abierto .dropdown-content{
+
+    display:block;
+
+  }
+
+
+  .dropdown-content a{
+
+    padding:9px 12px;
+
+    font-size:.82rem;
+
+  }
+
+
+  /* DESACTIVAR HOVER EN MÓVIL */
+
+  .menu-dropdown:hover .dropdown-content{
+
+    display:none;
+
+  }
+
+
+  .menu-dropdown.abierto:hover .dropdown-content{
+
+    display:block;
+
   }
 
 }
+
+
+/* =========================================================
+   MÓVIL PEQUEÑO
+========================================================= */
 
 @media(max-width:480px){
 
   .menu{
+
     width:94%;
-    justify-content:center;
+
   }
 
-  .menu a,
-  .menu button{
-    font-size:.7rem;
-    padding:7px 6px;
+
+  .menu-hamburguesa{
+
+    width:42px;
+    height:42px;
+
+    font-size:23px;
+
+  }
+
+
+  .menu-contenido{
+
+    top:56px;
+
+    width:220px;
+
   }
 
 }
+
 
 /* =========================================================
    PÁGINAS DE TEMAS — CCSS I / CCSS II

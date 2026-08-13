@@ -22,53 +22,24 @@
 
 <body>
 
-    <nav class="menu">
+    <div id="menu-container"></div>
 
-        <a href="index.html">🏠 Inicio</a>
+    <script>
 
-        <a href="https://accounts.google.com/AccountChooser?continue=https://script.google.com/a/macros/g.educaand.es/s/AKfycbxHgTgZREPTg4a2gfi1Yx1B_kc4OnKDFsuaprH3JRdDZoyebyEu9oWwpw2aquCw6zf76Q/exec"
-        target="_blank">
-        📤 Entregas
-        </a>
+    fetch("menu.html")
+        .then(response => response.text())
+        .then(html => {
 
-        <div class="menu-dropdown">
-            <button>📘 CCSS I ▾</button>
+            document.getElementById("menu-container").innerHTML = html;
 
-            <div class="dropdown-content">
-                <a href="ccss1/tema1.html">Tema 1</a>
-                <a href="ccss1/tema2.html">Tema 2</a>
-                <a href="ccss1/tema3.html">Tema 3</a>
-                <a href="ccss1/tema4.html">Tema 4</a>
-                <a href="ccss1/tema5.html">Tema 5</a>
-                <a href="ccss1/tema6.html">Tema 6</a>
-                <a href="ccss1/tema7.html">Tema 7</a>
-                <a href="ccss1/tema8.html">Tema 8</a>
-                <a href="ccss1/tema9.html">Tema 9</a>
-                <a href="ccss1/tema10.html">Tema 10</a>
-            </div>
-        </div>
+        })
+        .catch(error => {
 
-        <div class="menu-dropdown">
-            <button>📕 CCSS II ▾</button>
+            console.error("Error cargando el menú:", error);
 
-            <div class="dropdown-content">
-                <a href="ccss2/tema1.html">Tema 1</a>
-                <a href="ccss2/tema2.html">Tema 2</a>
-                <a href="ccss2/tema3.html">Tema 3</a>
-                <a href="ccss2/tema4.html">Tema 4</a>
-                <a href="ccss2/tema5.html">Tema 5</a>
-                <a href="ccss2/tema6.html">Tema 6</a>
-                <a href="ccss2/tema7.html">Tema 7</a>
-            </div>
-        </div>
+        });
 
-        <a href="cumpleanos.html">🎂 Cumpleaños</a>
-
-        <a href="juegos.html">🎮 Juegos</a>
-
-        <a href="reels.html">🎬 Reels</a>
-
-    </nav>
+    </script>
 
     <main>
 
@@ -826,12 +797,7 @@ document.addEventListener("click", async event => {
 
     if (esIOS()) {
 
-        alert(
-            "📱 Instalar Matemáticas\n\n" +
-            "1. Pulsa el botón Compartir ⬆️\n" +
-            "2. Selecciona «Añadir a pantalla de inicio»\n" +
-            "3. Pulsa «Añadir»."
-        );
+        mostrarModalIOS();
 
         return;
 
@@ -912,6 +878,540 @@ document.addEventListener("visibilitychange", () => {
     }
 
 });
+
+</script>
+
+<!-- =========================================================
+     MODAL INSTALACIÓN IPHONE
+========================================================= -->
+
+<div id="modal-ios" class="modal-ios">
+
+    <div class="modal-ios-fondo"></div>
+
+    <div class="modal-ios-caja">
+
+        <button
+            id="cerrar-modal-ios"
+            class="modal-ios-cerrar">
+            ×
+        </button>
+
+
+        <div class="modal-ios-icono">
+            📱
+        </div>
+
+
+        <h2>
+            Instala Matemáticas
+        </h2>
+
+
+        <p class="modal-ios-intro">
+            Ten la web siempre a mano en tu iPhone.
+        </p>
+
+
+        <div class="modal-ios-pasos">
+
+
+            <div class="modal-ios-paso">
+
+                <div class="modal-ios-numero">
+                    1
+                </div>
+
+                <div class="modal-ios-texto">
+
+                    <strong>
+                        Pulsa Compartir
+                    </strong>
+
+                    <span>
+                        En Safari, pulsa el botón
+                        <b>Compartir</b>
+                        ⬆️
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="modal-ios-paso">
+
+                <div class="modal-ios-numero">
+                    2
+                </div>
+
+                <div class="modal-ios-texto">
+
+                    <strong>
+                        Añadir a pantalla de inicio
+                    </strong>
+
+                    <span>
+                        Desliza hacia abajo y selecciona
+                        <b>«Añadir a pantalla de inicio»</b>.
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="modal-ios-paso">
+
+                <div class="modal-ios-numero">
+                    3
+                </div>
+
+                <div class="modal-ios-texto">
+
+                    <strong>
+                        Pulsa Añadir
+                    </strong>
+
+                    <span>
+                        Confirma pulsando
+                        <b>«Añadir»</b>.
+                    </span>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <button
+            id="cerrar-modal-ios-btn"
+            class="modal-ios-ok">
+
+            Entendido
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<style>
+
+/* =========================================================
+   MODAL IPHONE
+========================================================= */
+
+.modal-ios {
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 99999;
+
+    display: none;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 20px;
+
+}
+
+
+.modal-ios.activo {
+
+    display: flex;
+
+}
+
+
+/* FONDO */
+
+.modal-ios-fondo {
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        rgba(2, 6, 23, 0.72);
+
+    backdrop-filter:
+        blur(8px);
+
+    -webkit-backdrop-filter:
+        blur(8px);
+
+}
+
+
+/* CAJA */
+
+.modal-ios-caja {
+
+    position: relative;
+
+    width: 100%;
+
+    max-width: 420px;
+
+    padding: 32px 28px 28px;
+
+    border-radius: 26px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #ffffff,
+            #f8fafc
+        );
+
+    box-shadow:
+        0 25px 70px rgba(0, 0, 0, 0.35);
+
+    color: #0f172a;
+
+    animation:
+        aparecer-ios
+        0.25s
+        ease-out;
+
+}
+
+
+@keyframes aparecer-ios {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(20px)
+            scale(0.96);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+
+    }
+
+}
+
+
+/* CERRAR */
+
+.modal-ios-cerrar {
+
+    position: absolute;
+
+    top: 12px;
+    right: 14px;
+
+    width: 34px;
+    height: 34px;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background:
+        #f1f5f9;
+
+    color:
+        #64748b;
+
+    font-size: 25px;
+
+    line-height: 1;
+
+    cursor: pointer;
+
+}
+
+
+/* ICONO */
+
+.modal-ios-icono {
+
+    width: 64px;
+    height: 64px;
+
+    margin: 0 auto 16px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 18px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #38bdf8
+        );
+
+    font-size: 30px;
+
+    box-shadow:
+        0 10px 25px
+        rgba(37, 99, 235, 0.25);
+
+}
+
+
+/* TÍTULO */
+
+.modal-ios-caja h2 {
+
+    margin: 0;
+
+    text-align: center;
+
+    font-size: 1.5rem;
+
+}
+
+
+.modal-ios-intro {
+
+    margin: 8px 0 25px;
+
+    text-align: center;
+
+    color: #64748b;
+
+    font-size: 0.9rem;
+
+    line-height: 1.5;
+
+}
+
+
+/* PASOS */
+
+.modal-ios-pasos {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 14px;
+
+}
+
+
+.modal-ios-paso {
+
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 13px;
+
+    padding: 13px;
+
+    border-radius: 16px;
+
+    background:
+        #f8fafc;
+
+}
+
+
+.modal-ios-numero {
+
+    flex-shrink: 0;
+
+    width: 30px;
+    height: 30px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background:
+        #2563eb;
+
+    color: white;
+
+    font-weight: 700;
+
+    font-size: 0.85rem;
+
+}
+
+
+.modal-ios-texto {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 3px;
+
+}
+
+
+.modal-ios-texto strong {
+
+    font-size: 0.9rem;
+
+}
+
+
+.modal-ios-texto span {
+
+    color: #64748b;
+
+    font-size: 0.78rem;
+
+    line-height: 1.45;
+
+}
+
+
+/* BOTÓN */
+
+.modal-ios-ok {
+
+    width: 100%;
+
+    margin-top: 24px;
+
+    padding: 12px;
+
+    border: none;
+
+    border-radius: 14px;
+
+    background:
+        #2563eb;
+
+    color: white;
+
+    font-size: 0.9rem;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+}
+
+
+.modal-ios-ok:hover {
+
+    background:
+        #1d4ed8;
+
+}
+
+
+/* MÓVIL */
+
+@media (max-width: 480px) {
+
+    .modal-ios {
+
+        padding: 14px;
+
+    }
+
+
+    .modal-ios-caja {
+
+        padding:
+            28px
+            20px
+            22px;
+
+        border-radius: 23px;
+
+    }
+
+}
+
+</style>
+
+
+<script>
+
+/* =========================================================
+   ABRIR MODAL IPHONE
+========================================================= */
+
+function mostrarModalIOS() {
+
+    const modal =
+        document.getElementById("modal-ios");
+
+    if (!modal) return;
+
+    modal.classList.add("activo");
+
+}
+
+
+/* =========================================================
+   CERRAR MODAL
+========================================================= */
+
+function cerrarModalIOS() {
+
+    const modal =
+        document.getElementById("modal-ios");
+
+    if (!modal) return;
+
+    modal.classList.remove("activo");
+
+}
+
+
+/* BOTÓN X */
+
+document
+    .getElementById("cerrar-modal-ios")
+    ?.addEventListener(
+        "click",
+        cerrarModalIOS
+    );
+
+
+/* BOTÓN ENTENDIDO */
+
+document
+    .getElementById("cerrar-modal-ios-btn")
+    ?.addEventListener(
+        "click",
+        cerrarModalIOS
+    );
+
+
+/* CLIC FUERA */
+
+document
+    .querySelector(".modal-ios-fondo")
+    ?.addEventListener(
+        "click",
+        cerrarModalIOS
+    );
 
 </script>
 
