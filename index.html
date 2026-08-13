@@ -603,8 +603,6 @@ fetch("footer.html")
 
     <!-- SCRIPTS -->
 
-    <script src="app.js"></script>
-
     <script>
 
         
@@ -711,6 +709,210 @@ if ("serviceWorker" in navigator) {
             .catch(error => console.error("❌ Error registrando Service Worker:", error));
     });
 }
+</script>
+
+<script>
+
+let deferredPrompt = null;
+
+
+/* =========================================================
+   CAPTURAR INSTALACIÓN
+========================================================= */
+
+window.addEventListener("beforeinstallprompt", event => {
+
+    event.preventDefault();
+
+    deferredPrompt = event;
+
+    actualizarBotonApp();
+
+});
+
+
+/* =========================================================
+   COMPROBAR SI YA ESTÁ INSTALADA
+========================================================= */
+
+function appEstaInstalada() {
+
+    return (
+        window.matchMedia("(display-mode: standalone)").matches ||
+        window.navigator.standalone === true
+    );
+
+}
+
+
+/* =========================================================
+   DETECTAR IPHONE / IPAD
+========================================================= */
+
+function esIOS() {
+
+    return /iphone|ipad|ipod/i.test(navigator.userAgent);
+
+}
+
+
+/* =========================================================
+   ACTUALIZAR BOTÓN
+========================================================= */
+
+function actualizarBotonApp() {
+
+    const boton = document.getElementById("footer-app");
+
+    if (!boton) return;
+
+
+    /* APP YA INSTALADA */
+
+    if (appEstaInstalada()) {
+
+        boton.textContent = "✓ App instalada";
+
+        boton.style.opacity = "0.6";
+
+        boton.style.pointerEvents = "none";
+
+        return;
+
+    }
+
+
+    /* IPHONE / IPAD */
+
+    if (esIOS()) {
+
+        boton.textContent = "📱 Instalar App";
+
+        return;
+
+    }
+
+
+    /* RESTO DE DISPOSITIVOS */
+
+    boton.textContent = "📱 Instalar App";
+
+}
+
+
+/* =========================================================
+   BOTÓN DE INSTALACIÓN
+========================================================= */
+
+document.addEventListener("click", async event => {
+
+    const boton = event.target.closest("#footer-app");
+
+    if (!boton) return;
+
+    event.preventDefault();
+
+
+    /* YA ESTÁ INSTALADA */
+
+    if (appEstaInstalada()) {
+
+        return;
+
+    }
+
+
+    /* IPHONE / IPAD */
+
+    if (esIOS()) {
+
+        alert(
+            "📱 Instalar Matemáticas\n\n" +
+            "1. Pulsa el botón Compartir ⬆️\n" +
+            "2. Selecciona «Añadir a pantalla de inicio»\n" +
+            "3. Pulsa «Añadir»."
+        );
+
+        return;
+
+    }
+
+
+    /* ANDROID / ORDENADOR */
+
+    if (deferredPrompt) {
+
+        deferredPrompt.prompt();
+
+
+        const resultado =
+            await deferredPrompt.userChoice;
+
+
+        console.log(
+            "Resultado de instalación:",
+            resultado.outcome
+        );
+
+
+        deferredPrompt = null;
+
+        actualizarBotonApp();
+
+        return;
+
+    }
+
+
+    /* EL NAVEGADOR NO HA OFRECIDO INSTALACIÓN */
+
+    alert(
+        "La instalación todavía no está disponible.\n\n" +
+        "Si estás usando Chrome o Edge, abre el menú del navegador " +
+        "y busca «Instalar Matemáticas» o «Instalar aplicación»."
+    );
+
+});
+
+
+/* =========================================================
+   CUANDO LA APP SE INSTALA
+========================================================= */
+
+window.addEventListener("appinstalled", () => {
+
+    deferredPrompt = null;
+
+    actualizarBotonApp();
+
+});
+
+
+/* =========================================================
+   COMPROBAR AL CARGAR
+========================================================= */
+
+window.addEventListener("load", () => {
+
+    actualizarBotonApp();
+
+});
+
+
+/* =========================================================
+   VOLVER A LA PÁGINA
+========================================================= */
+
+document.addEventListener("visibilitychange", () => {
+
+    if (!document.hidden) {
+
+        actualizarBotonApp();
+
+    }
+
+});
+
 </script>
 
 </body>
