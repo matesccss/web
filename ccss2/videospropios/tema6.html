@@ -35,6 +35,7 @@
 
     </script>
 
+
 <!-- ==========================
      CABECERA
 =========================== -->
@@ -60,6 +61,7 @@
 <!-- ==========================
      VÍDEOS
 =========================== -->
+
 <section class="videos-tema">
 
 
@@ -76,6 +78,7 @@
         <div class="contenido">
 
             <div class="galeria-videos">
+
 
                 <!-- VIDEO 1 -->
 
@@ -110,6 +113,7 @@
 
                 </div>
 
+
             </div>
 
         </div>
@@ -125,6 +129,7 @@
 =========================== -->
 
 <style>
+
 
     /* ==========================
        CABECERA
@@ -720,11 +725,14 @@
 
 </style>
 
+
 <script>
 
 document.addEventListener("DOMContentLoaded", function () {
 
-    const secciones = document.querySelectorAll(".video-section");
+    const secciones =
+        document.querySelectorAll(".video-section");
+
 
     secciones.forEach(seccion => {
 
@@ -732,16 +740,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (!seccion.open) return;
 
+
             // Cerrar las demás secciones
+
             secciones.forEach(otra => {
 
                 if (otra !== seccion) {
+
                     otra.open = false;
+
                 }
 
             });
 
+
             // Esperar a que se complete la apertura
+
             setTimeout(() => {
 
                 const posicion =
@@ -749,9 +763,13 @@ document.addEventListener("DOMContentLoaded", function () {
                     window.scrollY -
                     20;
 
+
                 window.scrollTo({
+
                     top: posicion,
+
                     behavior: "smooth"
+
                 });
 
             }, 100);
@@ -763,3 +781,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 </script>
+
+</body>
+
+</html>
