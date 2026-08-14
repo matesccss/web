@@ -1,11 +1,4 @@
-const CACHE_NAME = "mates-cache";
-
-const ARCHIVOS_INICIALES = [
-    "./",
-    "./index.html",
-    "./manifest.json",
-    "./styles.css"
-];
+const CACHE_NAME = "mates-cache-v2";
 
 
 /* =========================================================
@@ -14,14 +7,8 @@ const ARCHIVOS_INICIALES = [
 
 self.addEventListener("install", event => {
 
-    event.waitUntil(
+    console.log("🆕 Instalando nueva versión del Service Worker");
 
-        caches.open(CACHE_NAME)
-            .then(cache => cache.addAll(ARCHIVOS_INICIALES))
-
-    );
-
-    /* Activar inmediatamente la nueva versión */
     self.skipWaiting();
 
 });
@@ -47,11 +34,15 @@ self.addEventListener("activate", event => {
                 );
 
             })
+            .then(() => {
+
+                console.log("✅ Nueva versión activada");
+
+                return self.clients.claim();
+
+            })
 
     );
-
-    /* Controlar inmediatamente las páginas abiertas */
-    self.clients.claim();
 
 });
 
@@ -62,51 +53,112 @@ self.addEventListener("activate", event => {
 
 self.addEventListener("fetch", event => {
 
-    /* Solo GET */
     if (event.request.method !== "GET") {
         return;
     }
 
 
-    /* No controlar peticiones externas */
-    if (!event.request.url.startsWith(self.location.origin)) {
+    /* No interceptar webs externas */
+
+    if (
+        !event.request.url.startsWith(
+            self.location.origin
+        )
+    ) {
+
         return;
+
     }
 
 
-    event.respondWith(
+    /*
+       HTML
+       -----------------------------------------------
+       SIEMPRE intentamos obtener la versión actual
+       de GitHub Pages.
+    */
 
-        fetch(event.request)
+    if (
+        event.request.destination === "document" ||
+        event.request.url.endsWith(".html")
+    ) {
+
+        event.respondWith(
+
+            fetch(
+                new Request(
+                    event.request,
+                    {
+                        cache: "no-store"
+                    }
+                )
+            )
 
             .then(response => {
 
-                /* Guardar la versión nueva */
-
-                const copia = response.clone();
-
-                caches.open(CACHE_NAME)
-                    .then(cache => {
-
-                        cache.put(
-                            event.request,
-                            copia
-                        );
-
-                    });
-
-                /* Mostrar SIEMPRE la versión de Internet */
                 return response;
 
             })
 
             .catch(() => {
 
-                /* Si no hay Internet,
-                   utilizar la versión guardada */
-
                 return caches.match(event.request);
 
             })
+
+        );
+
+        return;
+
+    }
+
+
+    /*
+       CSS / JS / IMÁGENES / OTROS
+       -----------------------------------------------
+       Primero Internet.
+       Si falla, usamos caché.
+    */
+
+    event.respondWith(
+
+        fetch(
+            new Request(
+                event.request,
+                {
+                    cache: "no-store"
+                }
+            )
+        )
+
+        .then(response => {
+
+            const copia =
+                response.clone();
+
+
+            caches.open(CACHE_NAME)
+                .then(cache => {
+
+                    cache.put(
+                        event.request,
+                        copia
+                    );
+
+                });
+
+
+            return response;
+
+        })
+
+        .catch(() => {
+
+            return caches.match(
+                event.request
+            );
+
+        })
 
     );
 
