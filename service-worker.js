@@ -1,16 +1,10 @@
-/* =========================================================
-   SERVICE WORKER
-========================================================= */
-
 const CACHE_NAME = "mates-cache";
 
-
-const ARCHIVOS = [
+const ARCHIVOS_INICIALES = [
     "./",
     "./index.html",
     "./manifest.json",
-    "./styles.css",
-    "./app.js"
+    "./styles.css"
 ];
 
 
@@ -23,10 +17,11 @@ self.addEventListener("install", event => {
     event.waitUntil(
 
         caches.open(CACHE_NAME)
-            .then(cache => cache.addAll(ARCHIVOS))
+            .then(cache => cache.addAll(ARCHIVOS_INICIALES))
 
     );
 
+    /* Activar inmediatamente la nueva versión */
     self.skipWaiting();
 
 });
@@ -41,11 +36,11 @@ self.addEventListener("activate", event => {
     event.waitUntil(
 
         caches.keys()
-            .then(cachesExistentes => {
+            .then(nombres => {
 
                 return Promise.all(
 
-                    cachesExistentes
+                    nombres
                         .filter(nombre => nombre !== CACHE_NAME)
                         .map(nombre => caches.delete(nombre))
 
@@ -53,9 +48,10 @@ self.addEventListener("activate", event => {
 
             })
 
-            .then(() => self.clients.claim())
-
     );
+
+    /* Controlar inmediatamente las páginas abiertas */
+    self.clients.claim();
 
 });
 
@@ -66,10 +62,17 @@ self.addEventListener("activate", event => {
 
 self.addEventListener("fetch", event => {
 
-    /*
-     * Para navegación y archivos de la web:
-     * intentar siempre obtener la versión actual.
-     */
+    /* Solo GET */
+    if (event.request.method !== "GET") {
+        return;
+    }
+
+
+    /* No controlar peticiones externas */
+    if (!event.request.url.startsWith(self.location.origin)) {
+        return;
+    }
+
 
     event.respondWith(
 
@@ -77,38 +80,29 @@ self.addEventListener("fetch", event => {
 
             .then(response => {
 
-                /*
-                 * Guardamos una copia actualizada.
-                 */
+                /* Guardar la versión nueva */
 
-                if (
-                    response &&
-                    response.status === 200 &&
-                    response.type === "basic"
-                ) {
+                const copia = response.clone();
 
-                    const copia = response.clone();
+                caches.open(CACHE_NAME)
+                    .then(cache => {
 
-                    caches.open(CACHE_NAME)
-                        .then(cache => {
-                            cache.put(
-                                event.request,
-                                copia
-                            );
-                        });
+                        cache.put(
+                            event.request,
+                            copia
+                        );
 
-                }
+                    });
 
+                /* Mostrar SIEMPRE la versión de Internet */
                 return response;
 
             })
 
             .catch(() => {
 
-                /*
-                 * Sin conexión:
-                 * utilizar la versión guardada.
-                 */
+                /* Si no hay Internet,
+                   utilizar la versión guardada */
 
                 return caches.match(event.request);
 
