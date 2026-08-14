@@ -1,6 +1,6 @@
 {
-  "name": "Mates CCSS I",
-  "short_name": "Mates CCSS I",
+  "name": "Mates CCSS",
+  "short_name": "Mates CCSS",
   "description": "Web de Matemáticas",
   "start_url": "./index.html",
   "display": "standalone",
