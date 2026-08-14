@@ -99,7 +99,10 @@
 
                 <div class="video-card">
 
-                    <!-- ORDENADOR -->
+
+                    <!-- ==================
+                         ORDENADOR
+                    =================== -->
 
                     <div class="video-container video-ordenador">
 
@@ -113,21 +116,11 @@
                     </div>
 
 
-                    <!-- MÓVIL -->
+                    <!-- ==================
+                         MÓVIL
+                    =================== -->
 
                     <div class="video-movil">
-
-                        <div class="video-movil-icono">
-                            ▶
-                        </div>
-
-                        <div class="video-movil-titulo">
-                            Tema 2 al completo
-                        </div>
-
-                        <div class="video-movil-texto">
-                            Vídeo explicativo con ejercicios
-                        </div>
 
                         <a
                             href="https://drive.google.com/file/d/1VZidirNUrHHbec7-8NIr1oQg195pO5bF/view"
@@ -141,6 +134,10 @@
 
                     </div>
 
+
+                    <!-- ==================
+                         INFORMACIÓN
+                    =================== -->
 
                     <div class="video-info">
 
@@ -194,6 +191,7 @@
 
                 <div class="video-card">
 
+
                     <div class="video-container video-ordenador">
 
                         <iframe
@@ -207,18 +205,6 @@
 
 
                     <div class="video-movil">
-
-                        <div class="video-movil-icono">
-                            ▶
-                        </div>
-
-                        <div class="video-movil-titulo">
-                            Ejercicios de diagramas de árbol
-                        </div>
-
-                        <div class="video-movil-texto">
-                            Vídeo de ejercicios
-                        </div>
 
                         <a
                             href="https://drive.google.com/file/d/1Jl_zHmAEv-7OHQ7Xxy4i8xySSVMaP7qb/view"
@@ -259,6 +245,7 @@
 
                 <div class="video-card">
 
+
                     <div class="video-container video-ordenador">
 
                         <iframe
@@ -272,18 +259,6 @@
 
 
                     <div class="video-movil">
-
-                        <div class="video-movil-icono">
-                            ▶
-                        </div>
-
-                        <div class="video-movil-titulo">
-                            Ejercicios de diagramas de árbol y propiedades
-                        </div>
-
-                        <div class="video-movil-texto">
-                            Vídeo de ejercicios
-                        </div>
 
                         <a
                             href="https://drive.google.com/file/d/1DVB15SzjKONi6LSGpOZsidEqAPlkPSJT/view"
@@ -324,6 +299,7 @@
 
                 <div class="video-card">
 
+
                     <div class="video-container video-ordenador">
 
                         <iframe
@@ -337,18 +313,6 @@
 
 
                     <div class="video-movil">
-
-                        <div class="video-movil-icono">
-                            ▶
-                        </div>
-
-                        <div class="video-movil-titulo">
-                            Ejercicios de propiedades
-                        </div>
-
-                        <div class="video-movil-texto">
-                            Vídeo de ejercicios
-                        </div>
 
                         <a
                             href="https://drive.google.com/file/d/1FG_5hIoDRHPbAVv_mTtZFySvyDCrmPK-/view"
@@ -411,6 +375,7 @@
 
                 <div class="video-card">
 
+
                     <div class="video-container video-ordenador">
 
                         <iframe
@@ -424,18 +389,6 @@
 
 
                     <div class="video-movil">
-
-                        <div class="video-movil-icono">
-                            ▶
-                        </div>
-
-                        <div class="video-movil-titulo">
-                            Algunos ejercicios de las entregas 1 y 2
-                        </div>
-
-                        <div class="video-movil-texto">
-                            Vídeo de ejercicios PAU
-                        </div>
 
                         <a
                             href="https://drive.google.com/file/d/1fdywD7w9PDZGY9DMcTH4uTrU0FrcCzqA/view"
@@ -700,8 +653,9 @@
     grid-template-columns:
         repeat(
             auto-fit,
-            minmax(320px, 1fr)
-        );
+            minmax(320px, 1fr
+        )
+    );
 
     gap: 25px;
 
@@ -801,7 +755,6 @@
 }
 
 
-
 /* ==========================
    INFORMACIÓN
 =========================== */
@@ -875,15 +828,6 @@
 
 }
 
-/* ==========================
-   VERSIÓN MÓVIL
-=========================== */
-
-.video-movil {
-
-    display: none;
-
-}
 
 
 /* ==========================
@@ -892,47 +836,7 @@
 
 .video-movil {
 
-    padding: 14px 10px;
-
-    border-radius: 10px;
-
-    background: #f0fdf4;
-
-    border:
-        1px solid rgba(0,177,64,0.2);
-
-    text-align: center;
-
-}
-
-
-.video-movil-icono {
-
     display: none;
-
-}
-
-
-.video-movil-titulo {
-
-    font-size: 0.95em;
-
-    font-weight: bold;
-
-    color: #166534;
-
-    margin-bottom: 4px;
-
-}
-
-
-.video-movil-texto {
-
-    font-size: 0.75em;
-
-    color: #64748b;
-
-    margin-bottom: 10px;
 
 }
 
@@ -1082,39 +986,57 @@
     }
 
 
-    /* Mostrar botón móvil */
+    /* Mostrar únicamente el botón */
 
     .video-movil {
 
         display: block;
+
+        padding: 8px 4px;
+
+        text-align: center;
+
+        background: transparent;
+
+        border: none;
+
+    }
+
+
+    .video-info {
+
+        padding: 0;
 
     }
 
 
     .video-info h3 {
 
-        font-size: 0.85em;
+        display: none;
 
     }
 
 
     .video-info p {
 
-        font-size: 0.75em;
+        display: none;
 
     }
 
 
-    .btn-drive {
-
-        padding: 7px 12px;
-
-        font-size: 0.8em;
-
-    }
-    
     .video-info .btn-drive {
-         display: none;
+
+        display: none;
+
+    }
+
+
+    .btn-video-movil {
+
+        padding: 8px 18px;
+
+        font-size: 0.82em;
+
     }
 
 }
