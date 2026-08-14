@@ -16,6 +16,10 @@
 <body>
 
 
+    <!-- ==========================
+         MENÚ
+    =========================== -->
+
     <div id="menu-container"></div>
 
     <script>
@@ -36,99 +40,140 @@
     </script>
 
 
-<!-- ==========================
-     CABECERA
-=========================== -->
 
-<section class="videos-header videos-propios">
+    <!-- ==========================
+         CABECERA
+    =========================== -->
 
-    <div class="videos-title">
+    <section class="videos-header videos-propios">
 
-        <span class="videos-icon">▶</span>
+        <div class="videos-title">
 
-        <div>
-            <span class="videos-label">TEMA 6</span>
-            <h1>Vídeos propios · Estudio global de funciones</h1>
-        </div>
+            <span class="videos-icon">▶</span>
 
-    </div>
+            <div>
 
-    <p>Vídeos explicativos, ejercicios y preparación PAU</p>
+                <span class="videos-label">
+                    TEMA 6
+                </span>
 
-</section>
-
-
-<!-- ==========================
-     VÍDEOS
-=========================== -->
-
-<section class="videos-tema">
-
-
-    <!-- ======================
-         ASÍNTOTAS
-    ======================= -->
-
-    <details class="video-section">
-
-        <summary>
-            🔲 Asíntotas
-        </summary>
-
-        <div class="contenido">
-
-            <div class="galeria-videos">
-
-
-                <!-- VIDEO 1 -->
-
-                <div class="video-card">
-
-                    <div class="video-container">
-
-                        <iframe
-                            src="https://drive.google.com/file/d/1Ael2zrs9fsP7GN8-boA7MNeTRl3PwSrK/preview"
-                            title="Asíntotas. Teoría y ejercicios"
-                            allow="autoplay"
-                            allowfullscreen>
-                        </iframe>
-
-                    </div>
-
-                    <div class="video-info">
-
-                        <h3>✍️ Teoría y ejercicios</h3>
-
-                        <a
-                            href="https://drive.google.com/file/d/1Ael2zrs9fsP7GN8-boA7MNeTRl3PwSrK/view"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="btn-drive">
-
-                            ▶️ Abrir en Drive
-
-                        </a>
-
-                    </div>
-
-                </div>
-
+                <h1>
+                    Vídeos propios · Estudio global de funciones
+                </h1>
 
             </div>
 
         </div>
 
-    </details>
+        <p>
+            Vídeos explicativos, ejercicios y preparación PAU
+        </p>
+
+    </section>
 
 
-</section>
+
+    <!-- ==========================
+         VÍDEOS
+    =========================== -->
+
+    <section class="videos-tema">
 
 
-<!-- ==========================
-     ESTILOS
-=========================== -->
+        <!-- ======================
+             ASÍNTOTAS
+        ======================= -->
 
-<style>
+        <details class="video-section">
+
+            <summary>
+                🔲 Asíntotas
+            </summary>
+
+            <div class="contenido">
+
+                <div class="galeria-videos">
+
+
+                    <!-- VIDEO 1 -->
+
+                    <div class="video-card">
+
+
+                        <!-- VISOR ORDENADOR -->
+
+                        <div class="video-container video-ordenador">
+
+                            <iframe
+                                src="https://drive.google.com/file/d/1Ael2zrs9fsP7GN8-boA7MNeTRl3PwSrK/preview"
+                                title="Asíntotas. Teoría y ejercicios"
+                                allow="autoplay"
+                                allowfullscreen>
+                            </iframe>
+
+                        </div>
+
+
+
+                        <!-- INFORMACIÓN -->
+
+                        <div class="video-info">
+
+                            <h3>
+                                ✍️ Teoría y ejercicios
+                            </h3>
+
+                            <p>
+                                Vídeo explicativo de asíntotas
+                            </p>
+
+
+                            <!-- BOTÓN MÓVIL -->
+
+                            <a
+                                href="https://drive.google.com/file/d/1Ael2zrs9fsP7GN8-boA7MNeTRl3PwSrK/view"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="btn-video-movil">
+
+                                ▶️ Ver vídeo
+
+                            </a>
+
+
+                            <!-- BOTÓN ORDENADOR -->
+
+                            <a
+                                href="https://drive.google.com/file/d/1Ael2zrs9fsP7GN8-boA7MNeTRl3PwSrK/view"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="btn-drive">
+
+                                ▶️ Abrir en Drive
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </details>
+
+
+    </section>
+
+
+
+    <!-- ==========================
+         ESTILOS
+    =========================== -->
+
+    <style>
 
 
     /* ==========================
@@ -723,64 +768,70 @@
 
     }
 
-</style>
+    </style>
 
 
-<script>
 
-document.addEventListener("DOMContentLoaded", function () {
+    <!-- ==========================
+         JAVASCRIPT
+    =========================== -->
 
-    const secciones =
-        document.querySelectorAll(".video-section");
+    <script>
 
+    document.addEventListener("DOMContentLoaded", function () {
 
-    secciones.forEach(seccion => {
-
-        seccion.addEventListener("toggle", function () {
-
-            if (!seccion.open) return;
+        const secciones =
+            document.querySelectorAll(".video-section");
 
 
-            // Cerrar las demás secciones
+        secciones.forEach(seccion => {
 
-            secciones.forEach(otra => {
+            seccion.addEventListener("toggle", function () {
 
-                if (otra !== seccion) {
-
-                    otra.open = false;
-
-                }
-
-            });
+                if (!seccion.open) return;
 
 
-            // Esperar a que se complete la apertura
+                /* Cerrar las demás */
 
-            setTimeout(() => {
+                secciones.forEach(otra => {
 
-                const posicion =
-                    seccion.getBoundingClientRect().top +
-                    window.scrollY -
-                    20;
+                    if (otra !== seccion) {
 
+                        otra.open = false;
 
-                window.scrollTo({
-
-                    top: posicion,
-
-                    behavior: "smooth"
+                    }
 
                 });
 
-            }, 100);
+
+                /* Esperar a que se complete la apertura */
+
+                setTimeout(() => {
+
+                    const posicion =
+                        seccion.getBoundingClientRect().top +
+                        window.scrollY -
+                        20;
+
+
+                    window.scrollTo({
+
+                        top: posicion,
+
+                        behavior: "smooth"
+
+                    });
+
+                }, 100);
+
+            });
 
         });
 
     });
 
-});
+    </script>
 
-</script>
 
 </body>
 
