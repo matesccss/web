@@ -1,7 +1,7 @@
 {
   "name": "Matemáticas · IES El Molinillo",
-  "short_name": "Mates Molinillo",
-  "description": "Web de Matemáticas del IES El Molinillo",
+  "short_name": "Mates CCSS",
+  "description": "Web de Matemáticas",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#ffffff",
