@@ -407,514 +407,597 @@
 
     <style>
 
-        /* ==========================
-           CABECERA
-        =========================== */
+    /* ==========================
+       CABECERA
+    =========================== */
+
+    .videos-header {
+
+        max-width: 1100px;
+
+        margin: 25px auto 30px;
+
+        padding: 25px;
+
+        border-radius: 18px;
+
+        background: #fff;
+
+        box-shadow:
+            0 4px 14px rgba(0,0,0,0.12);
+
+        border:
+            1px solid rgba(0,177,64,0.18);
+
+    }
+
+
+    .videos-title {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 15px;
+
+    }
+
+
+    .videos-icon {
+
+        width: 55px;
+        height: 55px;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 50%;
+
+        background:
+            linear-gradient(
+                135deg,
+                #00ff88,
+                #00b140
+            );
+
+        color: #111;
+
+        font-size: 24px;
+
+        font-weight: bold;
+
+        box-shadow:
+            0 4px 12px rgba(0,177,64,0.3);
+
+    }
+
+
+    .videos-label {
+
+        display: block;
+
+        color: #00b140;
+
+        font-size: 0.8em;
+
+        font-weight: bold;
+
+        letter-spacing: 2px;
+
+    }
+
+
+    .videos-title h1 {
+
+        margin: 2px 0 0;
+
+        color: #00b140;
+
+    }
+
+
+    .videos-header > p {
+
+        margin: 15px 0 0;
+
+        color: #64748b;
+
+    }
+
+
+    .videos-propios::after {
+
+        background: #4ade80 !important;
+
+    }
+
+
+
+    /* ==========================
+       BLOQUES
+    =========================== */
+
+    .video-section {
+
+        margin: 18px auto;
+
+        max-width: 1100px;
+
+        border-radius: 14px;
+
+        background: #fff;
+
+        box-shadow:
+            0 4px 14px rgba(0,0,0,0.15);
+
+        overflow: hidden;
+
+    }
+
+
+    .video-section summary {
+
+        cursor: pointer;
+
+        font-size: 1.2em;
+
+        font-weight: bold;
+
+        padding: 12px 18px;
+
+        background:
+            linear-gradient(
+                135deg,
+                #00ff88,
+                #00b140
+            );
+
+        color: #111;
+
+        outline: none;
+
+        user-select: none;
+
+        transition:
+            background 0.3s ease;
+
+    }
+
+
+    .video-section summary:hover {
+
+        background:
+            linear-gradient(
+                135deg,
+                #00b140,
+                #00ff88
+            );
+
+    }
+
+
+
+    /* ==========================
+       CONTENIDO
+    =========================== */
+
+    .contenido {
+
+        max-height: 0;
+
+        overflow: hidden;
+
+        transition:
+            max-height 0.5s ease;
+
+        padding: 0 20px;
+
+    }
+
+
+    .video-section[open] .contenido {
+
+        max-height: 5000px;
+
+        padding: 20px;
+
+    }
+
+
+
+    /* ==========================
+       GALERÍA
+    =========================== */
+
+    .galeria-videos {
+
+        display: grid;
+
+        grid-template-columns:
+            repeat(
+                auto-fit,
+                minmax(320px, 1fr)
+            );
+
+        gap: 25px;
+
+    }
+
+
+
+    /* ==========================
+       TARJETA
+    =========================== */
+
+    .video-card {
+
+        background: #f8fafc;
+
+        border-radius: 12px;
+
+        padding: 12px;
+
+        text-align: center;
+
+        width: 100%;
+
+        border:
+            1.5px solid rgba(0,177,64,0.25);
+
+        box-shadow:
+            0 3px 10px rgba(0,0,0,0.08);
+
+        transition:
+            transform 0.3s ease,
+            box-shadow 0.3s ease;
+
+    }
+
+
+    .video-card:hover {
+
+        transform: translateY(-3px);
+
+        box-shadow:
+            0 6px 16px rgba(0,177,64,0.18);
+
+    }
+
+
+
+    /* ==========================
+       VÍDEO ORDENADOR
+    =========================== */
+
+    .video-container {
+
+        position: relative;
+
+        width: 100%;
+
+        padding-bottom: 56.25%;
+
+        height: 0;
+
+        border-radius: 8px;
+
+        overflow: hidden;
+
+        background: #000;
+
+    }
+
+
+    .video-container iframe {
+
+        position: absolute;
+
+        top: 0;
+        left: 0;
+
+        width: 100%;
+        height: 100%;
+
+        border: none;
+
+    }
+
+
+
+    /* ==========================
+       INFORMACIÓN
+    =========================== */
+
+    .video-info {
+
+        padding: 4px 2px 2px;
+
+    }
+
+
+    .video-info h3 {
+
+        font-size: 1.05em;
+
+        margin: 10px 0 6px;
+
+        color: #00b140;
+
+    }
+
+
+    .video-info p {
+
+        font-size: 0.9em;
+
+        color: #64748b;
+
+        margin: 0 0 8px;
+
+    }
+
+
+
+    /* ==========================
+       BOTÓN DRIVE
+    =========================== */
+
+    .btn-drive {
+
+        display: inline-block;
+
+        margin-top: 6px;
+
+        padding: 7px 14px;
+
+        background: #00b140;
+
+        color: #fff;
+
+        border-radius: 30px;
+
+        font-size: 0.9em;
+
+        font-weight: bold;
+
+        text-decoration: none;
+
+        transition:
+            transform 0.25s ease,
+            background 0.25s ease;
+
+    }
+
+
+    .btn-drive:hover {
+
+        background: #008f35;
+
+        transform: scale(1.05);
+
+    }
+
+
+
+    /* ==========================
+       BOTÓN VÍDEO MÓVIL
+    =========================== */
+
+    .btn-video-movil {
+
+        display: none;
+
+        padding: 8px 18px;
+
+        border-radius: 25px;
+
+        background: #00b140;
+
+        color: white;
+
+        text-decoration: none;
+
+        font-size: 0.82em;
+
+        font-weight: bold;
+
+        box-shadow:
+            0 3px 8px rgba(0,177,64,0.2);
+
+    }
+
+
+    .btn-video-movil:hover {
+
+        background: #008f35;
+
+    }
+
+
+
+    /* ==========================
+       MÓVIL
+    =========================== */
+
+    @media (max-width: 600px) {
+
 
         .videos-header {
 
-            max-width: 1100px;
-            margin: 25px auto 30px;
-            padding: 25px;
+            margin: 10px 8px 15px;
 
-            border-radius: 18px;
+            padding: 15px;
 
-            background: #fff;
-
-            box-shadow:
-                0 4px 14px rgba(0,0,0,0.12);
-
-            border: 1px solid rgba(0,177,64,0.18);
+            border-radius: 12px;
 
         }
 
 
         .videos-title {
 
-            display: flex;
-
-            align-items: center;
-
-            gap: 15px;
+            gap: 10px;
 
         }
 
 
         .videos-icon {
 
-            width: 55px;
-            height: 55px;
+            width: 40px;
+            height: 40px;
 
-            display: flex;
-
-            align-items: center;
-            justify-content: center;
-
-            border-radius: 50%;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #00ff88,
-                    #00b140
-                );
-
-            color: #111;
-
-            font-size: 24px;
-            font-weight: bold;
-
-            box-shadow:
-                0 4px 12px rgba(0,177,64,0.3);
-
-        }
-
-
-        .videos-label {
-
-            display: block;
-
-            color: #00b140;
-
-            font-size: 0.8em;
-
-            font-weight: bold;
-
-            letter-spacing: 2px;
+            font-size: 18px;
 
         }
 
 
         .videos-title h1 {
 
-            margin: 2px 0 0;
+            font-size: 1.25em;
 
-            color: #00b140;
+        }
+
+
+        .videos-label {
+
+            font-size: 0.65em;
 
         }
 
 
         .videos-header > p {
 
-            margin: 15px 0 0;
+            font-size: 0.8em;
 
-            color: #64748b;
-
-        }
-
-
-        .videos-propios::after {
-
-            background: #4ade80 !important;
+            margin-top: 10px;
 
         }
 
-
-        /* ==========================
-           BLOQUES DESPLEGABLES
-        =========================== */
 
         .video-section {
 
-            margin: 18px auto;
-
-            max-width: 1100px;
-
-            border-radius: 14px;
-
-            background: #fff;
-
-            box-shadow:
-                0 4px 14px rgba(0,0,0,0.15);
-
-            overflow: hidden;
+            margin: 8px auto;
 
         }
 
-
-        /* ==========================
-           CABECERA DEL BLOQUE
-        =========================== */
 
         .video-section summary {
 
-            cursor: pointer;
+            font-size: 0.9em;
 
-            font-size: 1.2em;
-
-            font-weight: bold;
-
-            padding: 12px 18px;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #00ff88,
-                    #00b140
-                );
-
-            color: #111;
-
-            outline: none;
-
-            user-select: none;
-
-            transition:
-                background 0.3s ease;
+            padding: 8px 10px;
 
         }
 
-
-        .video-section summary:hover {
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #00b140,
-                    #00ff88
-                );
-
-        }
-
-
-        /* ==========================
-           CONTENIDO
-        =========================== */
 
         .contenido {
 
-            max-height: 0;
-
-            overflow: hidden;
-
-            transition:
-                max-height 0.5s ease;
-
-            padding: 0 20px;
+            padding: 0 6px;
 
         }
 
 
         .video-section[open] .contenido {
 
-            max-height: 5000px;
-
-            padding: 20px;
+            padding: 10px 6px;
 
         }
 
-
-        /* ==========================
-           GALERÍA
-        =========================== */
 
         .galeria-videos {
 
-            display: grid;
+            grid-template-columns: 1fr;
 
-            grid-template-columns:
-                repeat(
-                    auto-fit,
-                    minmax(320px, 1fr)
-                );
-
-            gap: 25px;
+            gap: 10px;
 
         }
 
-
-        /* ==========================
-           TARJETA
-        =========================== */
 
         .video-card {
 
-            background: #f8fafc;
-
-            border-radius: 12px;
-
-            padding: 12px;
-
-            text-align: center;
-
-            width: 100%;
-
-            border:
-                1.5px solid rgba(0,177,64,0.25);
-
-            box-shadow:
-                0 3px 10px rgba(0,0,0,0.08);
-
-            transition:
-                transform 0.3s ease,
-                box-shadow 0.3s ease;
+            padding: 10px;
 
         }
 
 
-        .video-card:hover {
+        /* Ocultar visor de Drive */
 
-            transform: translateY(-3px);
+        .video-ordenador {
 
-            box-shadow:
-                0 6px 16px rgba(0,177,64,0.18);
-
-        }
-
-
-        /* ==========================
-           VÍDEO
-        =========================== */
-
-        .video-container {
-
-            position: relative;
-
-            width: 100%;
-
-            padding-bottom: 56.25%;
-
-            height: 0;
-
-            border-radius: 8px;
-
-            overflow: hidden;
-
-            background: #000;
+            display: none;
 
         }
 
 
-        .video-container iframe {
+        /* Mostrar botón de vídeo */
 
-            position: absolute;
-
-            top: 0;
-            left: 0;
-
-            width: 100%;
-            height: 100%;
-
-            border: none;
-
-        }
-
-
-        /* ==========================
-           INFORMACIÓN
-        =========================== */
-
-        .video-info {
-
-            padding: 4px 2px 2px;
-
-        }
-
-
-        .video-info h3 {
-
-            font-size: 1.05em;
-
-            margin: 10px 0 6px;
-
-            color: #00b140;
-
-        }
-
-
-        .video-info p {
-
-            font-size: 0.9em;
-
-            color: #64748b;
-
-            margin: 0 0 8px;
-
-        }
-
-
-        /* ==========================
-           BOTÓN DRIVE
-        =========================== */
-
-        .btn-drive {
+        .btn-video-movil {
 
             display: inline-block;
 
-            margin-top: 6px;
+        }
 
-            padding: 7px 14px;
 
-            background: #00b140;
+        /* Ocultar botón Abrir en Drive */
 
-            color: #fff;
+        .btn-drive {
 
-            border-radius: 30px;
+            display: none;
+
+        }
+
+
+        /* Títulos */
+
+        .video-info h3 {
 
             font-size: 0.9em;
 
-            font-weight: bold;
-
-            text-decoration: none;
-
-            transition:
-                transform 0.25s ease,
-                background 0.25s ease;
+            margin: 8px 0 5px;
 
         }
 
 
-        .btn-drive:hover {
+        /* Subtítulos */
 
-            background: #008f35;
+        .video-info p {
 
-            transform: scale(1.05);
+            font-size: 0.78em;
+
+            margin: 0 0 10px;
 
         }
 
 
-        /* ==========================
-           MÓVIL
-        =========================== */
+        /* Botón */
 
-        @media (max-width: 600px) {
+        .btn-video-movil {
 
-            .videos-header {
+            padding: 8px 18px;
 
-                margin: 10px 8px 15px;
-
-                padding: 15px;
-
-                border-radius: 12px;
-
-            }
-
-
-            .videos-title {
-
-                gap: 10px;
-
-            }
-
-
-            .videos-icon {
-
-                width: 40px;
-                height: 40px;
-
-                font-size: 18px;
-
-            }
-
-
-            .videos-title h1 {
-
-                font-size: 1.25em;
-
-            }
-
-
-            .videos-label {
-
-                font-size: 0.65em;
-
-            }
-
-
-            .videos-header > p {
-
-                font-size: 0.8em;
-
-                margin-top: 10px;
-
-            }
-
-
-            .video-section {
-
-                margin: 8px auto;
-
-            }
-
-
-            .video-section summary {
-
-                font-size: 0.9em;
-
-                padding: 8px 10px;
-
-            }
-
-
-            .contenido {
-
-                padding: 0 10px;
-
-            }
-
-
-            .video-section[open] .contenido {
-
-                padding: 10px;
-
-            }
-
-
-            .galeria-videos {
-
-                grid-template-columns: 1fr;
-
-                gap: 10px;
-
-            }
-
-
-            .video-card {
-
-                padding: 6px;
-
-            }
-
-
-            .video-info h3 {
-
-                font-size: 0.85em;
-
-            }
-
-
-            .video-info p {
-
-                font-size: 0.75em;
-
-            }
-
-
-            .btn-drive {
-
-                padding: 7px 12px;
-
-                font-size: 0.8em;
-
-            }
+            font-size: 0.82em;
 
         }
 
+    }
 
-        /* ==========================
-           ORDENADOR
-        =========================== */
 
-        @media (min-width: 1024px) {
 
-            .galeria-videos {
+    /* ==========================
+       ORDENADOR
+    =========================== */
 
-                grid-template-columns:
-                    repeat(2, 1fr);
+    @media (min-width: 1024px) {
 
-            }
+        .galeria-videos {
+
+            grid-template-columns:
+                repeat(2, 1fr);
 
         }
+
+    }
 
     </style>
 
