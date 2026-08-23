@@ -194,3 +194,45 @@
     </div>
 
 </nav>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    const desplegables = document.querySelectorAll(".menu-dropdown");
+
+    desplegables.forEach(dropdown => {
+
+        const boton = dropdown.querySelector(".dropdown-btn");
+
+        if (!boton) return;
+
+        boton.addEventListener("click", (e) => {
+
+            e.stopPropagation();
+
+            desplegables.forEach(otro => {
+                if (otro !== dropdown) {
+                    otro.classList.remove("abierto");
+                }
+            });
+
+            dropdown.classList.toggle("abierto");
+
+        });
+
+    });
+
+    document.addEventListener("click", (e) => {
+
+        if (!e.target.closest(".menu-dropdown")) {
+
+            desplegables.forEach(dropdown => {
+                dropdown.classList.remove("abierto");
+            });
+
+        }
+
+    });
+
+});
+</script>
