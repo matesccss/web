@@ -9,7 +9,7 @@
 
     <title>Calculadora 570SP CW</title>
 
-    <link rel="stylesheet" href="../../styles.css">
+    <link rel="stylesheet" href="../styles.css">
 
 </head>
 
@@ -602,19 +602,6 @@
         });
 
     </script>
-
-<div id="footer-container"></div>
-
-<script>
-fetch("footer.html")
-    .then(response => response.text())
-    .then(data => {
-        document.getElementById("footer-container").innerHTML = data;
-    })
-    .catch(error => {
-        console.error("Error cargando el footer:", error);
-    });
-</script>
 
 </body>
 
