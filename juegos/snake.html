@@ -1235,43 +1235,45 @@
             let size;
 
 
-            if (
-                window.innerWidth <= 600
-            ) {
+            if (window.innerWidth <= 600) {
 
-                size =
-                    Math.min(
-                        window.innerWidth * 0.82,
-                        330
-                    );
+                size = Math.min(
+                    window.innerWidth * 0.82,
+                    330
+                );
 
             } else {
 
-                size =
-                    Math.min(
-                        window.innerWidth * 0.55,
-                        400
-                    );
+                size = Math.min(
+                    window.innerWidth * 0.55,
+                    400
+                );
 
             }
 
 
-            box =
-                Math.floor(
-                    size / CELLS
-                );
+            /* Tamaño exacto de cada casilla */
+
+            box = Math.floor(size / CELLS);
 
 
-            canvas.width =
-                box * CELLS;
+            /* Tamaño real del tablero */
+
+            const realSize = box * CELLS;
 
 
-            canvas.height =
-                box * CELLS;
+            canvas.width = realSize;
+            canvas.height = realSize;
 
 
-            maxCells =
-                CELLS * CELLS;
+            /* Hacemos que el tamaño visual coincida
+            exactamente con el tamaño interno */
+
+            canvas.style.width = realSize + "px";
+            canvas.style.height = realSize + "px";
+
+
+            maxCells = CELLS * CELLS;
 
         }
 
@@ -1407,154 +1409,47 @@
 
         function draw() {
 
-            direction =
-                nextDirection;
+            /* =====================================================
+            NUEVA DIRECCIÓN
+            ===================================================== */
+
+            direction = nextDirection;
 
 
-            /* FONDO */
+            /* =====================================================
+            CALCULAR NUEVA CABEZA
+            ===================================================== */
 
-            ctx.fillStyle =
-                "#000";
-
-            ctx.fillRect(
-                0,
-                0,
-                canvas.width,
-                canvas.height
-            );
+            let snakeX = snake[0].x;
+            let snakeY = snake[0].y;
 
 
-            /* SERPIENTE */
-
-            for (
-                let i = 0;
-                i < snake.length;
-                i++
-            ) {
-
-                ctx.fillStyle =
-                    i === 0
-                        ? "lime"
-                        : "white";
-
-
-                ctx.fillRect(
-                    snake[i].x,
-                    snake[i].y,
-                    box,
-                    box
-                );
-
-
-                ctx.strokeStyle =
-                    "#000";
-
-
-                ctx.strokeRect(
-                    snake[i].x,
-                    snake[i].y,
-                    box,
-                    box
-                );
-
-            }
-
-
-            /* COMIDA */
-
-            ctx.fillStyle =
-                "red";
-
-
-            ctx.fillRect(
-                food.x,
-                food.y,
-                box,
-                box
-            );
-
-
-            /* NUEVA CABEZA */
-
-            let snakeX =
-                snake[0].x;
-
-            let snakeY =
-                snake[0].y;
-
-
-            if (
-                direction === "LEFT"
-            ) {
-
+            if (direction === "LEFT") {
                 snakeX -= box;
-
             }
 
-
-            if (
-                direction === "UP"
-            ) {
-
+            if (direction === "UP") {
                 snakeY -= box;
-
             }
 
-
-            if (
-                direction === "RIGHT"
-            ) {
-
+            if (direction === "RIGHT") {
                 snakeX += box;
-
             }
 
-
-            if (
-                direction === "DOWN"
-            ) {
-
+            if (direction === "DOWN") {
                 snakeY += box;
-
             }
 
 
             const newHead = {
-
                 x: snakeX,
-
                 y: snakeY
-
             };
 
 
-            /* COMER */
-
-            if (
-
-                snakeX === food.x &&
-
-                snakeY === food.y
-
-            ) {
-
-                score++;
-
-
-                scoreBox.textContent =
-                    score;
-
-
-                placeFood();
-
-            } else {
-
-                snake.pop();
-
-            }
-
-
-            /* COLISIÓN */
+            /* =====================================================
+            COMPROBAR COLISIÓN
+            ===================================================== */
 
             if (
 
@@ -1578,20 +1473,109 @@
                     score
                 );
 
-
                 return;
 
             }
 
 
-            /* AÑADIR CABEZA */
+            /* =====================================================
+            COMER
+            ===================================================== */
 
-            snake.unshift(
-                newHead
+            const comiendo =
+                snakeX === food.x &&
+                snakeY === food.y;
+
+
+            if (comiendo) {
+
+                score++;
+
+                scoreBox.textContent = score;
+
+                placeFood();
+
+            } else {
+
+                snake.pop();
+
+            }
+
+
+            /* =====================================================
+            AÑADIR NUEVA CABEZA
+            ===================================================== */
+
+            snake.unshift(newHead);
+
+
+            /* =====================================================
+            DIBUJAR
+            ===================================================== */
+
+            ctx.fillStyle = "#000";
+
+            ctx.fillRect(
+                0,
+                0,
+                canvas.width,
+                canvas.height
             );
 
 
-            /* VICTORIA */
+            /* =====================================================
+            DIBUJAR SERPIENTE
+            ===================================================== */
+
+            for (
+                let i = 0;
+                i < snake.length;
+                i++
+            ) {
+
+                ctx.fillStyle =
+                    i === 0
+                        ? "lime"
+                        : "white";
+
+
+                ctx.fillRect(
+                    snake[i].x,
+                    snake[i].y,
+                    box,
+                    box
+                );
+
+
+                ctx.strokeStyle = "#000";
+
+                ctx.strokeRect(
+                    snake[i].x,
+                    snake[i].y,
+                    box,
+                    box
+                );
+
+            }
+
+
+            /* =====================================================
+            DIBUJAR COMIDA
+            ===================================================== */
+
+            ctx.fillStyle = "red";
+
+            ctx.fillRect(
+                food.x,
+                food.y,
+                box,
+                box
+            );
+
+
+            /* =====================================================
+            VICTORIA
+            ===================================================== */
 
             if (
                 snake.length >= maxCells
