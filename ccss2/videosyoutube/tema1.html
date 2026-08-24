@@ -21,20 +21,39 @@
 
     <script>
 
-    fetch("../../menu.html")
-        .then(response => response.text())
-        .then(html => {
+        fetch("../menu.html")
+            .then(response => response.text())
+            .then(html => {
 
-            document.getElementById("menu-container").innerHTML = html;
+                document.getElementById("menu-container").innerHTML = html;
 
-        })
-        .catch(error => {
+                document
+                    .querySelectorAll("#menu-container a[href]")
+                    .forEach(enlace => {
 
-            console.error("Error cargando el menú:", error);
+                        const href = enlace.getAttribute("href");
 
-        });
+                        if (
+                            href &&
+                            !href.startsWith("http") &&
+                            !href.startsWith("#")
+                        ) {
 
-    </script>
+                            enlace.href =
+                                "../" + href;
+
+                        }
+
+                    });
+
+            })
+            .catch(error => {
+
+                console.error("Error cargando el menú:", error);
+
+            });
+
+        </script>
 
     <!-- ==========================
          CABECERA
