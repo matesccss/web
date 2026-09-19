@@ -1311,39 +1311,50 @@
 
     <script>
 
-
         /* =========================================================
            URL GOOGLE APPS SCRIPT
         ========================================================= */
-
+    
         const REELS_API =
             "https://script.google.com/macros/s/AKfycbx6Ra-11-XX7e-dh6MuHyBIg1ePD5jhNGY_GovjluSx_LjiUs8dbWuS-rOLNKGG2yT_/exec";
-
-
+    
+    
         /* =========================================================
-           INSTAGRAM
+           DATOS
         ========================================================= */
-
+    
         let instagramData = [];
-
         let instagramIndex = 0;
-
-
-        async function loadInstagram() {
-
-            const container =
+    
+        let tiktokData = [];
+        let tiktokIndex = 0;
+    
+    
+        /* =========================================================
+           CARGA GENERAL
+           
+           IMPORTANTE:
+           Antes Instagram y TikTok hacían DOS peticiones
+           independientes a Apps Script.
+    
+           Ahora hacemos UNA sola petición y aprovechamos
+           los datos para las dos redes.
+        ========================================================= */
+    
+        async function loadReels() {
+    
+            const instagramContainer =
                 document.getElementById(
                     "instagram-video-container"
                 );
-
-            const comment =
+    
+            const tiktokContainer =
                 document.getElementById(
-                    "instagram-comment"
+                    "tiktok-video-container"
                 );
-
-
+    
             try {
-
+    
                 const response =
                     await fetch(
                         REELS_API,
@@ -1352,28 +1363,32 @@
                             cache: "no-store"
                         }
                     );
-
-
+    
+    
                 if (!response.ok) {
-
+    
                     throw new Error(
                         "HTTP " +
                         response.status
                     );
-
+    
                 }
-
-
+    
+    
                 const data =
                     await response.json();
-
-
+    
+    
                 console.log(
-                    "Datos recibidos:",
+                    "Datos de Reels recibidos:",
                     data
                 );
-
-
+    
+    
+                /* =================================================
+                   INSTAGRAM
+                ================================================= */
+    
                 instagramData =
                     Array.isArray(
                         data.instagram
@@ -1382,263 +1397,15 @@
                             ...data.instagram
                         ].reverse()
                         : [];
-
-
+    
+    
                 instagramIndex = 0;
-
-
-                showInstagramVideo(
-                    instagramIndex
-                );
-
-
-            } catch (error) {
-
-                console.error(
-                    "Error cargando Instagram:",
-                    error
-                );
-
-
-                container.innerHTML =
-                    `
-                    <div class="video-loading">
-                        ❌ No se han podido cargar
-                        los vídeos de Instagram.
-                    </div>
-                    `;
-
-                comment.textContent =
-                    "Comprueba que el servicio de Google Apps Script esté disponible.";
-
-            }
-
-        }
-
-
-        function showInstagramVideo(index) {
-
-
-            const container =
-                document.getElementById(
-                    "instagram-video-container"
-                );
-
-
-            const comment =
-                document.getElementById(
-                    "instagram-comment"
-                );
-
-
-            container.innerHTML =
-                "";
-
-
-            comment.textContent =
-                "";
-
-
-            if (
-                !instagramData.length
-            ) {
-
-
-                container.innerHTML =
-                    `
-                    <div class="video-loading">
-                        📭 No hay Reels de Instagram publicados.
-                    </div>
-                    `;
-
-
-                return;
-
-            }
-
-
-            if (
-                index < 0 ||
-                index >= instagramData.length
-            ) {
-
-                index = 0;
-
-            }
-
-
-            const video =
-                instagramData[index];
-
-
-            if (
-                !video ||
-                !video.id
-            ) {
-
-                container.innerHTML =
-                    `
-                    <div class="video-loading">
-                        ⚠️ El Reel no tiene un ID válido.
-                    </div>
-                    `;
-
-                return;
-
-            }
-
-
-            const iframe =
-                document.createElement(
-                    "iframe"
-                );
-
-
-            iframe.title =
-                "Reel de Instagram";
-
-
-            iframe.allow =
-                "autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share";
-
-
-            iframe.setAttribute(
-                "allowfullscreen",
-                ""
-            );
-
-
-            iframe.src =
-                "https://www.instagram.com/p/" +
-                encodeURIComponent(video.id) +
-                "/embed/";
-
-
-            container.appendChild(
-                iframe
-            );
-
-
-            if (
-                video.comment
-            ) {
-
-                comment.textContent =
-                    video.comment;
-
-            }
-
-
-            document.getElementById(
-                "open-in-app-instagram"
-            ).href =
-                "https://www.instagram.com/p/" +
-                encodeURIComponent(video.id) +
-                "/";
-
-        }
-
-
-        function prevInstagramVideo() {
-
-
-            if (
-                !instagramData.length
-            ) {
-
-                return;
-
-            }
-
-
-            instagramIndex =
-                (
-                    instagramIndex -
-                    1 +
-                    instagramData.length
-                ) %
-                instagramData.length;
-
-
-            showInstagramVideo(
-                instagramIndex
-            );
-
-        }
-
-
-        function nextInstagramVideo() {
-
-
-            if (
-                !instagramData.length
-            ) {
-
-                return;
-
-            }
-
-
-            instagramIndex =
-                (
-                    instagramIndex +
-                    1
-                ) %
-                instagramData.length;
-
-
-            showInstagramVideo(
-                instagramIndex
-            );
-
-        }
-
-
-        /* =========================================================
-           TIKTOK
-        ========================================================= */
-
-        let tiktokData = [];
-
-        let tiktokIndex = 0;
-
-
-        async function loadTikTok() {
-
-
-            try {
-
-
-                const response =
-                    await fetch(
-                        REELS_API,
-                        {
-                            method: "GET",
-                            cache: "no-store"
-                        }
-                    );
-
-
-                if (!response.ok) {
-
-                    throw new Error(
-                        "HTTP " +
-                        response.status
-                    );
-
-                }
-
-
-                const data =
-                    await response.json();
-
-
-                console.log(
-                    "Datos TikTok:",
-                    data
-                );
-
-
+    
+    
+                /* =================================================
+                   TIKTOK
+                ================================================= */
+    
                 tiktokData =
                     Array.isArray(
                         data.tiktok
@@ -1647,165 +1414,655 @@
                             ...data.tiktok
                         ].reverse()
                         : [];
-
-
+    
+    
                 tiktokIndex = 0;
-
-
+    
+    
+                /* =================================================
+                   MOSTRAR PRIMEROS VÍDEOS
+                ================================================= */
+    
+                showInstagramVideo(
+                    instagramIndex
+                );
+    
+    
                 showTikTokVideo(
                     tiktokIndex
                 );
-
-
+    
+    
             } catch (error) {
-
-
+    
                 console.error(
-                    "Error cargando TikTok:",
+                    "Error cargando Reels:",
                     error
                 );
-
-
+    
+    
+                /* =================================================
+                   ERROR INSTAGRAM
+                ================================================= */
+    
+                instagramContainer.innerHTML =
+                    `
+                    <div class="video-loading">
+                        ❌ No se han podido cargar
+                        los vídeos de Instagram.
+                    </div>
+                    `;
+    
+    
                 document.getElementById(
-                    "tiktok-video-container"
-                ).innerHTML =
+                    "instagram-comment"
+                ).textContent =
+                    "Comprueba que el servicio esté disponible.";
+    
+    
+                /* =================================================
+                   ERROR TIKTOK
+                ================================================= */
+    
+                tiktokContainer.innerHTML =
                     `
                     <div class="video-loading">
                         ❌ No se han podido cargar
                         los vídeos de TikTok.
                     </div>
                     `;
-
-
+    
+    
                 document.getElementById(
                     "tiktok-comment"
                 ).textContent =
-                    "Comprueba que el servicio de Google Apps Script esté disponible.";
-
+                    "Comprueba que el servicio esté disponible.";
+    
             }
-
+    
         }
-
-
+    
+    
+        /* =========================================================
+           INSTAGRAM
+        ========================================================= */
+    
+        function showInstagramVideo(index) {
+    
+            const container =
+                document.getElementById(
+                    "instagram-video-container"
+                );
+    
+    
+            const comment =
+                document.getElementById(
+                    "instagram-comment"
+                );
+    
+    
+            container.innerHTML =
+                "";
+    
+    
+            comment.textContent =
+                "";
+    
+    
+            /* =====================================================
+               SIN VÍDEOS
+            ===================================================== */
+    
+            if (
+                !instagramData.length
+            ) {
+    
+                container.innerHTML =
+                    `
+                    <div class="video-loading">
+                        📭 No hay Reels de Instagram publicados.
+                    </div>
+                    `;
+    
+                return;
+    
+            }
+    
+    
+            /* =====================================================
+               COMPROBAR ÍNDICE
+            ===================================================== */
+    
+            if (
+                index < 0 ||
+                index >= instagramData.length
+            ) {
+    
+                index = 0;
+    
+            }
+    
+    
+            const video =
+                instagramData[index];
+    
+    
+            /* =====================================================
+               COMPROBAR ID
+            ===================================================== */
+    
+            if (
+                !video ||
+                !video.id
+            ) {
+    
+                container.innerHTML =
+                    `
+                    <div class="video-loading">
+                        ⚠️ El Reel no tiene un ID válido.
+                    </div>
+                    `;
+    
+                return;
+    
+            }
+    
+    
+            /* =====================================================
+               MENSAJE DE CARGA
+               
+               Aparece inmediatamente mientras Instagram
+               prepara el iframe.
+            ===================================================== */
+    
+            container.innerHTML =
+                `
+                <div class="video-loading">
+                    ⏳ Cargando Instagram...
+                </div>
+                `;
+    
+    
+            /* =====================================================
+               CREAR IFRAME
+            ===================================================== */
+    
+            const iframe =
+                document.createElement(
+                    "iframe"
+                );
+    
+    
+            iframe.title =
+                "Reel de Instagram";
+    
+    
+            iframe.allow =
+                "autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share";
+    
+    
+            iframe.setAttribute(
+                "allowfullscreen",
+                ""
+            );
+    
+    
+            iframe.loading =
+                "eager";
+    
+    
+            iframe.src =
+                "https://www.instagram.com/p/" +
+                encodeURIComponent(video.id) +
+                "/embed/";
+    
+    
+            /* =====================================================
+               CUANDO INSTAGRAM HA CARGADO
+            ===================================================== */
+    
+            let instagramLoaded =
+                false;
+    
+    
+            iframe.addEventListener(
+                "load",
+                function () {
+    
+                    instagramLoaded =
+                        true;
+    
+    
+                    container.innerHTML =
+                        "";
+    
+    
+                    container.appendChild(
+                        iframe
+                    );
+    
+                }
+            );
+    
+    
+            /* =====================================================
+               TIMEOUT
+               
+               Si Instagram tarda demasiado, no dejamos la página
+               eternamente en "Cargando..."
+            ===================================================== */
+    
+            setTimeout(
+                function () {
+    
+                    if (
+                        instagramLoaded
+                    ) {
+    
+                        return;
+    
+                    }
+    
+    
+                    container.innerHTML =
+                        `
+                        <div class="video-loading">
+    
+                            ⚠️ Instagram está tardando
+                            más de lo habitual.
+    
+                            <br><br>
+    
+                            <a
+                                href="https://www.instagram.com/p/${encodeURIComponent(video.id)}/"
+                                target="_blank"
+                                style="
+                                    display:inline-block;
+                                    margin-top:10px;
+                                    padding:10px 18px;
+                                    border-radius:999px;
+                                    background:linear-gradient(135deg,#833AB4,#E1306C);
+                                    color:white;
+                                    text-decoration:none;
+                                    font-weight:700;
+                                "
+                            >
+                                📸 Abrir en Instagram
+                            </a>
+    
+                        </div>
+                        `;
+    
+                },
+                12000
+            );
+    
+    
+            /* =====================================================
+               COMENTARIO
+            ===================================================== */
+    
+            if (
+                video.comment
+            ) {
+    
+                comment.textContent =
+                    video.comment;
+    
+            }
+    
+    
+            /* =====================================================
+               BOTÓN "VER EN INSTAGRAM"
+            ===================================================== */
+    
+            document.getElementById(
+                "open-in-app-instagram"
+            ).href =
+                "https://www.instagram.com/p/" +
+                encodeURIComponent(video.id) +
+                "/";
+    
+    
+            /* =====================================================
+               INSERTAR IFRAME
+            ===================================================== */
+    
+            /*
+               Lo insertamos inmediatamente.
+               El navegador se encarga de cargar Instagram
+               mientras el resto de la página sigue funcionando.
+            */
+    
+            container.innerHTML =
+                "";
+    
+    
+            container.appendChild(
+                iframe
+            );
+    
+        }
+    
+    
+        /* =========================================================
+           INSTAGRAM — ANTERIOR
+        ========================================================= */
+    
+        function prevInstagramVideo() {
+    
+            if (
+                !instagramData.length
+            ) {
+    
+                return;
+    
+            }
+    
+    
+            instagramIndex =
+                (
+                    instagramIndex -
+                    1 +
+                    instagramData.length
+                ) %
+                instagramData.length;
+    
+    
+            showInstagramVideo(
+                instagramIndex
+            );
+    
+        }
+    
+    
+        /* =========================================================
+           INSTAGRAM — SIGUIENTE
+        ========================================================= */
+    
+        function nextInstagramVideo() {
+    
+            if (
+                !instagramData.length
+            ) {
+    
+                return;
+    
+            }
+    
+    
+            instagramIndex =
+                (
+                    instagramIndex +
+                    1
+                ) %
+                instagramData.length;
+    
+    
+            showInstagramVideo(
+                instagramIndex
+            );
+    
+        }
+    
+    
+        /* =========================================================
+           TIKTOK
+        ========================================================= */
+    
         function showTikTokVideo(index) {
-
-
+    
             const container =
                 document.getElementById(
                     "tiktok-video-container"
                 );
-
-
+    
+    
             const comment =
                 document.getElementById(
                     "tiktok-comment"
                 );
-
-
+    
+    
             container.innerHTML =
                 "";
-
-
+    
+    
             comment.textContent =
                 "";
-
-
+    
+    
+            /* =====================================================
+               SIN VÍDEOS
+            ===================================================== */
+    
             if (
                 !tiktokData.length
             ) {
-
-
+    
                 container.innerHTML =
                     `
                     <div class="video-loading">
                         📭 No hay vídeos de TikTok publicados.
                     </div>
                     `;
-
-
+    
                 return;
-
+    
             }
-
-
+    
+    
+            /* =====================================================
+               COMPROBAR ÍNDICE
+            ===================================================== */
+    
             if (
                 index < 0 ||
                 index >= tiktokData.length
             ) {
-
+    
                 index = 0;
-
+    
             }
-
-
+    
+    
             const video =
                 tiktokData[index];
-
-
+    
+    
+            /* =====================================================
+               COMPROBAR ID
+            ===================================================== */
+    
             if (
                 !video ||
                 !video.id
             ) {
-
+    
                 container.innerHTML =
                     `
                     <div class="video-loading">
                         ⚠️ El vídeo no tiene un ID válido.
                     </div>
                     `;
-
+    
                 return;
-
+    
             }
-
-
+    
+    
+            /* =====================================================
+               MENSAJE DE CARGA
+            ===================================================== */
+    
+            container.innerHTML =
+                `
+                <div class="video-loading">
+                    ⏳ Cargando TikTok...
+                </div>
+                `;
+    
+    
+            /* =====================================================
+               CREAR IFRAME
+            ===================================================== */
+    
             const iframe =
                 document.createElement(
                     "iframe"
                 );
-
-
+    
+    
             iframe.title =
                 "Vídeo de TikTok";
-
-
+    
+    
             iframe.allow =
                 "autoplay; encrypted-media; picture-in-picture";
-
-
+    
+    
             iframe.setAttribute(
                 "allowfullscreen",
                 ""
             );
-
-
+    
+    
+            iframe.loading =
+                "eager";
+    
+    
             iframe.src =
                 "https://www.tiktok.com/embed/v2/" +
                 encodeURIComponent(video.id);
-
-
-            container.appendChild(
-                iframe
+    
+    
+            /* =====================================================
+               CONTROL DE CARGA
+            ===================================================== */
+    
+            let tiktokLoaded =
+                false;
+    
+    
+            iframe.addEventListener(
+                "load",
+                function () {
+    
+                    tiktokLoaded =
+                        true;
+    
+    
+                    container.innerHTML =
+                        "";
+    
+    
+                    container.appendChild(
+                        iframe
+                    );
+    
+                }
             );
-
-
+    
+    
+            /* =====================================================
+               TIMEOUT
+            ===================================================== */
+    
+            setTimeout(
+                function () {
+    
+                    if (
+                        tiktokLoaded
+                    ) {
+    
+                        return;
+    
+                    }
+    
+    
+                    const user =
+                        video.user ||
+                        "";
+    
+    
+                    let tiktokUrl;
+    
+    
+                    if (user) {
+    
+                        tiktokUrl =
+                            "https://www.tiktok.com/@" +
+                            encodeURIComponent(user) +
+                            "/video/" +
+                            encodeURIComponent(video.id);
+    
+                    } else {
+    
+                        tiktokUrl =
+                            "https://www.tiktok.com/";
+    
+                    }
+    
+    
+                    container.innerHTML =
+                        `
+                        <div class="video-loading">
+    
+                            ⚠️ TikTok está tardando
+                            más de lo habitual.
+    
+                            <br><br>
+    
+                            <a
+                                href="${tiktokUrl}"
+                                target="_blank"
+                                style="
+                                    display:inline-block;
+                                    margin-top:10px;
+                                    padding:10px 18px;
+                                    border-radius:999px;
+                                    background:linear-gradient(135deg,#25F4EE,#FE2C55);
+                                    color:white;
+                                    text-decoration:none;
+                                    font-weight:700;
+                                "
+                            >
+                                🎵 Abrir en TikTok
+                            </a>
+    
+                        </div>
+                        `;
+    
+                },
+                12000
+            );
+    
+    
+            /* =====================================================
+               COMENTARIO
+            ===================================================== */
+    
             if (
                 video.comment
             ) {
-
+    
                 comment.textContent =
                     video.comment;
-
+    
             }
-
-
+    
+    
+            /* =====================================================
+               BOTÓN "VER EN TIKTOK"
+            ===================================================== */
+    
             const user =
                 video.user ||
                 "";
-
-
+    
+    
             if (user) {
-
+    
                 document.getElementById(
                     "open-in-app-tiktok"
                 ).href =
@@ -1813,31 +2070,47 @@
                     encodeURIComponent(user) +
                     "/video/" +
                     encodeURIComponent(video.id);
-
+    
             } else {
-
+    
                 document.getElementById(
                     "open-in-app-tiktok"
                 ).href =
                     "https://www.tiktok.com/";
-
+    
             }
-
+    
+    
+            /* =====================================================
+               INSERTAR IFRAME
+            ===================================================== */
+    
+            container.innerHTML =
+                "";
+    
+    
+            container.appendChild(
+                iframe
+            );
+    
         }
-
-
+    
+    
+        /* =========================================================
+           TIKTOK — ANTERIOR
+        ========================================================= */
+    
         function prevTikTokVideo() {
-
-
+    
             if (
                 !tiktokData.length
             ) {
-
+    
                 return;
-
+    
             }
-
-
+    
+    
             tiktokIndex =
                 (
                     tiktokIndex -
@@ -1845,58 +2118,58 @@
                     tiktokData.length
                 ) %
                 tiktokData.length;
-
-
+    
+    
             showTikTokVideo(
                 tiktokIndex
             );
-
+    
         }
-
-
+    
+    
+        /* =========================================================
+           TIKTOK — SIGUIENTE
+        ========================================================= */
+    
         function nextTikTokVideo() {
-
-
+    
             if (
                 !tiktokData.length
             ) {
-
+    
                 return;
-
+    
             }
-
-
+    
+    
             tiktokIndex =
                 (
                     tiktokIndex +
                     1
                 ) %
                 tiktokData.length;
-
-
+    
+    
             showTikTokVideo(
                 tiktokIndex
             );
-
+    
         }
-
-
+    
+    
         /* =========================================================
            INICIAR
         ========================================================= */
-
+    
         document.addEventListener(
             "DOMContentLoaded",
             function () {
-
-                loadInstagram();
-
-                loadTikTok();
-
+    
+                loadReels();
+    
             }
         );
-
-
+    
     </script>
 
 
