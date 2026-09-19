@@ -2209,7 +2209,7 @@
             try {
 
                 const response = await fetch(
-                    "https://script.google.com/macros/s/AKfycbwBaIbzRpAcuZLrrG-KJl269UJV2pCYZmMR9lqt26cnLRHVXQDhDNrfBx6LRHBYZ2jD/exec"
+                    "https://script.google.com/macros/s/AKfycbzDASKEymR_exqZ9c2p45wP-di_yMNhhomkONuEsNjYm2-SVWP064Q-3KGZE1qsaqB3/exec"
                 );
 
 
@@ -2224,27 +2224,51 @@
 
                 const data =
                     await response.json();
-
-
-                if (!data.nombre || !data.fecha) {
-
+                
+                
+                if (
+                    !data.nombres ||
+                    !data.fecha ||
+                    data.nombres.length === 0
+                ) {
+                
                     throw new Error(
                         "Faltan datos de cumpleaños"
                     );
-
+                
                 }
-
-
+                
+                
                 const banner =
                     document.getElementById(
                         "proximoCumple"
                     );
-
-
-                const nombre =
-                    data.nombre;
-
-
+                
+                
+                const nombres =
+                    data.nombres;
+                
+                
+                let nombre;
+                
+                if (nombres.length === 1) {
+                
+                    nombre = nombres[0];
+                
+                } else if (nombres.length === 2) {
+                
+                    nombre = nombres.join(" y ");
+                
+                } else {
+                
+                    nombre =
+                        nombres.slice(0, -1).join(", ")
+                        + " y "
+                        + nombres[nombres.length - 1];
+                
+                }
+                
+                
                 const fechaCumple =
                     new Date(data.fecha);
 
