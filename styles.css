@@ -1157,37 +1157,6 @@ line-height:1.25;
 
     }
 
-
-/* =========================================================
-   DESPLEGABLE CCSS II EN MÓVIL
-========================================================= */
-
-@media (max-width: 600px) {
-
-    .menu-dropdown:last-of-type {
-        position: static;
-    }
-
-    .menu-dropdown:last-of-type .dropdown-content {
-
-        position: absolute;
-
-        top: 100%;
-
-        left: auto;
-
-        right: 10px;
-
-        transform: none;
-
-        min-width: 170px;
-
-        max-width: calc(100vw - 20px);
-
-        box-sizing: border-box;
-
-    }
-
 }
 
 
@@ -1221,6 +1190,7 @@ line-height:1.25;
     }
 
 }
+
 
 /* =========================================================
    PÁGINAS DE TEMAS — CCSS I / CCSS II
