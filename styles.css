@@ -1158,19 +1158,36 @@ line-height:1.25;
     }
 
 
+    /* DESPLEGABLES EN MÓVIL */
+
+    .dropdown-content {
+
+        position: absolute;
+
+        left: 0;
+
+        right: auto;
+
+        transform: none;
+
+        min-width: 150px;
+
+        max-width: 180px;
+
+        box-sizing: border-box;
+
+    }
+
+
     /* CCSS II */
 
     .menu-dropdown:last-of-type .dropdown-content {
 
         left: auto;
 
-        right: 4px;
+        right: 0;
 
         transform: none;
-
-        max-width: calc(100vw - 20px);
-
-        box-sizing: border-box;
 
     }
 
