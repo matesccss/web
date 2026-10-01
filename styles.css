@@ -1458,6 +1458,17 @@ line-height:1.25;
 
 }
 
+.icono-indigo{
+
+    background:
+        linear-gradient(
+            135deg,
+            #4f46e5,
+            #6366f1
+        );
+
+}
+
 
 
 .texto{
