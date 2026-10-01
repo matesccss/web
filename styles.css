@@ -1447,6 +1447,18 @@ line-height:1.25;
 
 }
 
+.icono-amarillo{
+
+    background:
+        linear-gradient(
+            135deg,
+            #eab308,
+            #facc15
+        );
+
+}
+
+
 
 .texto{
 
