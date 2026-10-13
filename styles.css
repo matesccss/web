@@ -1485,6 +1485,22 @@ line-height:1.25;
     );
 }
 
+.icono-cyan {
+    background: linear-gradient(
+        135deg,
+        #0d9488,
+        #2dd4bf
+    );
+}
+
+.icono-gris {
+    background: linear-gradient(
+        135deg,
+        #475569,
+        #94a3b8
+    );
+}
+
 
 
 .texto{
