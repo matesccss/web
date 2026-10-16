@@ -794,6 +794,8 @@
 
     </style>
 
+    <script src="../actualizar.js" defer></script>
+
 </head>
 
 
@@ -804,7 +806,7 @@
 
     <script>
 
-        fetch("../menu.html")
+        fetch("../menu.html", { cache: "no-store" })
             .then(response => response.text())
             .then(html => {
 

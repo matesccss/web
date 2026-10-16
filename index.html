@@ -21,6 +21,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Mates Molinillo">
 
+    <script src="actualizar.js" defer></script>
+
 </head>
 
 <body>
@@ -29,7 +31,7 @@
 
     <script>
 
-    fetch("menu.html")
+    fetch("menu.html", { cache: "no-store" })
         .then(response => response.text())
         .then(html => {
 
@@ -425,7 +427,7 @@
 
 <script>
 
-fetch("footer.html")
+fetch("footer.html", { cache: "no-store" })
 .then(response => response.text())
 .then(html => {
 
@@ -654,16 +656,6 @@ fetch("footer.html")
 
 
     <script src="https://script.google.com/macros/s/AKfycbzzgg17cby98NjAjZWKDR9k4XuWZbHL9_if2q9fUgVYvPBxJEF7O3vV90QvyWPR8g437A/exec?callback=recibirNoticias"></script>
-
-<script>
-if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-        navigator.serviceWorker.register("./service-worker.js")
-            .then(() => console.log("✅ Service Worker registrado"))
-            .catch(error => console.error("❌ Error registrando Service Worker:", error));
-    });
-}
-</script>
 
 <script>
 

@@ -1286,6 +1286,8 @@
 
     </style>
 
+    <script src="actualizar.js" defer></script>
+
 </head>
 
 
@@ -1298,7 +1300,7 @@
     <div id="menu-container"></div>
 
     <script>
-    fetch("menu.html")
+    fetch("menu.html", { cache: "no-store" })
         .then(response => response.text())
         .then(html => {
             document.getElementById("menu-container").innerHTML = html;
