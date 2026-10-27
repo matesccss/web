@@ -1,0 +1,9 @@
+Fuentes tipográficas de la web
+
+- Poppins (c) Indian Type Foundry - títulos
+- Inter (c) The Inter Project Authors - texto
+- Lora (c) The Lora Project Authors - citas
+
+Las tres se distribuyen bajo la SIL Open Font License 1.1 (https://openfontlicense.org),
+que permite usarlas e incluirlas libremente en una web.
+Son subconjuntos (solo caracteres latinos) para que pesen poco.

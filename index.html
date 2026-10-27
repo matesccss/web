@@ -15,13 +15,17 @@
 
     <link rel="manifest" href="manifest.json">
 
-    <meta name="theme-color" content="#2563eb">
+    <meta name="theme-color" content="#14213d">
 
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Mates Molinillo">
 
     <script src="actualizar.js" defer></script>
+
+
+    <link rel="stylesheet" href="elegante.css?v=12">
+    <script src="elegante.js?v=12"></script>
 
 </head>
 
@@ -48,38 +52,140 @@
 
     <main>
 
-        <!-- ENCABEZADO -->
+        <!-- =====================================================
+             CABECERA PRINCIPAL
+             El dibujo animado de fondo (campana de Gauss) lo hace
+             elegante.js en el <canvas>. Los bloques con id se
+             rellenan solos.
+        ====================================================== -->
 
-        <div class="hero-apple">
+        <header class="hero" id="hero">
 
-            <div class="hero-content">
+            <canvas class="hero-lienzo" aria-hidden="true"></canvas>
 
-                <h1 class="title-gradient">
-                    Matemáticas Aplicadas a las Ciencias Sociales
-                </h1>
+            <div class="hero-dentro">
 
-                <div class="line"></div>
+                <div class="hero-texto">
 
-                <h2>Bachillerato · Curso 2026-2027</h2>
+                    <p class="hero-pastilla">
+                        <span class="hero-punto"></span>
+                        <span id="fecha-hoy">Curso 2026–2027</span>
+                        <span class="hero-sep">·</span>
+                        <span>IES El Molinillo</span>
+                    </p>
 
-                <p id="fraseHero"></p>
+                    <h1 class="hero-titulo">
+                        Matemáticas Aplicadas a las
+                        <span class="hero-degradado">Ciencias Sociales</span>
+                    </h1>
+
+                    <p class="hero-lead">
+                        <span id="ocurrencia"><strong class="saludo-hora">Hola.</strong></span>
+                        <span class="b-racha" id="racha" hidden></span>
+                    </p>
+
+                    <div class="hero-botones">
+
+                        <a class="hb hb-primario" id="hero-ir" href="ccss2/tema1.html">
+                            <span>Ir a 2.º Bachillerato</span>
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 5l7 7-7 7-1.4-1.4 4.6-4.6H4v-2h12.2l-4.6-4.6z"/></svg>
+                        </a>
+
+                        <button class="hb hb-cristal abrir-buscador" type="button">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 2a8 8 0 016.32 12.9l5.39 5.4-1.41 1.4-5.4-5.39A8 8 0 1110 2zm0 2a6 6 0 100 12 6 6 0 000-12z"/></svg>
+                            <span>Buscar un tema</span>
+                            <kbd>Ctrl K</kbd>
+                        </button>
+
+                    </div>
+
+                    <p id="fraseHero" class="hero-frase"></p>
+
+                </div>
+
+                <aside class="hero-lado">
+
+                    <article class="hero-examen" id="proximo-examen" hidden></article>
+
+                </aside>
 
             </div>
 
-            <div class="accent-line"></div>
+            <div class="hero-cinta" aria-hidden="true">
+                <div class="cinta-pista"><span>Matrices</span><span>Determinantes</span><span>Sistemas de ecuaciones</span><span>Programación lineal</span><span>Probabilidad</span><span>Teorema de Bayes</span><span>Distribución binomial</span><span>Distribución normal</span><span>Inferencia estadística</span><span>Intervalos de confianza</span><span>Límites</span><span>Continuidad</span><span>Derivadas</span><span>Optimización</span><span>Integrales</span><span>Área bajo la curva</span><span>Matrices</span><span>Determinantes</span><span>Sistemas de ecuaciones</span><span>Programación lineal</span><span>Probabilidad</span><span>Teorema de Bayes</span><span>Distribución binomial</span><span>Distribución normal</span><span>Inferencia estadística</span><span>Intervalos de confianza</span><span>Límites</span><span>Continuidad</span><span>Derivadas</span><span>Optimización</span><span>Integrales</span><span>Área bajo la curva</span></div>
+            </div>
 
-        </div>
+        </header>
+
+
+        <!-- =====================================================
+             01 · HOY
+        ====================================================== -->
+
+        <section class="seccion">
+
+            <header class="seccion-cab">
+                <p class="seccion-num">01 — Hoy</p>
+                <h2>Tu dosis diaria</h2>
+                <p class="seccion-desc">Un reto nuevo cada día y dos herramientas para el día a día: la tabla de la normal y tu nota de la PAU.</p>
+            </header>
+
+            <div class="bento bento-hoy" id="bento">
+
+                <!-- RETO DEL DÍA -->
+
+                <article class="b-tile b-reto" id="reto-dia">
+                    <p class="b-etiqueta">Reto del día</p>
+                    <p class="reto-pregunta">Cargando…</p>
+                </article>
+
+                <!-- CALCULADORA DE LA NORMAL -->
+
+                <article class="b-tile b-normal">
+
+                    <p class="b-etiqueta">Herramienta</p>
+
+                    <h2 class="b-nota-titulo">Calculadora de la normal</h2>
+
+                    <p class="b-nota-texto">Adiós a la tabla: P(Z ≤ z), probabilidades entre dos valores con cualquier media y desviación, y el valor z para una probabilidad.</p>
+
+                    <button class="b-boton" type="button" id="abrir-normal">
+                        Abrir la calculadora
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 5l7 7-7 7-1.4-1.4 4.6-4.6H4v-2h12.2l-4.6-4.6z"/></svg>
+                    </button>
+
+                </article>
+
+
+                <!-- CALCULADORA DE NOTA PAU -->
+
+                <article class="b-tile b-nota">
+
+                    <p class="b-etiqueta">Herramienta</p>
+
+                    <h2 class="b-nota-titulo">¿Qué nota necesito?</h2>
+
+                    <p class="b-nota-texto">Calcula tu nota de acceso y de admisión a la universidad con las reglas de la PAU en Andalucía.</p>
+
+                    <button class="b-boton" type="button" id="abrir-calculadora">
+                        Calcular mi nota
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 5l7 7-7 7-1.4-1.4 4.6-4.6H4v-2h12.2l-4.6-4.6z"/></svg>
+                    </button>
+
+                </article>
+
+            </div>
+
+        </section>
 
 
         <!-- ACCESOS RÁPIDOS -->
 
-        <div class="titulo-accesos">
-
-            <h2>Accesos rápidos</h2>
-
-            <div class="linea-accesos"></div>
-
-        </div>
+        <header class="seccion-cab">
+            <p class="seccion-num">02 — Accesos rápidos</p>
+            <h2>Todo a un clic</h2>
+            <p class="seccion-desc">Temporalización, exámenes del curso, directrices de la PAU y la ayuda para tu calculadora.</p>
+        </header>
 
 
         <div class="quick-grid">
@@ -176,32 +282,9 @@
             </a>
 
 
-            <!-- FX-570 -->
+            <!-- CALCULADORAS (abre un selector con los tres modelos) -->
 
-            <a class="quick-card"
-            href="calculadoras/calculadora570.html">
-
-                <div class="icon icon-calc">
-
-                    <svg viewBox="0 0 24 24">
-
-                        <path d="M7 2h10a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm2 3v3h6V5H9zm0 6h2v2H9v-2zm4 0h2v2h-2v-2zm-4 4h2v2H9v-2zm4 0h2v2h-2v-2z"/>
-
-                    </svg>
-
-                </div>
-
-                <div class="title">Calculadora FX-570SP CW (BLANCA)</div>
-
-                <div class="subtitle">Vídeos y ayuda</div>
-
-            </a>
-
-
-            <!-- FX-991 -->
-
-            <a class="quick-card"
-            href="calculadoras/calculadora991.html">
+            <button class="quick-card" type="button" id="abrir-calculadoras">
 
                 <div class="icon icon-calc">
 
@@ -213,33 +296,11 @@
 
                 </div>
 
-                <div class="title">Calculadora FX-991</div>
+                <div class="title">Calculadoras</div>
 
-                <div class="subtitle">Vídeos y ayuda</div>
+                <div class="subtitle">FX-570 · FX-991 · ClassWiz</div>
 
-            </a>
-
-
-            <!-- CLASSWIZ -->
-
-            <a class="quick-card"
-            href="calculadoras/calculadoraclasswiz.html">
-
-                <div class="icon icon-calc">
-
-                    <svg viewBox="0 0 24 24">
-
-                        <path d="M7 2h10a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm2 3v3h6V5H9zm0 6h2v2H9v-2zm4 0h2v2h-2v-2zm-4 4h2v2H9v-2zm4 0h2v2h-2v-2z"/>
-
-                    </svg>
-
-                </div>
-
-                <div class="title">Calculadora Classwiz</div>
-
-                <div class="subtitle">Vídeos y ayuda</div>
-
-            </a>
+            </button>
 
 
             <!-- EXÁMENES PAU -->
@@ -270,6 +331,12 @@
 
         <!-- NOVEDADES + TENDENCIAS -->
 
+        <header class="seccion-cab">
+            <p class="seccion-num">03 — Actualidad</p>
+            <h2>Qué está pasando</h2>
+            <p class="seccion-desc">Avisos de clase y las noticias del día.</p>
+        </header>
+
         <div class="inicio-paneles">
 
 
@@ -281,7 +348,7 @@
 
                     <div class="board-header">
 
-                        <span>📌</span>
+                        
 
                         <h2>Novedades</h2>
 
@@ -322,7 +389,7 @@
 
                 <div class="news-header">
 
-                    <span>📰</span>
+                    
 
                     <h2>Hoy en Tendencias</h2>
 
@@ -366,10 +433,11 @@
 
 
         <!-- PAU -->
-        <div class="titulo-pau">
-        <h2>Información PAU</h2>
-        <div class="linea-pau"></div>
-        </div>
+        <header class="seccion-cab">
+            <p class="seccion-num">04 — Universidad</p>
+            <h2>Información PAU</h2>
+            <p class="seccion-desc">Estructura del examen, criterios oficiales y notas de corte de los grados.</p>
+        </header>
         <div class="pau-grid">
 
             <a class="pau-card"

@@ -15,7 +15,6 @@
         href="styles.css">
 
     <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap"
         rel="stylesheet">
 
 
@@ -1041,6 +1040,10 @@
 
     <script src="actualizar.js" defer></script>
 
+
+    <link rel="stylesheet" href="elegante.css?v=12">
+    <script src="elegante.js?v=12"></script>
+
 </head>
 
 
@@ -1075,8 +1078,7 @@
         <header class="reels-header">
 
             <h1 class="titulo-reels">
-                🎬 Galería de Reels
-            </h1>
+              Galería de Reels</h1>
 
 
             <div class="reels-line"></div>
@@ -1544,15 +1546,18 @@
       iframe.title = "Vídeo de TikTok";
     
       iframe.allow =
-        "autoplay; encrypted-media;";
+        "autoplay; encrypted-media; fullscreen; picture-in-picture";
     
       iframe.setAttribute("allowfullscreen", "");
     
       iframe.loading = "lazy";
     
       iframe.src =
-        "https://www.tiktok.com/embed/v2/" +
-        encodeURIComponent(video.id);
+        // Reproductor oficial de TikTok (player/v1).
+        // El antiguo "embed/v2" da "ratelimit triggered".
+        "https://www.tiktok.com/player/v1/" +
+        encodeURIComponent(video.id) +
+        "?rel=0&music_info=0&description=0";
     
     
       // Igual que Instagram:
