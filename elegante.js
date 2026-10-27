@@ -1228,6 +1228,29 @@
             return { x0: W * .3, x1: W * 1.04, base: base, alto: Math.max(110, Math.min(230, base - techo)) };
         }
 
+        /* Colores de la curva: siguen el color elegido por el alumno */
+        var col = { a: [122, 92, 255], b: [91, 140, 255] }, cuadro = 0;
+
+        function hexRgb(h) {
+            h = (h || "").trim().replace("#", "");
+            if (h.length !== 6) return null;
+            return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)];
+        }
+
+        function leerColores() {
+            var cs = getComputedStyle(document.documentElement);
+            var a = hexRgb(cs.getPropertyValue("--c1")), b = hexRgb(cs.getPropertyValue("--c2"));
+            if (a && b) {
+                /* un poco más claros para que brillen sobre el fondo oscuro */
+                col.a = a.map(function (v) { return Math.round(v + (255 - v) * .25); });
+                col.b = b.map(function (v) { return Math.round(v + (255 - v) * .25); });
+            }
+        }
+
+        function rgba(c, o) { return "rgba(" + c[0] + "," + c[1] + "," + c[2] + "," + o + ")"; }
+
+        leerColores();
+
         function gauss(x, m, s) {
             return Math.exp(-((x - m) * (x - m)) / (2 * s * s));
         }
@@ -1235,6 +1258,7 @@
         function dibujar(ahora) {
 
             var t = (ahora - t0) / 1000;
+            if (++cuadro % 30 === 0) leerColores();
             var z = zona();
             var m = Math.sin(t * .17) * .18;
             var s = .2 + Math.sin(t * .23) * .05 + .03;
@@ -1264,8 +1288,8 @@
                 var h = gauss((u0 + u1) / 2, m, s);
                 var x0 = X(u0) + 1.5, x1 = X(u1) - 1.5;
                 var g = ctx.createLinearGradient(0, Y(h), 0, z.base);
-                g.addColorStop(0, "rgba(140, 115, 255, .16)");
-                g.addColorStop(1, "rgba(140, 115, 255, .02)");
+                g.addColorStop(0, rgba(col.a, .16));
+                g.addColorStop(1, rgba(col.a, .02));
                 ctx.fillStyle = g;
                 ctx.fillRect(x0, Y(h), x1 - x0, z.base - Y(h));
             }
@@ -1285,8 +1309,8 @@
             ctx.lineTo(X(m + s), z.base);
             ctx.closePath();
             var ga = ctx.createLinearGradient(0, Y(1), 0, z.base);
-            ga.addColorStop(0, "rgba(120, 140, 255, .35)");
-            ga.addColorStop(1, "rgba(120, 140, 255, .02)");
+            ga.addColorStop(0, rgba(col.b, .35));
+            ga.addColorStop(1, rgba(col.b, .02));
             ctx.fillStyle = ga;
             ctx.fill();
 
@@ -1311,9 +1335,9 @@
 
             /* curva principal con brillo */
             var gl = ctx.createLinearGradient(z.x0, 0, z.x1, 0);
-            gl.addColorStop(0, "#7a5cff");
-            gl.addColorStop(.5, "#5b8cff");
-            gl.addColorStop(1, "#ff7a59");
+            gl.addColorStop(0, rgba(col.a, 1));
+            gl.addColorStop(.5, rgba(col.b, 1));
+            gl.addColorStop(1, rgba(col.a, 1));
             ctx.beginPath();
             for (var q = -1; q <= 1.0001; q += .005) {
                 var yq = gauss(q, m, s);
@@ -1321,7 +1345,7 @@
             }
             ctx.strokeStyle = gl;
             ctx.lineWidth = 2.6;
-            ctx.shadowColor = "rgba(120, 130, 255, .9)";
+            ctx.shadowColor = rgba(col.b, .9);
             ctx.shadowBlur = 16;
             ctx.stroke();
             ctx.shadowBlur = 0;
@@ -1334,7 +1358,7 @@
                 ctx.beginPath();
                 ctx.arc(px, py, p.r, 0, Math.PI * 2);
                 ctx.fillStyle = "rgba(255, 255, 255, .85)";
-                ctx.shadowColor = "rgba(160, 170, 255, 1)";
+                ctx.shadowColor = rgba(col.a, 1);
                 ctx.shadowBlur = 8;
                 ctx.fill();
             });
@@ -1355,7 +1379,7 @@
                 ctx.beginPath();
                 ctx.arc(raton.x, py2, 5, 0, Math.PI * 2);
                 ctx.fillStyle = "#fff";
-                ctx.shadowColor = "#9d8cff";
+                ctx.shadowColor = rgba(col.a, 1);
                 ctx.shadowBlur = 18;
                 ctx.fill();
                 ctx.shadowBlur = 0;
@@ -1547,7 +1571,10 @@
         }
         v.querySelector(".buscador-fondo").addEventListener("click", cerrar);
         v.querySelector(".cp-cerrar").addEventListener("click", cerrar);
-        v.addEventListener("keydown", function (e) { if (e.key === "Escape") cerrar(); });
+        /* Esc cierra la ventana aunque el foco se haya ido fuera */
+        document.addEventListener("keydown", function (e) {
+            if (e.key === "Escape" && v.classList.contains("abierto")) cerrar();
+        });
 
         v.abrir = function () {
             v.classList.add("abierto");
@@ -1944,14 +1971,18 @@
                     var partes = /^(Tema\s*\d+)\s*[:.·-]?\s*(.*)$/i.exec(t.titulo) || [null, t.titulo, ""];
                     var aviso = t.fecha && t.fecha > ahora ?
                         ' <em class="hf-examen">Examen ' + new Date(t.fecha).toLocaleDateString("es-ES", { day: "numeric", month: "short" }) + '</em>' : "";
+                    var nuevo = misNovedades().some(function (n) { return n.tema === t.url && n.tipo === "tema"; })
+                        ? ' <em class="hf-nuevo">Nuevo</em>' : "";
                     return '<a class="hoja-fila hf-tema" href="' + t.url + '"><span class="hf-num">' + (partes[1].replace(/\D/g, "")) + '</span>' +
-                        '<span class="hf-txt"><strong>' + (partes[2] || partes[1]) + '</strong>' + aviso + '</span><span class="hf-flecha">›</span></a>';
+                        '<span class="hf-txt"><strong>' + (partes[2] || partes[1]) + nuevo + '</strong>' + aviso + '</span><span class="hf-flecha">›</span></a>';
                 }).join("");
                 html2 += curso === 2
                     ? '<p class="hoja-grupo">2.º Bachillerato · CCSS II</p>' + dentro
                     : '<details class="hoja-desplegable"><summary>1.º Bachillerato · CCSS I <small>curso pasado</small></summary>' + dentro + '</details>';
             });
             p.querySelector(".hoja-cuerpo").innerHTML = html2;
+            /* abrir el panel cuenta como «visto» */
+            if (misNovedades().length) setTimeout(borrarNovedades, 2500);
         });
     }
 
@@ -1979,9 +2010,12 @@
             enlaces += fila(a.href, t, "", ext);
         });
         var noche = html.getAttribute("data-tema") === "noche";
+        var nf = misFavs().length;
         var p = panel("hoja-mas", "Más",
+            boton("favs", "Mis favoritos", nf ? nf + (nf === 1 ? " guardado" : " guardados") : "Guarda vídeos y PDF con la estrella") +
             enlaces +
             '<p class="hoja-grupo">Ajustes</p>' +
+            '<div class="hoja-fila hf-color"><span class="hf-txt"><strong>Tu color</strong><small>Cambia el color de toda la web</small></span>' + selectorColores() + '</div>' +
             boton("quien", (miPerfil() && miPerfil().nombre) ? "Eres " + miPerfil().nombre : "¿Quién eres?",
                 (miPerfil() && miPerfil().nombre) ? "Toca para cambiarlo" : "Elige tu nombre para que la web te salude") +
             '<button type="button" class="hoja-fila" data-accion="tema"><span class="hf-txt"><strong>Modo noche</strong><small>Fondo oscuro, ideal por la noche</small></span>' +
@@ -2008,6 +2042,7 @@
         if (acc === "calculadoras") abrirCalculadoras();
         if (acc === "quien") abrirQuienEres();
         if (acc === "media") abrirMedia();
+        if (acc === "favs") { setTimeout(panelFavs, 10); }
         if (acc === "repaso") { setTimeout(panelRepaso, 10); }
     });
 
@@ -2615,7 +2650,7 @@
         if (promesaTarjetas) return promesaTarjetas;
         promesaTarjetas = new Promise(function (ok, mal) {
             var sc = document.createElement("script");
-            sc.src = raiz + "tarjetas.js?v=1";
+            sc.src = raiz + "tarjetas.js?v=2";
             sc.onload = function () { ok(window.TARJETAS || {}); };
             sc.onerror = mal;
             document.head.appendChild(sc);
@@ -2633,19 +2668,77 @@
         return a;
     }
 
+    /* ---------- Repetición espaciada (como Duolingo / Anki) ----------
+       Cada tarjeta está en una «caja» del 0 al 5. Si la aciertas sube de
+       caja y vuelve a salir más tarde (1, 3, 7, 14 o 30 días); si la fallas
+       vuelve a la caja 0 y sale hoy. Se guarda solo en el dispositivo. */
+
+    var INTERVALOS = [0, 1, 3, 7, 14, 30];
+
+    function hoyNum() {
+        var d = new Date();
+        return Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 86400000);
+    }
+
+    function memoria() { return leerJSON("srs-web", {}); }
+    function claveCarta(mazo, carta) { return mazo + "|" + carta[0]; }
+
+    function pendientesDe(mazo, cartas, mem) {
+        var hoy = hoyNum();
+        return cartas.filter(function (c) { var m = mem[claveCarta(mazo, c)]; return m && m.d <= hoy; });
+    }
+
+    /* Ordena un mazo: primero las pendientes de hoy, luego las nuevas y al final el resto */
+    function ordenarMazo(mazo, cartas) {
+        var mem = memoria(), hoy = hoyNum(), pend = [], nuevas = [], resto = [];
+        cartas.forEach(function (c) {
+            var m = mem[claveCarta(mazo, c)];
+            if (!m) nuevas.push(c); else if (m.d <= hoy) pend.push(c); else resto.push(c);
+        });
+        return barajar(pend).concat(barajar(nuevas), barajar(resto));
+    }
+
+    function anotar(key, acierto, falladaAntes) {
+        var mem = memoria(), m = mem[key] || { b: 0, d: 0 };
+        if (acierto) m.b = falladaAntes ? 1 : Math.min(5, m.b + 1);
+        else m.b = 0;
+        m.d = hoyNum() + INTERVALOS[m.b];
+        mem[key] = m;
+        guardar("srs-web", JSON.stringify(mem));
+    }
+
+    /* Todas las tarjetas pendientes hoy de los temas publicados */
+    function repasoDeHoy() {
+        return Promise.all([cargarTarjetas(), cargarTemas()]).then(function (r) {
+            var todas = r[0], mem = memoria(), lista = [];
+            r[1].temas.forEach(function (t) {
+                var k = claveTema(t.url);
+                if (!todas[k]) return;
+                pendientesDe(k, todas[k], mem).forEach(function (c) { lista.push({ mazo: k, carta: c }); });
+            });
+            return lista;
+        });
+    }
+
     var ventanaRepaso = null;
 
-    function abrirRepaso(clave, titulo) {
+    /* abrirRepaso("ccss2/tema3", "Probabilidad")  o  abrirRepaso(null, "Repaso de hoy", [{mazo, carta}…]) */
+    function abrirRepaso(clave, titulo, listaHoy) {
         cargarTarjetas().then(function (todas) {
-            var mazo = todas[clave];
-            if (!mazo || !mazo.length) return;
+            var items;
+            if (listaHoy) items = barajar(listaHoy.slice());
+            else {
+                if (!todas[clave] || !todas[clave].length) return;
+                items = ordenarMazo(clave, todas[clave]).map(function (c) { return { mazo: clave, carta: c }; });
+            }
+            if (!items.length) return;
 
             if (!ventanaRepaso) {
                 ventanaRepaso = crearVentana("v-repaso", "Repaso rápido", "Tarjetas",
                     '<div class="cp-cuerpo rp-cuerpo">' +
                     '<div class="rp-progreso"><div class="rp-barra"><span></span></div><span class="rp-cuenta"></span></div>' +
                     '<div class="rp-escena"><button type="button" class="rp-tarjeta" aria-live="polite">' +
-                    '<span class="rp-cara rp-frente"><small>Pregunta</small><span class="rp-texto"></span><em>Toca para ver la respuesta</em></span>' +
+                    '<span class="rp-cara rp-frente"><small>Pregunta</small><span class="rp-estado"></span><span class="rp-texto"></span><em>Toca para ver la respuesta</em></span>' +
                     '<span class="rp-cara rp-dorso"><small>Respuesta</small><span class="rp-texto"></span></span>' +
                     '</button></div>' +
                     '<div class="rp-botones" hidden><button type="button" class="rp-otra">Repasar otra vez</button><button type="button" class="rp-se">¡Me la sé!</button></div>' +
@@ -2656,7 +2749,8 @@
             var V = ventanaRepaso;
             V.querySelector(".cp-cabecera h2").textContent = titulo || "Tarjetas";
 
-            var cola = barajar(mazo.slice()), total = mazo.length, sabidas = 0, intentos = 0;
+            var original = items.slice();
+            var cola = items.slice(), total = items.length, sabidas = 0, intentos = 0, falladas = {};
             var tarjeta = V.querySelector(".rp-tarjeta");
             var botones = V.querySelector(".rp-botones");
             var fin = V.querySelector(".rp-fin");
@@ -2668,31 +2762,46 @@
                     tarjeta.parentNode.hidden = true;
                     botones.hidden = true;
                     fin.hidden = false;
-                    fin.querySelector("p").textContent = "Te sabes las " + total + " tarjetas" +
-                        (intentos > total ? " (con " + (intentos - total) + " repasos extra)." : " a la primera. ¡Brutal!");
-                    desbloquear("repaso");
+                    fin.querySelector("h3").textContent = listaHoy ? "¡Repaso de hoy hecho!" : "¡Mazo completado!";
+                    fin.querySelector("p").textContent = (listaHoy ? "Has repasado las " + total + " tarjetas pendientes" : "Te sabes las " + total + " tarjetas") +
+                        (intentos > total ? " (con " + (intentos - total) + " repasos extra)." : " a la primera. ¡Brutal!") +
+                        " Las que has acertado volverán dentro de unos días para que no se te olviden.";
+                    if (!listaHoy) desbloquear("repaso");
+                    pintarRepasoHoy();
                     return;
                 }
                 tarjeta.parentNode.hidden = false;
                 fin.hidden = true;
                 tarjeta.classList.remove("girada");
                 botones.hidden = true;
-                tarjeta.querySelector(".rp-frente .rp-texto").textContent = cola[0][0];
-                tarjeta.querySelector(".rp-dorso .rp-texto").textContent = cola[0][1];
+                var it = cola[0];
+                var m = memoria()[claveCarta(it.mazo, it.carta)];
+                var estado = tarjeta.querySelector(".rp-estado");
+                estado.textContent = !m ? "Nueva" : m.d <= hoyNum() ? "Toca repasarla" : "Ya la sabías";
+                estado.className = "rp-estado " + (!m ? "nueva" : m.d <= hoyNum() ? "toca" : "sabida");
+                tarjeta.querySelector(".rp-frente .rp-texto").textContent = it.carta[0];
+                tarjeta.querySelector(".rp-dorso .rp-texto").textContent = it.carta[1];
             }
 
             tarjeta.onclick = function () {
                 tarjeta.classList.toggle("girada");
                 botones.hidden = !tarjeta.classList.contains("girada");
             };
-            V.querySelector(".rp-se").onclick = function () { intentos++; sabidas++; cola.shift(); mostrar(); };
-            V.querySelector(".rp-otra").onclick = function () {
-                intentos++;
-                var c = cola.shift();
-                cola.splice(Math.min(cola.length, 3), 0, c);   /* vuelve a salir pronto */
+            V.querySelector(".rp-se").onclick = function () {
+                var it = cola.shift(), k = claveCarta(it.mazo, it.carta);
+                intentos++; sabidas++;
+                anotar(k, true, !!falladas[k]);
                 mostrar();
             };
-            V.querySelector(".rp-reiniciar").onclick = function () { cola = barajar(mazo.slice()); sabidas = 0; intentos = 0; mostrar(); };
+            V.querySelector(".rp-otra").onclick = function () {
+                var it = cola.shift(), k = claveCarta(it.mazo, it.carta);
+                intentos++;
+                if (!falladas[k]) anotar(k, false);
+                falladas[k] = true;
+                cola.splice(Math.min(cola.length, 3), 0, it);   /* vuelve a salir pronto */
+                mostrar();
+            };
+            V.querySelector(".rp-reiniciar").onclick = function () { cola = barajar(original.slice()); sabidas = 0; intentos = 0; falladas = {}; mostrar(); };
             V.onkeydown = function (e) {
                 if (e.key === " " && e.target === tarjeta) return;
                 if (e.key === " ") { e.preventDefault(); tarjeta.click(); }
@@ -2704,6 +2813,20 @@
             V.abrir();
             setTimeout(function () { tarjeta.focus(); }, 60);
         });
+    }
+
+    /* Aviso «Tienes N tarjetas para repasar hoy» (portada) */
+    function pintarRepasoHoy() {
+        var hueco = document.getElementById("repaso-hoy");
+        if (!hueco) return;
+        repasoDeHoy().then(function (lista) {
+            if (!lista.length) { hueco.hidden = true; return; }
+            hueco.hidden = false;
+            hueco.innerHTML = '<span class="rh-ic">🃏</span><span class="rh-txt"><strong>Tienes ' + lista.length +
+                (lista.length === 1 ? ' tarjeta' : ' tarjetas') + ' para repasar hoy</strong><small>Las que fallaste o te toca recordar. Unos minutos y listo.</small></span>' +
+                '<span class="b-boton rh-boton">Repasar</span>';
+            hueco.onclick = function () { abrirRepaso(null, "Repaso de hoy", lista); };
+        }).catch(function () {});
     }
 
     /* En cada página de tema: bloque «Repaso rápido» */
@@ -2724,6 +2847,13 @@
                 '<p>' + mazo.length + ' preguntas clave con su respuesta. Gíralas, marca las que te sabes y repite las que no.</p>' +
                 '<button type="button" class="b-boton">Empezar el repaso <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 5l7 7-7 7-1.4-1.4 4.6-4.6H4v-2h12.2l-4.6-4.6z"/></svg></button></div>';
             bloque.querySelector("button").addEventListener("click", function () { abrirRepaso(clave, titulo); });
+            var pend = pendientesDe(clave, mazo, memoria()).length;
+            if (pend) {
+                var chip = document.createElement("span");
+                chip.className = "rt-pendientes";
+                chip.textContent = pend + (pend === 1 ? " para repasar hoy" : " para repasar hoy");
+                bloque.querySelector(".b-etiqueta").appendChild(chip);
+            }
             col.parentNode.insertBefore(bloque, col.nextSibling);
         }).catch(function () {});
     }
@@ -2748,9 +2878,13 @@
     function panelRepaso() {
         var p = panel("hoja-repaso", "Tarjetas de repaso", '<p class="hoja-cargando">Cargando…</p>');
         abrirPanel(p);
-        Promise.all([cargarTarjetas(), cargarTemas()]).then(function (r) {
-            var todas = r[0], temas = r[1].temas;
-            p.querySelector(".hoja-cuerpo").innerHTML = temas.filter(function (t) { return todas[claveTema(t.url)]; }).map(function (t) {
+        Promise.all([cargarTarjetas(), cargarTemas(), repasoDeHoy()]).then(function (r) {
+            var todas = r[0], temas = r[1].temas, hoy = r[2];
+            window.__repasoHoy = hoy;
+            p.querySelector(".hoja-cuerpo").innerHTML = (hoy.length ?
+                '<button type="button" class="hoja-fila hf-hoy" data-accion-hoy="1"><span class="hf-num">🃏</span><span class="hf-txt"><strong>Repaso de hoy</strong><small>' +
+                hoy.length + (hoy.length === 1 ? ' tarjeta pendiente' : ' tarjetas pendientes') + '</small></span><span class="hf-flecha">›</span></button><p class="hoja-grupo">Por temas</p>' : '') +
+                temas.filter(function (t) { return todas[claveTema(t.url)]; }).map(function (t) {
                 var partes = /^(Tema\s*\d+)\s*[:.·-]?\s*(.*)$/i.exec(t.titulo) || [null, t.titulo, ""];
                 return '<button type="button" class="hoja-fila hf-tema" data-mazo="' + claveTema(t.url) + '" data-titulo="' + (partes[2] || partes[1]).replace(/"/g, "&quot;") + '">' +
                     '<span class="hf-num">' + partes[1].replace(/\D/g, "") + '</span><span class="hf-txt"><strong>' + (partes[2] || partes[1]) + '</strong><small>' +
@@ -2760,11 +2894,245 @@
     }
 
     document.addEventListener("click", function (e) {
+        if (e.target.closest("[data-accion-hoy]")) { cerrarPanel(); abrirRepaso(null, "Repaso de hoy", window.__repasoHoy || []); }
+    });
+
+    document.addEventListener("click", function (e) {
         var b = e.target.closest("[data-mazo]");
         if (!b) return;
         cerrarPanel();
         abrirRepaso(b.getAttribute("data-mazo"), b.getAttribute("data-titulo"));
     });
+
+
+    /* =====================================================
+       14. PERSONALIZACIÓN: color, favoritos y novedades
+    ===================================================== */
+
+    /* ---------- Color de la web ---------- */
+
+    var COLORES = [
+        ["violeta", "Violeta", "#7048ff", "#2f6bff"],
+        ["azul", "Azul", "#2563eb", "#06b6d4"],
+        ["verde", "Verde", "#059669", "#14b8a6"],
+        ["coral", "Coral", "#e8432c", "#f59e0b"],
+        ["rosa", "Rosa", "#db2777", "#8b5cf6"]
+    ];
+
+    function aplicarColor(id) {
+        if (!id || id === "violeta") html.removeAttribute("data-color");
+        else html.setAttribute("data-color", id);
+        document.querySelectorAll(".color-op").forEach(function (b) {
+            b.classList.toggle("si", b.getAttribute("data-col") === (id || "violeta"));
+        });
+    }
+
+    aplicarColor(leer("color-web"));
+
+    function selectorColores() {
+        var actual = leer("color-web") || "violeta";
+        return '<div class="colores">' + COLORES.map(function (c) {
+            return '<button type="button" class="color-op' + (c[0] === actual ? " si" : "") + '" data-col="' + c[0] + '" aria-label="Color ' + c[1] + '" title="' + c[1] + '"' +
+                ' style="background:linear-gradient(135deg,' + c[2] + ',' + c[3] + ')"></button>';
+        }).join("") + '</div>';
+    }
+
+    document.addEventListener("click", function (e) {
+        var b = e.target.closest(".color-op");
+        if (!b) return;
+        var id = b.getAttribute("data-col");
+        guardar("color-web", id);
+        aplicarColor(id);
+    });
+
+    function pintarColorTile() {
+        var t = document.getElementById("tu-color");
+        if (t) t.querySelector(".tc-colores").innerHTML = selectorColores();
+    }
+
+
+    /* ---------- Favoritos ---------- */
+
+    function misFavs() { return leerJSON("favs-web", []); }
+
+    function esFav(url) { return misFavs().some(function (f) { return f.url === url; }); }
+
+    function alternarFav(fav) {
+        var l = misFavs(), i = -1;
+        l.forEach(function (f, j) { if (f.url === fav.url) i = j; });
+        if (i > -1) l.splice(i, 1); else l.unshift(fav);
+        guardar("favs-web", JSON.stringify(l.slice(0, 40)));
+        return i === -1;
+    }
+
+    var SVG_ESTRELLA = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6L2.5 9.4l6.6-.8z"/></svg>';
+
+    function botonFav(fav) {
+        var b = document.createElement("button");
+        b.type = "button";
+        b.className = "fav" + (esFav(fav.url) ? " si" : "");
+        b.innerHTML = SVG_ESTRELLA;
+        b.setAttribute("aria-label", "Guardar en favoritos");
+        b.title = "Guardar en favoritos";
+        b.addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var ahora = alternarFav(fav);
+            b.classList.toggle("si", ahora);
+            b.classList.remove("pop"); void b.offsetWidth; b.classList.add("pop");
+        });
+        return b;
+    }
+
+    /* Estrellas en los PDF de los temas y en cada apartado de vídeos */
+    function estrellas() {
+        var cab = document.querySelector(".banda h1");
+        var titulo = cab ? limpiar((cab.querySelector(".h1-txt") || cab).textContent) : document.title;
+        var curso = html.getAttribute("data-curso");
+        var pre = cab && cab.querySelector(".h1-pre") ? limpiar(cab.querySelector(".h1-pre").textContent) : "";
+        var sub = (curso ? curso + ".º Bach · " : "") + (pre ? pre + " · " : "") + titulo;
+        var base = location.href.split("#")[0].split("?")[0];
+
+        document.querySelectorAll("a.btn-tema").forEach(function (a) {
+            if (a.querySelector(".fav") || /btn-deshabilitado/.test(a.className)) return;
+            var t = a.querySelector(".titulo");
+            a.appendChild(botonFav({ url: a.href, titulo: limpiar(t && t.textContent), sub: sub, externo: a.target === "_blank" }));
+        });
+
+        document.querySelectorAll("details.video-section, details.tema").forEach(function (d, i) {
+            var s = d.querySelector("summary");
+            if (!s || s.querySelector(".fav")) return;
+            var idx = Array.prototype.indexOf.call(document.querySelectorAll("details"), d);
+            s.appendChild(botonFav({ url: base + "?abrir=" + idx, titulo: limpiar(s.textContent), sub: sub }));
+        });
+    }
+
+    function listaFavsHTML(max) {
+        var l = misFavs().slice(0, max || 40);
+        if (!l.length) return '<p class="fav-vacio">Toca la <span class="fav-mini">' + SVG_ESTRELLA + '</span> de cualquier vídeo o PDF y aparecerá aquí.</p>';
+        return l.map(function (f) {
+            return '<a class="fav-fila" href="' + f.url + '"' + (f.externo ? ' target="_blank" rel="noopener"' : '') + '>' +
+                '<span class="fav-mini si">' + SVG_ESTRELLA + '</span><span class="fav-txt"><strong></strong><small></small></span><span class="hf-flecha">›</span></a>'
+                .replace("<strong></strong>", "<strong>" + escaparHTML(f.titulo) + "</strong>")
+                .replace("<small></small>", "<small>" + escaparHTML(f.sub || "") + "</small>");
+        }).join("");
+    }
+
+    function escaparHTML(t) {
+        return String(t || "").replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; });
+    }
+
+    function pintarFavsTile() {
+        var t = document.getElementById("mis-favs");
+        if (t) t.querySelector(".mf-lista").innerHTML = listaFavsHTML(6);
+    }
+
+    function panelFavs() {
+        abrirPanel(panel("hoja-favs", "Mis favoritos", listaFavsHTML()));
+    }
+
+
+    /* ---------- Novedades: temas nuevos, vídeos nuevos y fechas de examen ---------- */
+
+    function huellaWeb(datos) {
+        var h = { temas: {}, videos: [], recursos: {} };
+        datos.temas.forEach(function (t) {
+            h.temas[t.url] = t.fecha || 0;
+            /* botones de cada tema: título → enlace */
+            var r = {};
+            (t.recursos || []).forEach(function (x) { if (!/videosyoutube|videospropios/.test(x.url)) r[x.titulo] = x.url; });
+            h.recursos[t.url] = r;
+        });
+        datos.videos.forEach(function (v) { if (v.tipo === "video") h.videos.push(v.url.split("?")[0] + "|" + v.texto); });
+        return h;
+    }
+
+    function misNovedades() { return leerJSON("novedades-web", []); }
+
+    function comprobarNovedades() {
+        if (pagina === "juego") return;
+        cargarTemas().then(function (datos) {
+            var ahora = huellaWeb(datos);
+            var antes = leerJSON("visto-web", null);
+            guardar("visto-web", JSON.stringify(ahora));
+            if (!antes) { pintarNovedades(); return; }   /* primera visita: nada es «nuevo» */
+
+            var nov = misNovedades();
+            function añadir(n) { if (!nov.some(function (x) { return x.clave === n.clave; })) nov.push(n); }
+            function corto(t) { return t.titulo; }
+
+            datos.temas.forEach(function (t) {
+                if (!(t.url in antes.temas)) {
+                    añadir({ clave: "tema|" + t.url, tipo: "tema", url: t.url, tema: t.url,
+                        texto: "Nuevo: " + corto(t) + (t.fecha && t.fecha > Date.now() ? " · examen el " + new Date(t.fecha).toLocaleDateString("es-ES", { day: "numeric", month: "long" }) : "") });
+                } else if (t.fecha && t.fecha !== antes.temas[t.url] && t.fecha > Date.now()) {
+                    añadir({ clave: "fecha|" + t.url + "|" + t.fecha, tipo: "fecha", url: t.url, tema: t.url,
+                        texto: "Fecha de examen: " + corto(t).replace(/:.*$/, "") + " · " + new Date(t.fecha).toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "long" }) });
+                }
+            });
+
+            /* Botones nuevos o con el enlace cambiado (PDF, carpetas…) */
+            if (antes.recursos) datos.temas.forEach(function (t) {
+                var previos = antes.recursos[t.url];
+                if (!previos) return;   /* tema nuevo: ya se avisa arriba */
+                var actuales = ahora.recursos[t.url] || {};
+                var nombre = corto(t).replace(/:.*$/, "");
+                Object.keys(actuales).forEach(function (tit) {
+                    if (!(tit in previos)) {
+                        añadir({ clave: "rec|" + t.url + "|" + tit + "|" + actuales[tit], tipo: "pdf", url: t.url, tema: t.url,
+                            texto: "Nuevo en " + nombre + ": " + tit });
+                    } else if (previos[tit] !== actuales[tit]) {
+                        añadir({ clave: "rec|" + t.url + "|" + tit + "|" + actuales[tit], tipo: "pdf", url: t.url, tema: t.url,
+                            texto: "Actualizado en " + nombre + ": " + tit });
+                    }
+                });
+            });
+
+            var nuevosVideos = {};
+            datos.videos.forEach(function (v) {
+                if (v.tipo !== "video") return;
+                var k = v.url.split("?")[0] + "|" + v.texto;
+                if (antes.videos.indexOf(k) === -1) (nuevosVideos[v.url.split("?")[0]] = nuevosVideos[v.url.split("?")[0]] || []).push(v);
+            });
+            Object.keys(nuevosVideos).forEach(function (pag) {
+                var vs = nuevosVideos[pag];
+                añadir({ clave: "videos|" + pag + "|" + vs.map(function (v) { return v.texto; }).join(","), tipo: "video", url: vs[0].url,
+                    texto: (vs.length === 1 ? "Vídeo nuevo: " + vs[0].texto : vs.length + " vídeos nuevos") + " · " + vs[0].donde.split(" · ").slice(1, 3).join(" · ") });
+            });
+
+            guardar("novedades-web", JSON.stringify(nov.slice(-12)));
+            pintarNovedades();
+        }).catch(function () {});
+    }
+
+    function borrarNovedades() {
+        guardar("novedades-web", "[]");
+        pintarNovedades();
+    }
+
+    function pintarNovedades() {
+        var nov = misNovedades();
+        var hay = nov.length > 0;
+
+        /* punto en la pestaña Temas (móvil) y en «CCSS II» del menú (ordenador) */
+        var tab = document.querySelector('.tab[data-tab="temas"]');
+        if (tab) tab.classList.toggle("con-novedad", hay);
+        var dd = document.querySelectorAll("#menu-container .menu-dropdown")[1];
+        if (dd) dd.classList.toggle("con-novedad", hay);
+
+        var caja = document.getElementById("novedades-aviso");
+        if (!caja) return;
+        if (!hay) { caja.hidden = true; return; }
+        caja.hidden = false;
+        caja.innerHTML = '<div class="nv-cab"><span class="nv-ic">✨</span><strong>Novedades desde tu última visita</strong>' +
+            '<button type="button" class="nv-cerrar" aria-label="Marcar como visto">Entendido</button></div>' +
+            '<div class="nv-lista">' + nov.map(function (n) {
+                return '<a class="nv-item nv-' + n.tipo + '" href="' + n.url + '"><span class="nv-tipo">' +
+                    (n.tipo === "tema" ? "Tema" : n.tipo === "fecha" ? "Examen" : n.tipo === "pdf" ? "Material" : "Vídeos") + '</span><span>' + escaparHTML(n.texto) + '</span></a>';
+            }).join("") + '</div>';
+        caja.querySelector(".nv-cerrar").onclick = borrarNovedades;
+        caja.querySelectorAll(".nv-item").forEach(function (a) { a.addEventListener("click", borrarNovedades); });
+    }
 
 
     /* =====================================================
@@ -2783,6 +3151,9 @@
             pintarContinuar();
             pintarLogros();
             pintarMediaTile();
+            pintarRepasoHoy();
+            pintarColorTile();
+            pintarFavsTile();
             var bm = document.getElementById("abrir-media");
             if (bm) bm.addEventListener("click", abrirMedia);
             proximoExamen();
@@ -2799,6 +3170,10 @@
         barraInferior();
         registrarVisita();
         repasoEnTema();
+        estrellas();
+        setTimeout(comprobarNovedades, 900);
+        /* el menú llega más tarde: repintar el punto de novedades */
+        setTimeout(pintarNovedades, 1500);
         setTimeout(comprobarLogros, 1500);
         abrirApartado();
         prepararAparicion();

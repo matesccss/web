@@ -29,7 +29,7 @@ window.TARJETAS = {
         ["¿Cuándo es un sistema compatible indeterminado?", "Cuando rg(A) = rg(A*) < nº de incógnitas: infinitas soluciones."],
         ["¿Cuándo es un sistema incompatible?", "Cuando rg(A) ≠ rg(A*): no tiene solución."],
         ["¿Qué es un sistema homogéneo? ¿Puede ser incompatible?", "Todos los términos independientes son 0. Nunca es incompatible: siempre tiene al menos la solución (0, 0, 0)."],
-        ["¿Cuándo se puede aplicar la regla de Cramer?", "Cuando hay tantas ecuaciones como incógnitas y |A| ≠ 0."],
+        ["¿Cuándo se puede aplicar la regla de Cramer?", "En cualquier sistema compatible. Si es SCD (|A| ≠ 0), directamente. Si es SCI, se toma un menor no nulo de orden rg(A), las incógnitas que sobran pasan al otro miembro como parámetros y se aplica Cramer a ese sistema."],
         ["Regla de Cramer: ¿cómo se calcula x?", "x = |Aₓ| / |A|, donde Aₓ es A cambiando la columna de x por los términos independientes."],
         ["¿En qué consiste el método de Gauss?", "En transformar el sistema en uno escalonado mediante operaciones entre filas."],
         ["Programación lineal: ¿qué es la región factible?", "El conjunto de puntos que cumplen todas las restricciones."],
