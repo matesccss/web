@@ -7265,3 +7265,214 @@
 :root[data-color] .aviso-examen { border-top-color: var(--c1); }
 :root[data-color] #barra-progreso { background: var(--c1) !important; }
 :root[data-color] .cp-nota-adm { background-image: radial-gradient(90% 90% at 100% 0%, var(--c1), transparent 70%); }
+
+
+/* =========================================================
+   «AHORA», SCROLL DE LOS PANELES Y PESTAÑA DE FAVORITOS
+========================================================= */
+
+/* La lista de los paneles y ventanas se encoge para caber y hace scroll */
+:root .hoja-cuerpo,
+:root .cp-cuerpo,
+:root .buscador-lista {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    touch-action: pan-y;
+}
+
+:root .hoja-caja { overflow: hidden; }
+:root .hoja-asa, :root .hoja-cab { flex: 0 0 auto; touch-action: none; }
+:root .hoja-asa { padding: 6px 0; margin-top: 4px; background-clip: content-box; height: 5px; box-sizing: content-box; }
+
+/* Los botones de color no deben robar el gesto de scroll */
+:root .hf-color { touch-action: pan-y; }
+
+:root .hg-primero { margin-top: 4px; }
+
+/* Sección «Ahora» */
+:root .ahora .seccion-cab h2 { letter-spacing: -.03em; }
+
+:root .ahora-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+}
+
+:root .ah-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    padding: 14px;
+    border: 1px solid var(--borde);
+    border-radius: 16px;
+    background: var(--tarjeta);
+    box-shadow: var(--sombra);
+    color: var(--tinta);
+    text-decoration: none;
+    transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+}
+
+:root .ah-item:hover { transform: translateY(-2px); border-color: var(--c1); box-shadow: var(--sombra-hover); }
+
+:root .ah-ic {
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: var(--relleno);
+    font-size: 1.15rem;
+}
+
+:root .ah-txt { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+:root .ah-txt strong { font-size: .9rem; font-weight: 600; line-height: 1.25; }
+:root .ah-txt small { font-size: .74rem; color: var(--gris); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+:root .ah-ver {
+    justify-content: space-between;
+    border: 0;
+    background: linear-gradient(135deg, var(--c1), var(--c2));
+    color: #fff;
+}
+
+:root .ah-ver small { color: rgba(255, 255, 255, .8); }
+:root .ah-flecha { font-size: 1.2rem; }
+
+:root .ahora[hidden] { display: none; }
+
+@media (max-width: 960px) {
+    :root .ahora-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 760px) {
+    :root .ahora .seccion-cab { margin-top: 28px; }
+    :root .ahora .seccion-desc { display: block; margin-top: 4px; font-size: .85rem; }
+    :root .ahora-grid { gap: 8px; }
+    :root .ah-item { padding: 11px; gap: 10px; border-radius: 14px; }
+    :root .ah-ic { width: 34px; height: 34px; font-size: 1rem; }
+    :root .ah-txt strong { font-size: .84rem; }
+    :root .ah-txt small { display: none; }
+    :root .ah-ver { grid-column: 1 / -1; }
+}
+
+
+/* ---------- Examen dentro de «Ahora»: cuenta atrás pequeña ---------- */
+
+:root .ahora .seccion-cab { grid-template-columns: minmax(0, 1fr) auto; }
+
+:root .ah-examen {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 16px;
+    margin-top: 16px;
+    padding: 12px 14px;
+    border-radius: 16px;
+    background: var(--tarjeta);
+    border: 1px solid var(--borde);
+    box-shadow: var(--sombra);
+}
+
+:root .ah-ex-et {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: .86rem;
+    font-weight: 600;
+    color: var(--tinta);
+}
+
+:root .ah-ex-fecha { font-weight: 500; color: var(--tinta-2); }
+:root .ah-ex-fecha::first-letter { text-transform: uppercase; }
+
+:root .ah-punto {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #ff5a36;
+    animation: latido 1.8s ease-out infinite;
+}
+
+/* «14 d 11 h 06 min 54 s» en línea */
+:root .ah-cuenta.ep-cuenta {
+    display: inline-flex;
+    gap: 4px;
+    margin: 0;
+}
+
+:root .ah-cuenta.ep-cuenta div {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 2px;
+    padding: 4px 8px;
+    border: 0;
+    border-radius: 8px;
+    background: var(--granate-suave);
+}
+
+:root .ah-cuenta.ep-cuenta strong {
+    display: inline;
+    font-family: var(--serif);
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--granate);
+    text-shadow: none;
+}
+
+:root .ah-cuenta.ep-cuenta small {
+    display: inline;
+    margin: 0;
+    font-size: .68rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--granate);
+    opacity: .75;
+}
+
+:root .ah-cuenta.ep-cuenta.urgente div { background: #ffe6df; }
+:root .ah-cuenta.ep-cuenta.urgente :is(strong, small) { color: #c2381b; }
+
+:root .ah-acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-left: auto;
+}
+
+/* Los botones del examen, en versión clara (fuera de la cabecera oscura) */
+:root .ah-acciones .ep-cal { margin: 0; }
+:root .ah-acciones .ep-calendario {
+    margin: 0 !important;
+    padding: 7px 12px;
+    background: var(--relleno);
+    border: 1px solid var(--borde);
+    color: var(--tinta);
+    font-size: .78rem;
+}
+:root .ah-acciones .ep-calendario:hover { background: var(--granate-suave); border-color: var(--granate); }
+:root .ah-acciones .ep-cal-menu { left: auto; right: 0; }
+
+/* La cabecera de la portada queda en una sola columna */
+:root .hero-dentro:has(.hero-examen[hidden]) .hero-lado { display: none; }
+
+@media (max-width: 760px) {
+    :root .ah-examen { padding: 12px; gap: 10px; }
+    :root .ah-ex-et { width: 100%; font-size: .8rem; }
+    :root .ah-acciones { margin-left: 0; width: 100%; }
+    :root .ah-acciones .ep-calendario { flex: 1 1 0; justify-content: center; }
+    :root .ah-acciones .ep-cal { display: flex; gap: 8px; flex: 1 1 100%; }
+    :root .ah-acciones .ep-cal-menu { left: 0; right: auto; }
+}
+
+@media (max-width: 760px) {
+    :root .ahora .seccion-cab { grid-template-columns: minmax(0, 1fr); }
+    :root .ahora .seccion-cab h2 { font-size: 1.45rem; }
+}

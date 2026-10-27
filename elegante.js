@@ -387,7 +387,10 @@
                         var href = a.getAttribute("href") || "";
                         var tit = limpiar((a.querySelector(".titulo") || a).textContent);
                         if (!href || /btn-deshabilitado/.test(a.className)) return;
-                        t.recursos.push({ titulo: tit, url: new URL(href, t.url).href });
+                        var subEl = a.querySelector(".subtitulo"), icEl = a.querySelector(".icono");
+                        t.recursos.push({ titulo: tit, url: new URL(href, t.url).href,
+                            sub: limpiar(subEl && subEl.textContent), ic: limpiar(icEl && icEl.textContent),
+                            fuera: a.getAttribute("target") === "_blank" });
                     });
                     return t;
                 }).catch(function () { t.titulo = t.nombre; t.fecha = null; t.recursos = []; return t; });
@@ -755,9 +758,8 @@
                 (sig ? '<p class="b-examen-sig">Después: ' + sig.titulo.replace(/^Tema\s+\d+\s*:\s*/i, "") + ' · ' +
                     new Date(sig.fecha).toLocaleDateString("es-ES", { day: "numeric", month: "long" }) + '</p>' : "");
 
-            caja.hidden = false;
-            botonCalendario(caja, t);
-            repasoEnExamen(caja, t);
+            /* La cuenta atrás se muestra en la sección «Ahora», no en la cabecera */
+            caja.hidden = true;
 
             var ir = document.getElementById("hero-ir");
             if (ir) {
@@ -1883,7 +1885,8 @@
         temas: '<path d="M4 4h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H4zm16 0h-4a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h5z"/>',
         buscar: '<path d="M10 2a8 8 0 016.32 12.9l5.39 5.4-1.41 1.4-5.4-5.39A8 8 0 1110 2zm0 2a6 6 0 100 12 6 6 0 000-12z"/>',
         herramientas: '<path d="M6 2h12a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm1 3v4h10V5zm0 7v2h2v-2zm4 0v2h2v-2zm4 0v6h2v-6zm-8 4v2h2v-2zm4 0v2h2v-2z"/>',
-        mas: '<path d="M5 10a2 2 0 110 4 2 2 0 010-4zm7 0a2 2 0 110 4 2 2 0 010-4zm7 0a2 2 0 110 4 2 2 0 010-4z"/>'
+        mas: '<path d="M5 10a2 2 0 110 4 2 2 0 010-4zm7 0a2 2 0 110 4 2 2 0 010-4zm7 0a2 2 0 110 4 2 2 0 010-4z"/>',
+        estrella: '<path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6L2.5 9.4l6.6-.8z"/>'
     };
 
     function icono(n) { return '<svg viewBox="0 0 24 24" aria-hidden="true">' + ICONOS[n] + '</svg>'; }
@@ -1911,7 +1914,8 @@
             /* Deslizar hacia abajo para cerrar */
             var caja = p.querySelector(".hoja-caja"), y0 = null, dy = 0;
             caja.addEventListener("touchstart", function (e) {
-                if (caja.querySelector(".hoja-cuerpo").scrollTop > 0) { y0 = null; return; }
+                /* solo al arrastrar la barrita o el título; el resto hace scroll normal */
+                if (!e.target.closest(".hoja-asa, .hoja-cab") || e.target.closest("button")) { y0 = null; return; }
                 y0 = e.touches[0].clientY; dy = 0;
             }, { passive: true });
             caja.addEventListener("touchmove", function (e) {
@@ -2010,9 +2014,15 @@
             enlaces += fila(a.href, t, "", ext);
         });
         var noche = html.getAttribute("data-tema") === "noche";
-        var nf = misFavs().length;
         var p = panel("hoja-mas", "Más",
-            boton("favs", "Mis favoritos", nf ? nf + (nf === 1 ? " guardado" : " guardados") : "Guarda vídeos y PDF con la estrella") +
+            '<p class="hoja-grupo hg-primero">Herramientas</p>' +
+            boton("normal", "Calculadora de la normal", "P(Z ≤ z), entre dos valores y valor crítico", icono("herramientas")) +
+            boton("repaso", "Tarjetas de repaso", "Preguntas clave de cada tema", icono("temas")) +
+            boton("nota", "¿Qué nota necesito?", "Nota de acceso y de admisión de la PAU", icono("herramientas")) +
+            boton("media", "Mi media", "Tus notas por criterios y competencias", icono("herramientas")) +
+            boton("calculadoras", "Ayuda con tu calculadora", "FX-570 · FX-991 · ClassWiz", icono("herramientas")) +
+            '<p class="hoja-grupo">Secciones</p>' +
+            fila(raiz + "examenes.html", "Exámenes del curso", "Enunciados y soluciones") +
             enlaces +
             '<p class="hoja-grupo">Ajustes</p>' +
             '<div class="hoja-fila hf-color"><span class="hf-txt"><strong>Tu color</strong><small>Cambia el color de toda la web</small></span>' + selectorColores() + '</div>' +
@@ -2068,7 +2078,7 @@
             '<a class="tab" data-tab="inicio" href="' + raiz + 'index.html">' + icono("inicio") + '<span>Inicio</span></a>' +
             '<button class="tab" type="button" data-tab="temas">' + icono("temas") + '<span>Temas</span></button>' +
             '<button class="tab tab-buscar" type="button" data-tab="buscar">' + icono("buscar") + '<span>Buscar</span></button>' +
-            '<button class="tab" type="button" data-tab="herramientas">' + icono("herramientas") + '<span>Herramientas</span></button>' +
+            '<button class="tab" type="button" data-tab="favs">' + icono("estrella") + '<span>Favoritos</span></button>' +
             '<button class="tab" type="button" data-tab="mas">' + icono("mas") + '<span>Más</span></button>';
         document.body.appendChild(nav);
         html.classList.add("con-tabbar");
@@ -2081,6 +2091,7 @@
             marcarPestana(cual);
             if (cual === "temas") panelTemas();
             if (cual === "herramientas") panelHerramientas();
+            if (cual === "favs") panelFavs();
             if (cual === "mas") panelMas();
             if (cual === "buscar") { cerrarPanel(); abrirBuscador(); }
         });
@@ -3136,6 +3147,83 @@
 
 
     /* =====================================================
+       15. «AHORA»: el tema que toca, con su material
+           (tema del próximo examen; si no hay, el último
+           tema publicado de 2.º)
+    ===================================================== */
+
+    function temaDeAhora(datos) {
+        var ahora = Date.now();
+        var futuros = datos.temas.filter(function (t) { return t.fecha && t.fecha > ahora; })
+            .sort(function (a, b) { return a.fecha - b.fecha; });
+        if (futuros.length) return futuros[0];
+        var de2 = datos.temas.filter(function (t) { return t.curso === 2; });
+        return de2.length ? de2[de2.length - 1] : datos.temas[datos.temas.length - 1];
+    }
+
+    function pintarAhora() {
+        var sec = document.getElementById("ahora");
+        if (!sec) return;
+        cargarTemas().then(function (datos) {
+            var t = temaDeAhora(datos);
+            if (!t || !t.recursos || !t.recursos.length) return;
+
+            var partes = /^(Tema\s*\d+)\s*[:.·-]?\s*(.*)$/i.exec(t.titulo) || [null, t.titulo, ""];
+            document.getElementById("ahora-titulo").textContent = partes[2] || partes[1];
+
+            document.getElementById("ahora-desc").textContent = partes[1] + " · " + t.curso + ".º Bachillerato";
+
+            /* Examen: fecha + cuenta atrás pequeña + calendario y tarjetas */
+            var viejo = sec.querySelector(".ah-examen");
+            if (viejo) viejo.remove();
+            if (t.fecha && t.fecha > Date.now()) {
+                var ex = document.createElement("div");
+                ex.className = "ah-examen";
+                ex.innerHTML =
+                    '<span class="ah-ex-et"><span class="ah-punto"></span>Examen · <span class="ah-ex-fecha"></span></span>' +
+                    '<div class="ep-cuenta ah-cuenta" data-fecha="' + t.fecha + '">' +
+                    '<div><strong>--</strong><small>d</small></div>' +
+                    '<div><strong>--</strong><small>h</small></div>' +
+                    '<div><strong>--</strong><small>min</small></div>' +
+                    '<div><strong>--</strong><small>s</small></div>' +
+                    '</div>' +
+                    '<div class="ah-acciones"></div>';
+                ex.querySelector(".ah-ex-fecha").textContent =
+                    new Date(t.fecha).toLocaleString("es-ES", { weekday: "long", day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" }) + " h";
+                sec.querySelector(".seccion-cab").appendChild(ex);
+                botonCalendario(ex.querySelector(".ah-acciones"), t);
+                repasoEnExamen(ex.querySelector(".ah-acciones"), t);
+                actualizarCuentas();
+            }
+
+            var grid = document.getElementById("ahora-grid");
+            grid.innerHTML = "";
+            t.recursos.forEach(function (r) {
+                var a = document.createElement("a");
+                a.className = "ah-item";
+                a.href = r.url;
+                if (r.fuera) { a.target = "_blank"; a.rel = "noopener"; }
+                a.innerHTML = '<span class="ah-ic"></span><span class="ah-txt"><strong></strong><small></small></span>';
+                a.querySelector(".ah-ic").textContent = r.ic || "📄";
+                a.querySelector("strong").textContent = r.titulo;
+                a.querySelector("small").textContent = r.sub || "";
+                a.addEventListener("click", function () { apuntarVisita(r.titulo + " · " + partes[1], t.curso + ".º Bach · " + (partes[2] || ""), r.url); });
+                grid.appendChild(a);
+            });
+
+            var ver = document.createElement("a");
+            ver.className = "ah-item ah-ver";
+            ver.href = t.url;
+            ver.innerHTML = '<span class="ah-txt"><strong>Abrir el tema completo</strong><small>Examen, curiosidades y tarjetas</small></span><span class="ah-flecha">→</span>';
+            grid.appendChild(ver);
+
+            sec.hidden = false;
+            prepararAparicion();
+        }).catch(function () {});
+    }
+
+
+    /* =====================================================
        ARRANQUE
     ===================================================== */
 
@@ -3152,6 +3240,7 @@
             pintarLogros();
             pintarMediaTile();
             pintarRepasoHoy();
+            pintarAhora();
             pintarColorTile();
             pintarFavsTile();
             var bm = document.getElementById("abrir-media");
