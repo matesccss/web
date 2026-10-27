@@ -3198,7 +3198,8 @@
 
             var grid = document.getElementById("ahora-grid");
             grid.innerHTML = "";
-            t.recursos.forEach(function (r) {
+            /* Solo los tres primeros botones del tema; el resto, en «Abrir el tema completo» */
+            t.recursos.slice(0, 3).forEach(function (r) {
                 var a = document.createElement("a");
                 a.className = "ah-item";
                 a.href = r.url;
@@ -3214,7 +3215,8 @@
             var ver = document.createElement("a");
             ver.className = "ah-item ah-ver";
             ver.href = t.url;
-            ver.innerHTML = '<span class="ah-txt"><strong>Abrir el tema completo</strong><small>Examen, curiosidades y tarjetas</small></span><span class="ah-flecha">→</span>';
+            var resto = t.recursos.length - 3;
+            ver.innerHTML = '<span class="ah-txt"><strong>Abrir el tema completo</strong><small>' + (resto > 0 ? '+' + resto + ' recursos más, vídeos y tarjetas' : 'Vídeos, curiosidades y tarjetas') + '</small></span><span class="ah-flecha">→</span>';
             grid.appendChild(ver);
 
             sec.hidden = false;

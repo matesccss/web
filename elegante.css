@@ -7476,3 +7476,21 @@
     :root .ahora .seccion-cab { grid-template-columns: minmax(0, 1fr); }
     :root .ahora .seccion-cab h2 { font-size: 1.45rem; }
 }
+
+/* «Ahora»: 3 botones + «Abrir el tema completo» */
+@media (max-width: 960px) and (min-width: 761px) {
+    :root .ahora-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+@media (max-width: 760px) {
+    :root .ahora-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    :root .ahora-grid .ah-item:not(.ah-ver) {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 12px;
+    }
+    :root .ahora-grid .ah-txt strong { font-size: .82rem; }
+    :root .ah-ver { grid-column: 1 / -1; }
+    :root .ah-ver small { display: block; }
+}
