@@ -2086,7 +2086,10 @@
                     var partes = a.nombre.split(" ");
                     a.corto = cuenta[partes[0]] > 1 && partes[1] ? partes[0] + " " + partes[1].charAt(0) + "." : partes[0];
                 });
-                return lista.sort(function (a, b) { return a.nombre.localeCompare(b.nombre, "es"); });
+                lista.sort(function (a, b) { return a.nombre.localeCompare(b.nombre, "es"); });
+                /* El profe, el primero de la lista */
+                lista.unshift({ nombre: "Miguel Ángel", corto: "Miguel Ángel", profe: true });
+                return lista;
             });
     }
 
@@ -2123,6 +2126,12 @@
                     b.innerHTML = '<span class="quien-ini"></span><span class="quien-nom"></span>';
                     b.firstChild.textContent = a.nombre.charAt(0);
                     b.lastChild.textContent = a.nombre;
+                    if (a.profe) {
+                        b.classList.add("quien-profe");
+                        var et = document.createElement("small");
+                        et.textContent = "Profe";
+                        b.appendChild(et);
+                    }
                     b.addEventListener("click", function () {
                         guardar("perfil-web", JSON.stringify(a));
                         ventanaQuien.querySelector(".cp-cerrar").click();
@@ -2396,11 +2405,40 @@
         ["9", "Destrezas personales y sociales", [["9.1", "Gestionar emociones y aprender del error"], ["9.2", "Perseverar y aceptar la crítica razonada"], ["9.3", "Trabajar en equipo"]]]
     ];
 
-    function misNotas() { return leerJSON("notas-criterios", {}); }
+    /* Los exámenes se guardan así: [{ nombre, notas: { "1.1": "7", "2.1": "6,5" } }]
+       y de ahí se sacan todas las notas de cada criterio. */
+    function misExamenes() {
+        var ex = leerJSON("examenes-media", null);
+        if (ex) return ex;
+        /* notas apuntadas con la versión anterior (por criterio) → un examen */
+        var viejas = leerJSON("notas-criterios", null), notas = {}, hay = false;
+        if (viejas) Object.keys(viejas).forEach(function (k) {
+            var v = textosDe(viejas[k]);
+            if (v.length) { notas[k] = v[0]; hay = true; }
+        });
+        return hay ? [{ nombre: "Notas anteriores", notas: notas }] : [];
+    }
+
+    function misNotas() {
+        var porCriterio = {};
+        misExamenes().forEach(function (e) {
+            Object.keys(e.notas || {}).forEach(function (k) {
+                if (String(e.notas[k]).trim() === "") return;
+                (porCriterio[k] = porCriterio[k] || []).push(e.notas[k]);
+            });
+        });
+        return porCriterio;
+    }
 
     /* «6 7,5» → [6, 7.5] (se pueden poner varias notas de un mismo criterio) */
-    function notasDe(texto) {
-        return String(texto || "").split(/[\s;\/|]+/).map(leerNum).filter(function (n) { return n !== null && n >= 0 && n <= 10; });
+    function notasDe(valor) {
+        var lista = Array.isArray(valor) ? valor : String(valor || "").split(/[\s;\/|]+/);
+        return lista.map(leerNum).filter(function (n) { return n !== null && n >= 0 && n <= 10; });
+    }
+
+    function textosDe(valor) {
+        if (Array.isArray(valor)) return valor;
+        return String(valor || "").split(/[\s;\/|]+/).filter(function (x) { return x !== ""; });
     }
 
     function mediaDe(lista) {
@@ -2429,58 +2467,137 @@
 
     function abrirMedia() {
         if (!ventanaMedia) {
-            var cuerpo = '<div class="cp-cuerpo">' +
-                '<p class="cp-ayuda">Apunta la nota de cada criterio. Si un criterio tiene varias notas, escríbelas separadas por un espacio (por ejemplo <b>6 7,5</b>). Cada competencia es la media de sus criterios y tu nota es la media de las competencias, como se evalúa en Andalucía.</p>' +
-                COMPETENCIAS.map(function (ce) {
-                    return '<section class="ce" data-ce="' + ce[0] + '">' +
-                        '<div class="ce-cab"><span class="ce-num">CE ' + ce[0] + '</span><strong>' + ce[1] + '</strong><span class="ce-nota">—</span></div>' +
-                        ce[2].map(function (c) {
-                            return '<label class="crit"><span class="crit-cod">' + c[0] + '</span><span class="crit-txt">' + c[1] + '</span>' +
-                                '<input data-crit="' + c[0] + '" inputmode="decimal" placeholder="—" autocomplete="off"></label>';
-                        }).join("") + '</section>';
-                }).join("") +
-                '<button type="button" class="md-anadir md-borrar-todo">Borrar todas mis notas</button>' +
+            ventanaMedia = crearVentana("v-media", "Solo en tu móvil", "Mi media",
+                '<div class="cp-cuerpo">' +
+                '<p class="cp-ayuda">Añade cada examen, marca los criterios que evalúa y pon la nota de cada uno. Cada criterio es la media de sus notas, cada competencia la media de sus criterios y tu nota la media de las competencias, como se evalúa en Andalucía.</p>' +
+                '<div class="ex-lista"></div>' +
+                '<button type="button" class="md-anadir ex-nuevo">+ Añadir examen</button>' +
+                '<details class="ex-resumen"><summary>Ver mis notas por competencias</summary><div class="ex-ces"></div></details>' +
                 '</div>' +
                 '<div class="cp-resultado nm-resultado"><div class="cp-nota cp-nota-adm"><small>Tu nota (media de competencias)</small><strong id="md-media">—</strong></div>' +
                 '<p class="cp-mensaje" id="md-detalle"></p></div>' +
-                '<p class="cp-aviso">Orientativo. Las competencias sin ninguna nota todavía no cuentan en la media.</p>';
+                '<p class="cp-aviso">Orientativo. Las competencias sin ninguna nota todavía no cuentan en la media.</p>');
 
-            ventanaMedia = crearVentana("v-media", "Solo en tu móvil", "Mi media", cuerpo);
             var V = ventanaMedia;
-            var guardadas = misNotas();
+            var lista = V.querySelector(".ex-lista");
+            var examenes = misExamenes();
+            var abierto = examenes.length ? -1 : 0;
 
-            V.querySelectorAll("input[data-crit]").forEach(function (i) {
-                i.value = guardadas[i.getAttribute("data-crit")] || "";
-                i.addEventListener("input", function () {
-                    var n = misNotas();
-                    n[i.getAttribute("data-crit")] = i.value;
-                    guardar("notas-criterios", JSON.stringify(n));
-                    recalcular();
-                    pintarMediaTile();
-                });
-            });
+            var DESCR = {};
+            COMPETENCIAS.forEach(function (ce) { ce[2].forEach(function (c) { DESCR[c[0]] = c[1]; }); });
 
-            V.querySelector(".md-borrar-todo").addEventListener("click", function () {
-                if (!window.confirm("¿Borrar todas tus notas de este dispositivo?")) return;
-                guardar("notas-criterios", "{}");
-                V.querySelectorAll("input[data-crit]").forEach(function (i) { i.value = ""; });
+            function guardarTodo() {
+                guardar("examenes-media", JSON.stringify(examenes));
                 recalcular();
                 pintarMediaTile();
+            }
+
+            function mediaExamen(e) {
+                return mediaDe(Object.keys(e.notas || {}).map(function (k) { return leerNum(e.notas[k]); })
+                    .filter(function (n) { return n !== null; }));
+            }
+
+            function pintar() {
+                lista.innerHTML = "";
+                if (!examenes.length) {
+                    lista.innerHTML = '<p class="ex-vacio">Todavía no has apuntado ningún examen.</p>';
+                }
+                examenes.forEach(function (e, idx) {
+                    e.notas = e.notas || {};
+                    var sel = Object.keys(e.notas);
+                    var card = document.createElement("div");
+                    card.className = "ex-card" + (idx === abierto ? " abierto" : "");
+
+                    var m = mediaExamen(e);
+                    card.innerHTML =
+                        '<div class="ex-cab">' +
+                        '<button type="button" class="ex-plegar" aria-label="Abrir o cerrar"><span class="ex-flecha">›</span></button>' +
+                        '<input class="ex-nombre" placeholder="Nombre del examen" autocomplete="off">' +
+                        '<span class="ex-info">' + sel.length + (sel.length === 1 ? " criterio" : " criterios") + (m !== null ? " · " + fmt(m, 2) : "") + '</span>' +
+                        '<button type="button" class="ex-borrar" aria-label="Borrar examen">×</button>' +
+                        '</div>' +
+                        '<div class="ex-cuerpo">' +
+                        '<p class="ex-sub">¿Qué criterios evalúa?</p>' +
+                        '<div class="ex-chips">' + COMPETENCIAS.map(function (ce) {
+                            return '<div class="ex-grupo"><span class="ex-ce">CE ' + ce[0] + '</span>' + ce[2].map(function (c) {
+                                return '<button type="button" class="ex-chip' + (sel.indexOf(c[0]) > -1 ? " si" : "") + '" data-c="' + c[0] + '" title="' + c[1] + '">' + c[0] + '</button>';
+                            }).join("") + '</div>';
+                        }).join("") + '</div>' +
+                        (sel.length ? '<div class="ex-todas"><span>Misma nota para todos</span><input class="ex-misma" inputmode="decimal" placeholder="—" autocomplete="off"></div>' : '') +
+                        '<div class="ex-notas">' + sel.sort().map(function (c) {
+                            return '<label class="ex-fila"><span class="crit-cod">' + c + '</span><span class="crit-txt">' + (DESCR[c] || "") + '</span>' +
+                                '<input data-c="' + c + '" inputmode="decimal" placeholder="—" autocomplete="off"></label>';
+                        }).join("") + '</div>' +
+                        '</div>';
+
+                    var nom = card.querySelector(".ex-nombre");
+                    nom.value = e.nombre || "";
+                    nom.addEventListener("input", function () { e.nombre = nom.value; guardarTodo(); });
+
+                    card.querySelector(".ex-plegar").addEventListener("click", function () {
+                        abierto = abierto === idx ? -1 : idx; pintar();
+                    });
+                    card.querySelector(".ex-info").addEventListener("click", function () {
+                        abierto = abierto === idx ? -1 : idx; pintar();
+                    });
+
+                    card.querySelector(".ex-borrar").addEventListener("click", function () {
+                        if (!window.confirm("¿Borrar «" + (e.nombre || "este examen") + "»?")) return;
+                        examenes.splice(idx, 1); abierto = -1; guardarTodo(); pintar();
+                    });
+
+                    card.querySelectorAll(".ex-chip").forEach(function (ch) {
+                        ch.addEventListener("click", function () {
+                            var c = ch.getAttribute("data-c");
+                            if (c in e.notas) delete e.notas[c]; else e.notas[c] = "";
+                            abierto = idx; guardarTodo(); pintar();
+                        });
+                    });
+
+                    card.querySelectorAll(".ex-notas input").forEach(function (inp) {
+                        inp.value = e.notas[inp.getAttribute("data-c")] || "";
+                        inp.addEventListener("input", function () {
+                            e.notas[inp.getAttribute("data-c")] = inp.value;
+                            guardarTodo();
+                            var mm = mediaExamen(e), n = Object.keys(e.notas).length;
+                            card.querySelector(".ex-info").textContent = n + (n === 1 ? " criterio" : " criterios") + (mm !== null ? " · " + fmt(mm, 2) : "");
+                        });
+                    });
+
+                    var misma = card.querySelector(".ex-misma");
+                    if (misma) misma.addEventListener("input", function () {
+                        card.querySelectorAll(".ex-notas input").forEach(function (inp) {
+                            inp.value = misma.value;
+                            e.notas[inp.getAttribute("data-c")] = misma.value;
+                        });
+                        guardarTodo();
+                    });
+
+                    lista.appendChild(card);
+                });
+            }
+
+            V.querySelector(".ex-nuevo").addEventListener("click", function () {
+                examenes.push({ nombre: "", notas: {} });
+                abierto = examenes.length - 1;
+                guardarTodo(); pintar();
+                var ult = lista.lastElementChild;
+                if (ult) { ult.scrollIntoView({ block: "nearest" }); ult.querySelector(".ex-nombre").focus(); }
             });
 
             function recalcular() {
                 var r = calcularCompetencias(misNotas());
-                r.ces.forEach(function (ce) {
-                    var el = V.querySelector('.ce[data-ce="' + ce.id + '"] .ce-nota');
-                    el.textContent = ce.nota !== null ? fmt(ce.nota, 2) : "—";
-                    el.classList.toggle("baja", ce.nota !== null && ce.nota < 5);
-                });
+                V.querySelector(".ex-ces").innerHTML = r.ces.map(function (ce) {
+                    return '<div class="ex-ce-fila' + (ce.nota !== null && ce.nota < 5 ? " baja" : "") + '"><span class="ce-num">CE ' + ce.id + '</span><span>' + ce.nombre + '</span><strong>' +
+                        (ce.nota !== null ? fmt(ce.nota, 2) : "—") + '</strong></div>';
+                }).join("");
                 V.querySelector("#md-media").textContent = r.final !== null ? fmt(r.final, 2) : "—";
                 V.querySelector("#md-detalle").textContent = r.n
                     ? "Media de " + r.n + (r.n === 1 ? " competencia" : " competencias") + " con nota."
                     : "Todavía no hay notas.";
             }
 
+            pintar();
             recalcular();
         }
         ventanaMedia.abrir();

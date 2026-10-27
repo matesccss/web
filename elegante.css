@@ -6487,3 +6487,285 @@
 :root .ep-acciones-fila { margin-top: 16px; }
 :root .ep-acciones-fila .ep-calendario,
 :root .ep-acciones-fila .ep-calendario { margin-top: 0 !important; }
+
+
+/* ---------- Mi media: criterios con más aire y varias casillas ---------- */
+
+:root .ce {
+    padding: 14px 18px 8px;
+}
+
+:root .crit {
+    grid-template-columns: 44px minmax(0, 1fr) auto;
+    gap: 10px 12px;
+    padding: 10px 2px 10px 8px;
+}
+
+:root .crit-cod {
+    display: grid;
+    place-items: center;
+    height: 26px;
+    border-radius: 8px;
+    background: var(--relleno);
+    font-size: .76rem;
+}
+
+:root .crit-txt {
+    font-size: .84rem;
+    color: var(--tinta-2);
+}
+
+:root .crit-notas {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 6px;
+}
+
+:root .crit-notas input {
+    width: 58px !important;
+    padding: 8px 4px !important;
+}
+
+:root .crit-mas {
+    width: 34px;
+    height: 36px;
+    border: 1px dashed var(--borde);
+    border-radius: 10px;
+    background: transparent;
+    color: var(--granate);
+    font-size: 1.15rem;
+    font-weight: 700;
+    line-height: 1;
+    cursor: pointer;
+}
+
+:root .crit-mas:hover { border-style: solid; border-color: var(--granate); }
+
+@media (max-width: 560px) {
+    :root .ce { padding: 12px 14px 6px; }
+    :root .crit {
+        grid-template-columns: 40px minmax(0, 1fr);
+        padding: 10px 0 12px 4px;
+    }
+    /* en el móvil las casillas van debajo del texto, alineadas con él */
+    :root .crit-notas {
+        grid-column: 2;
+        justify-content: flex-start;
+    }
+    :root .crit-notas input { width: 64px !important; }
+}
+
+/* El profe en la lista de «¿Quién eres?» */
+:root .quien-profe {
+    grid-column: 1 / -1;
+    border-color: var(--granate);
+    background: linear-gradient(135deg, var(--granate-suave), var(--azul-suave));
+}
+
+:root .quien-profe small {
+    margin-left: auto;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: var(--granate);
+    color: #fff;
+    font-size: .68rem;
+    font-weight: 700;
+}
+
+
+/* ---------- Mi media por exámenes ---------- */
+
+:root .ex-vacio {
+    margin: 4px 0 10px;
+    padding: 18px;
+    border: 1px dashed var(--borde);
+    border-radius: 14px;
+    text-align: center;
+    font-size: .88rem;
+    color: var(--gris);
+}
+
+:root .ex-card {
+    margin-bottom: 10px;
+    border: 1px solid var(--borde);
+    border-radius: 16px;
+    background: var(--tarjeta);
+    overflow: hidden;
+}
+
+:root .ex-card.abierto { border-color: var(--granate); box-shadow: 0 0 0 3px var(--granate-suave); }
+
+:root .ex-cab {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 10px 10px 8px;
+}
+
+:root .ex-plegar,
+:root .ex-borrar {
+    flex: 0 0 auto;
+    width: 32px;
+    height: 32px;
+    border: 0;
+    border-radius: 50%;
+    background: var(--relleno);
+    color: var(--tinta-2);
+    font-size: 1.1rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+:root .ex-flecha { display: inline-block; transition: transform .2s ease; }
+:root .ex-card.abierto .ex-flecha { transform: rotate(90deg); }
+
+:root .ex-nombre {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: 8px 10px;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--tinta);
+    font-family: var(--serif);
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+:root .ex-nombre:focus { border-color: var(--borde); background: var(--papel); outline: none; }
+
+:root .ex-info {
+    flex: 0 0 auto;
+    font-size: .76rem;
+    font-weight: 600;
+    color: var(--granate);
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+:root .ex-cuerpo { display: none; padding: 0 16px 16px; }
+:root .ex-card.abierto .ex-cuerpo { display: block; }
+
+:root .ex-sub {
+    margin: 4px 0 8px;
+    font-size: .74rem;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--gris);
+}
+
+:root .ex-chips {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px 10px;
+}
+
+:root .ex-grupo {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 8px;
+    border-radius: 12px;
+    background: var(--relleno);
+}
+
+:root .ex-ce { width: 100%; font-size: .66rem; font-weight: 700; color: var(--gris); }
+
+:root .ex-chip {
+    min-width: 40px;
+    padding: 6px 8px;
+    border: 1px solid var(--borde);
+    border-radius: 999px;
+    background: var(--tarjeta);
+    color: var(--tinta-2);
+    font-family: var(--sans);
+    font-size: .8rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+:root .ex-chip.si {
+    border-color: var(--granate);
+    background: var(--granate);
+    color: #fff;
+}
+
+:root .ex-todas {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 14px 0 4px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: var(--granate-suave);
+    font-size: .84rem;
+    font-weight: 600;
+    color: var(--tinta-2);
+}
+
+:root .ex-fila {
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr) 70px;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 2px 9px 4px;
+    border-top: 1px solid var(--borde-suave);
+}
+
+:root .ex-todas input,
+:root .ex-fila input {
+    width: 70px;
+    box-sizing: border-box;
+    padding: 8px 4px;
+    border: 1px solid var(--borde);
+    border-radius: 10px;
+    background: var(--papel);
+    color: var(--tinta);
+    font-family: var(--sans);
+    font-size: .95rem;
+    text-align: center;
+}
+
+:root .ex-resumen {
+    margin-top: 14px;
+    border: 1px solid var(--borde);
+    border-radius: 14px;
+    background: var(--tarjeta);
+}
+
+:root .ex-resumen summary {
+    padding: 12px 14px;
+    font-size: .88rem;
+    font-weight: 600;
+    color: var(--tinta-2);
+    cursor: pointer;
+}
+
+:root .ex-ces { padding: 0 14px 10px; }
+
+:root .ex-ce-fila {
+    display: grid;
+    grid-template-columns: 50px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 0;
+    border-top: 1px solid var(--borde-suave);
+    font-size: .84rem;
+    color: var(--tinta-2);
+}
+
+:root .ex-ce-fila strong { font-family: var(--serif); color: var(--granate); }
+:root .ex-ce-fila.baja strong { color: #d43d1a; }
+:root .ex-ce-fila .ce-num { text-align: center; }
+
+@media (max-width: 560px) {
+    :root .ex-chips { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    :root .ex-cuerpo { padding: 0 12px 14px; }
+    :root .ex-fila { grid-template-columns: 40px minmax(0, 1fr) 64px; }
+    :root .ex-fila input { width: 64px; }
+    :root .ex-info { font-size: .7rem; }
+}
