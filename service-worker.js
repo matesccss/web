@@ -1,4 +1,4 @@
-const CACHE_NAME = "mates-cache-v14";
+const CACHE_NAME = "mates-cache-v22";
 
 
 /* =========================================================

@@ -1,22 +1,36 @@
 {
-  "name": "Mates CCSS",
+  "name": "Matemáticas CCSS · IES El Molinillo",
   "short_name": "Mates CCSS",
-  "description": "Web de Matemáticas",
+  "description": "Temas, vídeos, exámenes y herramientas de Matemáticas Aplicadas a las Ciencias Sociales.",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#f4f4f7",
+  "background_color": "#0a0920",
   "theme_color": "#0a0920",
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "./icons/icon-192.png",
+      "src": "./icons/logo-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
-      "src": "./icons/icon-512.png",
+      "src": "./icons/logo-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/logo-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "./icons/logo-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }

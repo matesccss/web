@@ -7,7 +7,9 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="icons/icon.png">
+    <link rel="icon" type="image/svg+xml" href="icons/favicon.svg">
+    <link rel="icon" type="image/png" sizes="48x48" href="icons/favicon.png">
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 
     <title>Matemáticas Aplicadas a las Ciencias Sociales</title>
 
@@ -24,8 +26,8 @@
     <script src="actualizar.js" defer></script>
 
 
-    <link rel="stylesheet" href="elegante.css?v=12">
-    <script src="elegante.js?v=12"></script>
+    <link rel="stylesheet" href="elegante.css?v=20">
+    <script src="elegante.js?v=20"></script>
 
 </head>
 
@@ -179,10 +181,48 @@
         </section>
 
 
+        <!-- =====================================================
+             02 · TU ESPACIO (logros y media; se guarda en su móvil)
+        ====================================================== -->
+
+        <section class="seccion">
+
+            <header class="seccion-cab">
+                <p class="seccion-num">02 — Tu espacio</p>
+                <h2>Lo tuyo</h2>
+                <p class="seccion-desc">Tus logros y tu media. Se guarda solo en tu dispositivo: nadie más lo ve.</p>
+            </header>
+
+            <div class="bento espacio">
+
+                <article class="b-tile b-logros" id="logros">
+                    <div class="lg-cab">
+                        <p class="b-etiqueta">Logros</p>
+                        <span class="lg-cuenta">0 de 10</span>
+                    </div>
+                    <div class="lg-barra"><span></span></div>
+                    <div class="lg-rejilla"></div>
+                </article>
+
+                <article class="b-tile b-media">
+                    <p class="b-etiqueta">Mi media</p>
+                    <p class="media-num" id="media-num">—</p>
+                    <p class="media-sub" id="media-sub">Apunta tus notas y te la calculo</p>
+                    <button class="b-boton" type="button" id="abrir-media">
+                        Mis notas
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 5l7 7-7 7-1.4-1.4 4.6-4.6H4v-2h12.2l-4.6-4.6z"/></svg>
+                    </button>
+                </article>
+
+            </div>
+
+        </section>
+
+
         <!-- ACCESOS RÁPIDOS -->
 
         <header class="seccion-cab">
-            <p class="seccion-num">02 — Accesos rápidos</p>
+            <p class="seccion-num">03 — Accesos rápidos</p>
             <h2>Todo a un clic</h2>
             <p class="seccion-desc">Temporalización, exámenes del curso, directrices de la PAU y la ayuda para tu calculadora.</p>
         </header>
@@ -332,7 +372,7 @@
         <!-- NOVEDADES + TENDENCIAS -->
 
         <header class="seccion-cab">
-            <p class="seccion-num">03 — Actualidad</p>
+            <p class="seccion-num">04 — Actualidad</p>
             <h2>Qué está pasando</h2>
             <p class="seccion-desc">Avisos de clase y las noticias del día.</p>
         </header>
@@ -434,7 +474,7 @@
 
         <!-- PAU -->
         <header class="seccion-cab">
-            <p class="seccion-num">04 — Universidad</p>
+            <p class="seccion-num">05 — Universidad</p>
             <h2>Información PAU</h2>
             <p class="seccion-desc">Estructura del examen, criterios oficiales y notas de corte de los grados.</p>
         </header>

@@ -666,6 +666,7 @@
         if (!buscador) return;
         buscador.classList.remove("abierto");
         document.documentElement.classList.remove("sin-scroll");
+        marcarPestana();
     }
 
     window.abrirBuscador = abrirBuscador;
@@ -756,6 +757,7 @@
 
             caja.hidden = false;
             botonCalendario(caja, t);
+            repasoEnExamen(caja, t);
 
             var ir = document.getElementById("hero-ir");
             if (ir) {
@@ -884,6 +886,7 @@
                 estado.dia = clave;
                 estado.elegida = i;
                 guardar("reto-web", JSON.stringify(estado));
+                setTimeout(comprobarLogros, 900);
             }
             pintarAciertos();
         }
@@ -1429,39 +1432,60 @@
         [0, 6, [
             ["Buenas noches, noctámbulo.", "Ya que estás despierto, un ejercicio rápido… y a dormir, que el cerebro también estudia mientras duermes."],
             ["Hola, búho nocturno.", "A estas horas solo quedan despiertos los astrónomos, los panaderos y tú."],
-            ["Buenas noches, trasnochador.", "Dato: dormir bien mejora la memoria. Repasa un poco y a la cama."]
+            ["Buenas noches, trasnochador.", "Dato: dormir bien mejora la memoria. Repasa un poco y a la cama."],
+            ["¿Todavía despierto?", "La probabilidad de que mañana tengas sueño acaba de subir bastante."],
+            ["Hola, noctámbulo.", "Las estrellas y tú. Un vistazo rápido y a descansar."],
+            ["Buenas noches.", "Si no puedes dormir, cuenta ovejas… o resuelve un sistema 3×3."]
         ]],
         [6, 9, [
             ["Buenos días, madrugador.", "Tú y el sol, los primeros en ponerse en marcha."],
             ["Buenos días, gente madrugadora.", "Café, Cola Cao o lo que haga falta: hoy toca darlo todo."],
-            ["Arriba, madrugador.", "Las mañanas tempranas tienen algo de superpoder."]
+            ["Arriba, madrugador.", "Las mañanas tempranas tienen algo de superpoder."],
+            ["Buenos días.", "Aún no son ni las nueve y ya estás aquí. Eso tiene mérito."],
+            ["Buenos días, valiente.", "Abrir los apuntes antes del desayuno es de otro nivel."],
+            ["Hola, madrugador.", "Mientras otros apagan el despertador, tú ya vas por delante."]
         ]],
         [9, 14, [
             ["Buenos días.", "Cabeza fresca, mañana por delante: el mejor momento para entender algo nuevo."],
             ["Buenos días, crack.", "Las matrices no se van a multiplicar solas."],
-            ["Hola, buenos días.", "Hoy es un buen día para que algo que no entendías, por fin haga clic."]
+            ["Hola, buenos días.", "Hoy es un buen día para que algo que no entendías, por fin haga clic."],
+            ["Buenos días.", "¿Escapada de un minuto entre clase y clase? Aprovéchalo."],
+            ["Hola, ¿qué tal la mañana?", "Si va regular, un ejercicio bien resuelto la arregla bastante."],
+            ["Buenos días.", "Hoy se derivan funciones, no responsabilidades."]
         ]],
         [14, 17, [
             ["Buenas tardes.", "Hora de la siesta… o de unas derivadas. Tú decides."],
             ["Buenas tardes, campeón.", "Después de comer, un repaso ligero entra mejor de lo que parece."],
-            ["Hola, buenas tardes.", "Sobremesa con estadística: más entretenida de lo que suena."]
+            ["Hola, buenas tardes.", "Sobremesa con estadística: más entretenida de lo que suena."],
+            ["Buenas tardes.", "La digestión va lenta, pero tu cabeza puede ir rápida."],
+            ["Hola, buenas tardes.", "Cinco minutos de repaso ahora valen por media hora el día antes del examen."],
+            ["Buenas tardes.", "Siesta corta, repaso corto, y la tarde es tuya."]
         ]],
         [17, 21, [
             ["Buenas tardes.", "Momento perfecto para repasar un poco y quitártelo de encima."],
             ["Buenas tardes, crack.", "Un rato de mates ahora y la tarde entera es tuya."],
-            ["Hola, buenas tardes.", "Merienda, apuntes y a por ello."]
+            ["Hola, buenas tardes.", "Merienda, apuntes y a por ello."],
+            ["Buenas tardes.", "Primero los deberes, luego el móvil. Bueno… ya estás en el móvil, pero en la web correcta."],
+            ["Hola, buenas tardes.", "La constancia es la variable que más pesa en la nota final."],
+            ["Buenas tardes.", "Un ejercicio al día y el examen se vuelve mucho más pequeño."]
         ]],
         [21, 24, [
             ["Buenas noches.", "Último repaso del día y a descansar, que mañana también hay clase."],
             ["Buenas noches, noctámbulo.", "Lo que repases ahora, tu cerebro lo ordena mientras duermes."],
-            ["Buenas noches, búho.", "Un ejercicio más y a dormir. Palabra de profe."]
+            ["Buenas noches, búho.", "Un ejercicio más y a dormir. Palabra de profe."],
+            ["Buenas noches.", "Repaso exprés antes de dormir: el truco que casi nadie usa."],
+            ["Hola, buenas noches.", "Mañana tu yo del futuro te agradecerá estos minutos."],
+            ["Buenas noches.", "Cierra el día con algo que ya domines. Sienta genial."]
         ]]
     ];
 
     var SALUDOS_ESPECIALES = {
-        viernes: ["¡Por fin viernes!", "Un vistazo rápido a lo de la semana y a disfrutar del finde."],
-        sabado: ["Feliz sábado.", "Hoy toca descansar… aunque un repasito ligero no hace daño a nadie."],
-        domingo: ["Feliz domingo.", "El clásico domingo de repaso. Mejor ahora que el lunes a primera hora."]
+        viernes: [["¡Por fin viernes!", "Un vistazo rápido a lo de la semana y a disfrutar del finde."],
+                  ["¡Viernes!", "Deja el repaso hecho hoy y el fin de semana será tuyo."]],
+        sabado:  [["Feliz sábado.", "Hoy toca descansar… aunque un repasito ligero no hace daño a nadie."],
+                  ["¿En sábado por aquí?", "Eso es compromiso. Un poco y a disfrutar."]],
+        domingo: [["Feliz domingo.", "El clásico domingo de repaso. Mejor ahora que el lunes a primera hora."],
+                  ["Buen domingo.", "Preparar la semana hoy es empezar el lunes con ventaja."]]
     };
 
     function ocurrenciaDelDia() {
@@ -1472,23 +1496,24 @@
         var ahora = new Date();
         var h = ahora.getHours();
         var dia = ahora.getDay();           /* 0 domingo … 6 sábado */
-        var n = Math.floor((Date.UTC(ahora.getFullYear(), ahora.getMonth(), ahora.getDate()) - Date.UTC(2026, 0, 1)) / 86400000);
+        var opciones = null;
 
-        var par = null;
+        if (dia === 5 && h >= 15 && h < 21) opciones = SALUDOS_ESPECIALES.viernes;
+        else if (dia === 6 && h >= 9 && h < 21) opciones = SALUDOS_ESPECIALES.sabado;
+        else if (dia === 0 && h >= 9 && h < 21) opciones = SALUDOS_ESPECIALES.domingo;
 
-        if (dia === 5 && h >= 15 && h < 21) par = SALUDOS_ESPECIALES.viernes;
-        else if (dia === 6 && h >= 9 && h < 21) par = SALUDOS_ESPECIALES.sabado;
-        else if (dia === 0 && h >= 9 && h < 21) par = SALUDOS_ESPECIALES.domingo;
-
-        if (!par) {
+        if (!opciones) {
             for (var i = 0; i < SALUDOS.length; i++) {
-                if (h >= SALUDOS[i][0] && h < SALUDOS[i][1]) {
-                    var opciones = SALUDOS[i][2];
-                    par = opciones[((n % opciones.length) + opciones.length) % opciones.length];
-                    break;
-                }
+                if (h >= SALUDOS[i][0] && h < SALUDOS[i][1]) { opciones = SALUDOS[i][2]; break; }
             }
         }
+
+        /* Uno al azar en cada visita, sin repetir el último que se vio */
+        var ultimo = leer("saludo-ultimo");
+        var candidatos = opciones.filter(function (o) { return o[1] !== ultimo; });
+        if (!candidatos.length) candidatos = opciones;
+        var par = candidatos[Math.floor(Math.random() * candidatos.length)];
+        guardar("saludo-ultimo", par[1]);
 
         el.innerHTML = '<strong class="saludo-hora"></strong> <span class="saludo-coletilla"></span>';
         el.firstChild.textContent = par[0];
@@ -1606,6 +1631,7 @@
     var ventanaNormal = null;
 
     function abrirNormal() {
+        setTimeout(function () { desbloquear("calculista"); }, 1200);
 
         if (!ventanaNormal) {
 
@@ -1731,7 +1757,7 @@
     }
 
 
-    /* ---------- Añadir el examen al calendario (.ics) ---------- */
+    /* ---------- Añadir el examen al calendario ---------- */
 
     function botonCalendario(caja, t) {
         if (!caja || caja.querySelector(".ep-calendario")) return;
@@ -1743,32 +1769,885 @@
 
         var ini = new Date(t.fecha);
         var fin = new Date(t.fecha + 60 * 60 * 1000);
-        var ahora = new Date();
         var titulo = "Examen de Matemáticas CCSS · " + t.titulo;
+        var detalle = "Repasa el tema aquí: " + t.url;
 
-        var ics = [
-            "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//IES El Molinillo//Matematicas CCSS//ES", "CALSCALE:GREGORIAN",
-            "BEGIN:VEVENT",
-            "UID:examen-" + t.fecha + "@matematicas-ccss",
-            "DTSTAMP:" + f(ahora),
-            "DTSTART:" + f(ini),
-            "DTEND:" + f(fin),
-            "SUMMARY:" + titulo.replace(/[,;]/g, "\\$&"),
-            "DESCRIPTION:Repasa en " + t.url,
-            "BEGIN:VALARM", "TRIGGER:-P1D", "ACTION:DISPLAY", "DESCRIPTION:Mañana tienes examen de Matemáticas", "END:VALARM",
-            "BEGIN:VALARM", "TRIGGER:-P7D", "ACTION:DISPLAY", "DESCRIPTION:Queda una semana para el examen de Matemáticas", "END:VALARM",
-            "END:VEVENT", "END:VCALENDAR"
-        ].join("\r\n");
+        /* Google Calendar: funciona en cualquier móvil u ordenador */
+        var google = "https://calendar.google.com/calendar/render?action=TEMPLATE" +
+            "&text=" + encodeURIComponent(titulo) +
+            "&dates=" + f(ini) + "/" + f(fin) +
+            "&ctz=Europe/Madrid" +
+            "&details=" + encodeURIComponent(detalle);
+
+        /* Archivo .ics: calendario del iPhone, Outlook, etc. */
+        function ics() {
+            return [
+                "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//IES El Molinillo//Matematicas CCSS//ES", "CALSCALE:GREGORIAN", "METHOD:PUBLISH",
+                "BEGIN:VEVENT",
+                "UID:examen-" + t.fecha + "@matematicas-ccss",
+                "DTSTAMP:" + f(new Date()),
+                "DTSTART;TZID=Europe/Madrid:" + f(ini),
+                "DTEND;TZID=Europe/Madrid:" + f(fin),
+                "SUMMARY:" + titulo.replace(/[,;]/g, "\\$&"),
+                "DESCRIPTION:" + detalle.replace(/[,;]/g, "\\$&"),
+                "BEGIN:VALARM", "TRIGGER:-P1D", "ACTION:DISPLAY", "DESCRIPTION:Mañana tienes examen de Matemáticas", "END:VALARM",
+                "BEGIN:VALARM", "TRIGGER:-P7D", "ACTION:DISPLAY", "DESCRIPTION:Queda una semana para el examen de Matemáticas", "END:VALARM",
+                "END:VEVENT", "END:VCALENDAR"
+            ].join("\r\n");
+        }
+
+        function descargarIcs() {
+            var archivo = new Blob([ics()], { type: "text/calendar;charset=utf-8" });
+            var nombre = "examen-matematicas.ics";
+
+            /* En el móvil, mejor el menú «Compartir»: deja guardarlo en el calendario */
+            try {
+                var fichero = new File([archivo], nombre, { type: "text/calendar" });
+                if (navigator.canShare && navigator.canShare({ files: [fichero] }) && /android|iphone|ipad/i.test(navigator.userAgent)) {
+                    navigator.share({ files: [fichero], title: titulo }).catch(function () {});
+                    return;
+                }
+            } catch (e) {}
+
+            var url = URL.createObjectURL(archivo);
+            var a = document.createElement("a");
+            a.href = url;
+            a.download = nombre;
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(function () { URL.revokeObjectURL(url); a.remove(); }, 1500);
+        }
+
+        var cont = document.createElement("div");
+        cont.className = "ep-cal";
+        cont.innerHTML =
+            '<button type="button" class="ep-calendario" aria-expanded="false">' +
+            '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2v2H5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2V2h-2v2H9V2H7zm12 8v9H5v-9h14zm-8 2v2H9v2h2v2h2v-2h2v-2h-2v-2h-2z"/></svg>' +
+            '<span>Al calendario</span></button>' +
+            '<div class="ep-cal-menu" hidden>' +
+            '<a class="ep-cal-op" target="_blank" rel="noopener">Google Calendar <small>Android y ordenador</small></a>' +
+            '<button type="button" class="ep-cal-op ep-cal-ics">iPhone, Outlook u otros <small>con aviso 1 semana y 1 día antes</small></button>' +
+            '</div>';
+        caja.appendChild(cont);
+
+        var boton = cont.querySelector(".ep-calendario");
+        var menu = cont.querySelector(".ep-cal-menu");
+        cont.querySelector("a.ep-cal-op").href = google;
+
+        boton.addEventListener("click", function (e) {
+            e.stopPropagation();
+            menu.hidden = !menu.hidden;
+            boton.setAttribute("aria-expanded", menu.hidden ? "false" : "true");
+        });
+        cont.querySelector(".ep-cal-ics").addEventListener("click", function () { descargarIcs(); menu.hidden = true; desbloquear("previsor"); });
+        cont.querySelector("a.ep-cal-op").addEventListener("click", function () { menu.hidden = true; desbloquear("previsor"); });
+        document.addEventListener("click", function (e) { if (!cont.contains(e.target)) menu.hidden = true; });
+    }
+
+
+    /* =====================================================
+       10. MÓVIL: barra inferior de pestañas y paneles
+           que suben desde abajo (solo se ven en pantallas
+           estrechas; en el ordenador no aparece nada)
+    ===================================================== */
+
+    var ICONOS = {
+        inicio: '<path d="M12 3l9 8h-3v9h-5v-6h-2v6H6v-9H3z"/>',
+        temas: '<path d="M4 4h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H4zm16 0h-4a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h5z"/>',
+        buscar: '<path d="M10 2a8 8 0 016.32 12.9l5.39 5.4-1.41 1.4-5.4-5.39A8 8 0 1110 2zm0 2a6 6 0 100 12 6 6 0 000-12z"/>',
+        herramientas: '<path d="M6 2h12a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm1 3v4h10V5zm0 7v2h2v-2zm4 0v2h2v-2zm4 0v6h2v-6zm-8 4v2h2v-2zm4 0v2h2v-2z"/>',
+        mas: '<path d="M5 10a2 2 0 110 4 2 2 0 010-4zm7 0a2 2 0 110 4 2 2 0 010-4zm7 0a2 2 0 110 4 2 2 0 010-4z"/>'
+    };
+
+    function icono(n) { return '<svg viewBox="0 0 24 24" aria-hidden="true">' + ICONOS[n] + '</svg>'; }
+
+    /* Panel inferior genérico */
+    var panelAbierto = null;
+
+    function panel(id, titulo, html) {
+        var p = document.getElementById(id);
+        if (!p) {
+            p = document.createElement("div");
+            p.id = id;
+            p.className = "hoja";
+            p.setAttribute("role", "dialog");
+            p.setAttribute("aria-modal", "true");
+            p.setAttribute("aria-label", titulo);
+            p.innerHTML = '<div class="hoja-fondo"></div><div class="hoja-caja"><div class="hoja-asa"></div>' +
+                '<div class="hoja-cab"><h2></h2><button type="button" class="hoja-cerrar" aria-label="Cerrar">×</button></div>' +
+                '<div class="hoja-cuerpo"></div></div>';
+            p.querySelector("h2").textContent = titulo;
+            document.body.appendChild(p);
+            p.querySelector(".hoja-fondo").addEventListener("click", cerrarPanel);
+            p.querySelector(".hoja-cerrar").addEventListener("click", cerrarPanel);
+
+            /* Deslizar hacia abajo para cerrar */
+            var caja = p.querySelector(".hoja-caja"), y0 = null, dy = 0;
+            caja.addEventListener("touchstart", function (e) {
+                if (caja.querySelector(".hoja-cuerpo").scrollTop > 0) { y0 = null; return; }
+                y0 = e.touches[0].clientY; dy = 0;
+            }, { passive: true });
+            caja.addEventListener("touchmove", function (e) {
+                if (y0 === null) return;
+                dy = Math.max(0, e.touches[0].clientY - y0);
+                caja.style.transform = "translateY(" + dy + "px)";
+            }, { passive: true });
+            caja.addEventListener("touchend", function () {
+                if (y0 === null) return;
+                caja.style.transform = "";
+                if (dy > 90) cerrarPanel();
+                y0 = null;
+            });
+        }
+        if (html !== undefined) p.querySelector(".hoja-cuerpo").innerHTML = html;
+        return p;
+    }
+
+    function abrirPanel(p) {
+        if (panelAbierto && panelAbierto !== p) panelAbierto.classList.remove("abierto");
+        panelAbierto = p;
+        p.classList.add("abierto");
+        html.classList.add("sin-scroll");
+    }
+
+    function cerrarPanel() {
+        if (!panelAbierto) return;
+        panelAbierto.classList.remove("abierto");
+        panelAbierto = null;
+        html.classList.remove("sin-scroll");
+        marcarPestana();
+    }
+
+    function fila(href, titulo, sub, extra) {
+        return '<a class="hoja-fila" href="' + href + '"' + (extra || "") + '><span class="hf-txt"><strong></strong><small></small></span><span class="hf-flecha">›</span></a>'
+            .replace("<strong></strong>", "<strong>" + titulo + "</strong>")
+            .replace("<small></small>", sub ? "<small>" + sub + "</small>" : "");
+    }
+
+    function boton(accion, titulo, sub, ic) {
+        return '<button type="button" class="hoja-fila" data-accion="' + accion + '">' +
+            (ic ? '<span class="hf-ic">' + ic + '</span>' : "") +
+            '<span class="hf-txt"><strong>' + titulo + '</strong>' + (sub ? '<small>' + sub + '</small>' : '') + '</span><span class="hf-flecha">›</span></button>';
+    }
+
+    /* --- Temas --- */
+    function panelTemas() {
+        var p = panel("hoja-temas", "Temas", '<p class="hoja-cargando">Cargando temas…</p>');
+        abrirPanel(p);
+        cargarTemas().then(function (datos) {
+            var ahora = Date.now();
+            var html2 = "";
+            [2, 1].forEach(function (curso) {
+                var lista = datos.temas.filter(function (t) { return t.curso === curso; });
+                if (!lista.length) return;
+                var dentro = lista.map(function (t) {
+                    var partes = /^(Tema\s*\d+)\s*[:.·-]?\s*(.*)$/i.exec(t.titulo) || [null, t.titulo, ""];
+                    var aviso = t.fecha && t.fecha > ahora ?
+                        ' <em class="hf-examen">Examen ' + new Date(t.fecha).toLocaleDateString("es-ES", { day: "numeric", month: "short" }) + '</em>' : "";
+                    return '<a class="hoja-fila hf-tema" href="' + t.url + '"><span class="hf-num">' + (partes[1].replace(/\D/g, "")) + '</span>' +
+                        '<span class="hf-txt"><strong>' + (partes[2] || partes[1]) + '</strong>' + aviso + '</span><span class="hf-flecha">›</span></a>';
+                }).join("");
+                html2 += curso === 2
+                    ? '<p class="hoja-grupo">2.º Bachillerato · CCSS II</p>' + dentro
+                    : '<details class="hoja-desplegable"><summary>1.º Bachillerato · CCSS I <small>curso pasado</small></summary>' + dentro + '</details>';
+            });
+            p.querySelector(".hoja-cuerpo").innerHTML = html2;
+        });
+    }
+
+    /* --- Herramientas --- */
+    function panelHerramientas() {
+        var p = panel("hoja-herramientas", "Herramientas",
+            boton("normal", "Calculadora de la normal", "P(Z ≤ z), entre dos valores y valor crítico", icono("herramientas")) +
+            boton("nota", "¿Qué nota necesito?", "Nota de acceso y de admisión de la PAU", icono("herramientas")) +
+            boton("calculadoras", "Ayuda con tu calculadora", "FX-570 · FX-991 · ClassWiz", icono("herramientas")) +
+            boton("repaso", "Tarjetas de repaso", "Preguntas clave de cada tema para girar", icono("temas")) +
+            boton("media", "Mi media", "Tus notas y lo que necesitas en el siguiente", icono("herramientas")) +
+            '<p class="hoja-grupo">También</p>' +
+            fila(raiz + "examenes.html", "Exámenes del curso", "Enunciados y soluciones") +
+            fila("https://www.emestrada.org/", "Exámenes de la PAU", "EMESTRADA", ' target="_blank" rel="noopener"'));
+        abrirPanel(p);
+    }
+
+    /* --- Más --- */
+    function panelMas() {
+        var enlaces = "";
+        document.querySelectorAll("#menu-container .menu-contenido > a").forEach(function (a) {
+            var t = a.textContent.replace(/\s+/g, " ").trim();
+            if (/^inicio$/i.test(t)) return;
+            var ext = a.target === "_blank" ? ' target="_blank" rel="noopener"' : "";
+            enlaces += fila(a.href, t, "", ext);
+        });
+        var noche = html.getAttribute("data-tema") === "noche";
+        var p = panel("hoja-mas", "Más",
+            enlaces +
+            '<p class="hoja-grupo">Ajustes</p>' +
+            boton("quien", (miPerfil() && miPerfil().nombre) ? "Eres " + miPerfil().nombre : "¿Quién eres?",
+                (miPerfil() && miPerfil().nombre) ? "Toca para cambiarlo" : "Elige tu nombre para que la web te salude") +
+            '<button type="button" class="hoja-fila" data-accion="tema"><span class="hf-txt"><strong>Modo noche</strong><small>Fondo oscuro, ideal por la noche</small></span>' +
+            '<span class="interruptor' + (noche ? " on" : "") + '"><span></span></span></button>');
+        abrirPanel(p);
+    }
+
+    /* Acciones de los botones dentro de los paneles */
+    document.addEventListener("click", function (e) {
+        var b = e.target.closest(".hoja [data-accion]");
+        if (!b) return;
+        var acc = b.getAttribute("data-accion");
+        if (acc === "tema") {
+            var nuevo = html.getAttribute("data-tema") === "noche" ? "claro" : "noche";
+            aplicarTema(nuevo);
+            guardar("tema-web", nuevo);
+            var sw = b.querySelector(".interruptor");
+            if (sw) sw.classList.toggle("on", nuevo === "noche");
+            return;
+        }
+        cerrarPanel();
+        if (acc === "normal") abrirNormal();
+        if (acc === "nota") abrirCalculadora();
+        if (acc === "calculadoras") abrirCalculadoras();
+        if (acc === "quien") abrirQuienEres();
+        if (acc === "media") abrirMedia();
+        if (acc === "repaso") { setTimeout(panelRepaso, 10); }
+    });
+
+    /* Barra de pestañas */
+    function marcarPestana(activa) {
+        var barra = document.querySelector(".tabbar");
+        if (!barra) return;
+        if (!activa) {
+            activa = pagina === "inicio" ? "inicio"
+                : (html.getAttribute("data-curso") || pagina === "calculadora") ? "temas" : "";
+        }
+        barra.querySelectorAll(".tab").forEach(function (t) {
+            t.classList.toggle("activa", t.getAttribute("data-tab") === activa);
+        });
+    }
+
+    function barraInferior() {
+        if (pagina === "juego" || document.querySelector(".tabbar")) return;
+        var nav = document.createElement("nav");
+        nav.className = "tabbar";
+        nav.setAttribute("aria-label", "Navegación");
+        nav.innerHTML =
+            '<a class="tab" data-tab="inicio" href="' + raiz + 'index.html">' + icono("inicio") + '<span>Inicio</span></a>' +
+            '<button class="tab" type="button" data-tab="temas">' + icono("temas") + '<span>Temas</span></button>' +
+            '<button class="tab tab-buscar" type="button" data-tab="buscar">' + icono("buscar") + '<span>Buscar</span></button>' +
+            '<button class="tab" type="button" data-tab="herramientas">' + icono("herramientas") + '<span>Herramientas</span></button>' +
+            '<button class="tab" type="button" data-tab="mas">' + icono("mas") + '<span>Más</span></button>';
+        document.body.appendChild(nav);
+        html.classList.add("con-tabbar");
+
+        nav.addEventListener("click", function (e) {
+            var t = e.target.closest("button.tab");
+            if (!t) return;
+            var cual = t.getAttribute("data-tab");
+            if (panelAbierto && panelAbierto.id === "hoja-" + cual) { cerrarPanel(); return; }
+            marcarPestana(cual);
+            if (cual === "temas") panelTemas();
+            if (cual === "herramientas") panelHerramientas();
+            if (cual === "mas") panelMas();
+            if (cual === "buscar") { cerrarPanel(); abrirBuscador(); }
+        });
+
+        marcarPestana();
+    }
+
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape") cerrarPanel(); });
+
+
+    /* =====================================================
+       11. ¿QUIÉN ERES? Nombre del alumno y su cumpleaños.
+           Se elige de la lista de Cumpleaños y se guarda
+           SOLO en su dispositivo (no se envía a ningún sitio).
+    ===================================================== */
+
+    function miPerfil() {
+        try { return JSON.parse(leer("perfil-web") || "null"); } catch (e) { return null; }
+    }
+
+    function cargarClase() {
+        return fetch(raiz + "cumpleanos.html", { cache: "no-cache" })
+            .then(function (r) { return r.text(); })
+            .then(function (t) {
+                var doc = new DOMParser().parseFromString(t, "text/html");
+                var lista = [];
+                doc.querySelectorAll(".cumple").forEach(function (c) {
+                    var n = c.querySelector(".nombre"), f = c.querySelector(".fecha");
+                    if (!n || !f) return;
+                    var nombre = limpiar(n.textContent);
+                    var m = /(\d{1,2})\/(\d{1,2})/.exec(f.textContent);
+                    if (nombre && m) lista.push({ nombre: nombre, dia: +m[1], mes: +m[2] });
+                });
+                /* Nombre corto: el nombre de pila (con inicial si hay dos iguales) */
+                var cuenta = {};
+                lista.forEach(function (a) { var p = a.nombre.split(" ")[0]; cuenta[p] = (cuenta[p] || 0) + 1; });
+                lista.forEach(function (a) {
+                    var partes = a.nombre.split(" ");
+                    a.corto = cuenta[partes[0]] > 1 && partes[1] ? partes[0] + " " + partes[1].charAt(0) + "." : partes[0];
+                });
+                return lista.sort(function (a, b) { return a.nombre.localeCompare(b.nombre, "es"); });
+            });
+    }
+
+    function esMiCumple(p) {
+        if (!p || !p.dia) return false;
+        var h = new Date();
+        return h.getDate() === p.dia && h.getMonth() + 1 === p.mes;
+    }
+
+    var ventanaQuien = null;
+
+    function abrirQuienEres() {
+        if (!ventanaQuien) {
+            ventanaQuien = crearVentana("v-quien", "Solo en tu móvil", "¿Quién eres?",
+                '<div class="cp-cuerpo">' +
+                '<p class="cp-ayuda">Elige tu nombre y la web te saludará a ti (y el día de tu cumple habrá sorpresa). Se guarda únicamente en este dispositivo: no se envía a ningún sitio.</p>' +
+                '<label class="cp-campo"><span>Busca tu nombre</span><input id="quien-buscar" type="search" autocomplete="off" placeholder="Escribe para filtrar…"></label>' +
+                '<div class="quien-lista"><p class="hoja-cargando">Cargando la clase…</p></div>' +
+                '</div>' +
+                '<div class="quien-pie"><button type="button" class="quien-anonimo">Prefiero no decirlo</button></div>');
+
+            var listaEl = ventanaQuien.querySelector(".quien-lista");
+            var buscar = ventanaQuien.querySelector("#quien-buscar");
+            var alumnos = [];
+
+            function pintar() {
+                var q = quitarTildes(buscar.value.trim());
+                var actual = miPerfil();
+                listaEl.innerHTML = "";
+                alumnos.filter(function (a) { return !q || quitarTildes(a.nombre).indexOf(q) > -1; }).forEach(function (a) {
+                    var b = document.createElement("button");
+                    b.type = "button";
+                    b.className = "quien-op" + (actual && actual.nombre === a.nombre ? " elegido" : "");
+                    b.innerHTML = '<span class="quien-ini"></span><span class="quien-nom"></span>';
+                    b.firstChild.textContent = a.nombre.charAt(0);
+                    b.lastChild.textContent = a.nombre;
+                    b.addEventListener("click", function () {
+                        guardar("perfil-web", JSON.stringify(a));
+                        ventanaQuien.querySelector(".cp-cerrar").click();
+                        aplicarPerfil(true);
+                    });
+                    listaEl.appendChild(b);
+                });
+                if (!listaEl.children.length) listaEl.innerHTML = '<p class="hoja-cargando">No aparece nadie con ese nombre.</p>';
+            }
+
+            cargarClase().then(function (l) { alumnos = l; pintar(); })
+                .catch(function () { listaEl.innerHTML = '<p class="hoja-cargando">No se ha podido cargar la lista.</p>'; });
+            buscar.addEventListener("input", pintar);
+
+            ventanaQuien.querySelector(".quien-anonimo").addEventListener("click", function () {
+                guardar("perfil-web", JSON.stringify({ anonimo: true }));
+                ventanaQuien.querySelector(".cp-cerrar").click();
+                aplicarPerfil(true);
+            });
+        }
+        ventanaQuien.abrir();
+    }
+
+    /* Personaliza la portada con el nombre y, si toca, el cumpleaños */
+    function aplicarPerfil(recienElegido) {
+        var p = miPerfil();
+        var el = document.getElementById("ocurrencia");
+        var hola = el && el.querySelector(".saludo-hora");
+        var aviso = document.getElementById("quien-aviso");
+
+        if (aviso) aviso.remove();
+
+        if (!el) return;
+
+        if (!p) {
+            /* Invitación discreta, solo en la portada */
+            var a = document.createElement("button");
+            a.type = "button";
+            a.id = "quien-aviso";
+            a.className = "quien-aviso";
+            a.innerHTML = '<span class="qa-punto"></span>¿Quién eres? <u>Elige tu nombre</u> y la web te saludará a ti';
+            a.addEventListener("click", abrirQuienEres);
+            el.parentNode.insertBefore(a, el.parentNode.firstChild);
+            return;
+        }
+
+        if (p.anonimo || !p.corto || !hola) return;
+
+        if (esMiCumple(p)) {
+            el.innerHTML = '<strong class="saludo-hora"></strong> <span class="saludo-coletilla"></span>';
+            el.firstChild.textContent = "¡Feliz cumpleaños, " + p.corto + "! 🎉";
+            el.lastChild.textContent = "Hoy las mates pueden esperar un poquito: disfruta tu día.";
+            confeti();
+        } else {
+            /* «Buenas tardes, crack.» → «Buenas tardes, Lucía.» */
+            var t = hola.textContent.trim();
+            var final = /[?!]$/.test(t) ? t.slice(-1) : ".";
+            var base = t.indexOf(",") > -1 ? t.slice(0, t.indexOf(",")) : t.replace(/[.?!]+$/, "");
+            hola.textContent = base + ", " + p.corto + (final === "." && /\.$/.test(p.corto) ? "" : final);
+            if (!el.querySelector(".quien-cambiar")) {
+                var cambiar = document.createElement("button");
+                cambiar.type = "button";
+                cambiar.className = "quien-cambiar";
+                cambiar.textContent = "¿No eres " + p.corto + "?";
+                cambiar.addEventListener("click", abrirQuienEres);
+                el.appendChild(cambiar);
+            } else {
+                el.querySelector(".quien-cambiar").textContent = "¿No eres " + p.corto + "?";
+            }
+            if (recienElegido) {
+                hola.classList.remove("saludo-nuevo");
+                void hola.offsetWidth;
+                hola.classList.add("saludo-nuevo");
+            }
+        }
+    }
+
+    /* Confeti (solo el día de su cumpleaños) */
+    function confeti() {
+        if (movimientoReducido) return;
+        var c = document.createElement("canvas");
+        c.className = "confeti";
+        document.body.appendChild(c);
+        var ctx = c.getContext("2d"), W = c.width = innerWidth, H = c.height = innerHeight;
+        var colores = ["#7048ff", "#2f6bff", "#ff6a45", "#3ddc97", "#ffc94d", "#ff7ab6"];
+        var trozos = [];
+        for (var i = 0; i < 160; i++) {
+            trozos.push({
+                x: W / 2 + (Math.random() - .5) * 120, y: H * .35,
+                vx: (Math.random() - .5) * 14, vy: -Math.random() * 14 - 4,
+                g: .32 + Math.random() * .1, r: Math.random() * Math.PI, vr: (Math.random() - .5) * .3,
+                w: 6 + Math.random() * 6, h: 8 + Math.random() * 8, c: colores[i % colores.length]
+            });
+        }
+        var t0 = performance.now();
+        (function paso(t) {
+            ctx.clearRect(0, 0, W, H);
+            trozos.forEach(function (p) {
+                p.vy += p.g; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.r += p.vr;
+                ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r);
+                ctx.fillStyle = p.c; ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h * Math.cos(p.r * 2));
+                ctx.restore();
+            });
+            if (t - t0 < 4200) requestAnimationFrame(paso); else c.remove();
+        })(t0);
+    }
+
+
+    /* =====================================================
+       12. TU ESPACIO: «Sigue donde lo dejaste», logros y
+           «Mi media». Todo se guarda solo en el dispositivo.
+    ===================================================== */
+
+    function leerJSON(clave, def) {
+        try { var v = JSON.parse(leer(clave) || "null"); return v === null ? def : v; } catch (e) { return def; }
+    }
+
+    /* ---------- Historial para «Sigue donde lo dejaste» ---------- */
+
+    function apuntarVisita(titulo, sub, url) {
+        guardar("ultimo-web", JSON.stringify({ titulo: titulo, sub: sub, url: url, t: Date.now() }));
+    }
+
+    function registrarVisita() {
+        var h1 = document.querySelector(".banda h1, h1");
+        var titulo = h1 ? limpiar(h1.querySelector(".h1-txt") ? h1.querySelector(".h1-txt").textContent : h1.textContent) : document.title;
+        var pre = h1 && h1.querySelector(".h1-pre") ? limpiar(h1.querySelector(".h1-pre").textContent) : "";
+        var curso = html.getAttribute("data-curso");
+
+        if (html.getAttribute("data-cabecera") === "si" && (curso || pagina === "calculadora")) {
+            var sub = (curso ? curso + ".º Bach · " : "") + (pre || (pagina === "calculadora" ? "Calculadora" : ""));
+            apuntarVisita(titulo, sub, location.href.split("#")[0].split("?")[0]);
+
+            /* temas distintos visitados (para el logro «Explorador») */
+            if (document.querySelector(".tema-header")) {
+                var vistos = leerJSON("temas-vistos", []);
+                if (vistos.indexOf(location.pathname) === -1) { vistos.push(location.pathname); guardar("temas-vistos", JSON.stringify(vistos)); }
+            }
+
+            /* al abrir un vídeo concreto, lo apunta con su enlace directo */
+            document.querySelectorAll("details").forEach(function (d, i) {
+                d.addEventListener("toggle", function () {
+                    if (!d.open) return;
+                    var s = d.querySelector("summary");
+                    apuntarVisita(limpiar(s && s.textContent), sub + " · " + titulo, location.href.split("#")[0].split("?")[0] + "?abrir=" + i);
+                });
+            });
+
+            /* al abrir un PDF del tema */
+            document.querySelectorAll("a.btn-tema").forEach(function (a) {
+                a.addEventListener("click", function () {
+                    var t = a.querySelector(".titulo");
+                    apuntarVisita(limpiar(t && t.textContent) + " · " + titulo, sub, a.href);
+                });
+            });
+        }
+    }
+
+    function pintarContinuar() {
+        var u = leerJSON("ultimo-web", null);
+        var lead = document.querySelector(".hero-lead");
+        if (!u || !lead || Date.now() - u.t > 21 * 86400000) return;
 
         var a = document.createElement("a");
-        a.className = "ep-calendario";
-        a.href = "data:text/calendar;charset=utf-8," + encodeURIComponent(ics);
-        a.setAttribute("download", "examen-matematicas.ics");
-        a.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2v2H5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2V2h-2v2H9V2H7zm12 8v9H5v-9h14zm-8 2v2H9v2h2v2h2v-2h2v-2h-2v-2h-2z"/></svg>' +
-            '<span>Añadir a mi calendario</span>';
-        a.title = "Te avisará una semana antes y el día anterior";
-        caja.appendChild(a);
+        a.className = "continuar";
+        a.href = u.url;
+        if (/^https?:/.test(u.url) && u.url.indexOf(location.host) === -1) { a.target = "_blank"; a.rel = "noopener"; }
+        a.innerHTML =
+            '<span class="ct-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span>' +
+            '<span class="ct-txt"><small>Sigue donde lo dejaste</small><strong></strong><em></em></span>' +
+            '<span class="ct-fl">→</span>';
+        a.querySelector("strong").textContent = u.titulo;
+        a.querySelector("em").textContent = u.sub || "";
+        lead.parentNode.insertBefore(a, lead.nextSibling);
     }
+
+
+    /* ---------- Logros ---------- */
+
+    var LOGROS = [
+        { id: "madrugador", ic: "🌅", nombre: "Madrugador", pista: "Entra antes de las 8:00" },
+        { id: "buho", ic: "🦉", nombre: "Búho nocturno", pista: "Entra entre las 23:00 y las 5:00" },
+        { id: "finde", ic: "🛋️", nombre: "Ni el finde", pista: "Entra un sábado o un domingo" },
+        { id: "racha3", ic: "🔥", nombre: "En racha", pista: "3 días seguidos entrando" },
+        { id: "racha7", ic: "☄️", nombre: "Imparable", pista: "7 días seguidos entrando" },
+        { id: "reto1", ic: "🎯", nombre: "Primer acierto", pista: "Acierta un reto del día" },
+        { id: "reto10", ic: "🧠", nombre: "Cerebrito", pista: "Acierta 10 retos del día" },
+        { id: "explorador", ic: "🧭", nombre: "Explorador", pista: "Visita 5 temas distintos" },
+        { id: "previsor", ic: "📅", nombre: "Previsor", pista: "Añade un examen a tu calendario" },
+        { id: "calculista", ic: "📈", nombre: "Calculista", pista: "Usa la calculadora de la normal" },
+        { id: "repaso", ic: "🃏", nombre: "Memoria de elefante", pista: "Completa un mazo de tarjetas" }
+    ];
+
+    function misLogros() { return leerJSON("logros-web", {}); }
+
+    function desbloquear(id) {
+        var l = misLogros();
+        if (l[id]) return;
+        l[id] = Date.now();
+        guardar("logros-web", JSON.stringify(l));
+        var def = LOGROS.filter(function (x) { return x.id === id; })[0];
+        if (def) avisoLogro(def);
+        pintarLogros();
+    }
+
+    var colaLogros = [], mostrandoLogro = false;
+
+    function avisoLogro(def) {
+        colaLogros.push(def);
+        if (!mostrandoLogro) siguienteLogro();
+    }
+
+    function siguienteLogro() {
+        var def = colaLogros.shift();
+        if (!def) { mostrandoLogro = false; return; }
+        mostrandoLogro = true;
+        var t = document.createElement("div");
+        t.className = "logro-toast";
+        t.innerHTML = '<span class="lt-ic"></span><span><small>Logro desbloqueado</small><strong></strong></span>';
+        t.firstChild.textContent = def.ic;
+        t.querySelector("strong").textContent = def.nombre;
+        document.body.appendChild(t);
+        requestAnimationFrame(function () { t.classList.add("visible"); });
+        setTimeout(function () { t.classList.remove("visible"); setTimeout(function () { t.remove(); siguienteLogro(); }, 450); }, 3200);
+    }
+
+    function comprobarLogros() {
+        var ahora = new Date(), h = ahora.getHours(), d = ahora.getDay();
+        if (h >= 5 && h < 8) desbloquear("madrugador");
+        if (h >= 23 || h < 5) desbloquear("buho");
+        if (d === 0 || d === 6) desbloquear("finde");
+        var racha = leerJSON("racha-web", { n: 0 });
+        if (racha.n >= 3) desbloquear("racha3");
+        if (racha.n >= 7) desbloquear("racha7");
+        var reto = leerJSON("reto-web", {});
+        if (reto.aciertos >= 1) desbloquear("reto1");
+        if (reto.aciertos >= 10) desbloquear("reto10");
+        if (leerJSON("temas-vistos", []).length >= 5) desbloquear("explorador");
+    }
+
+    function pintarLogros() {
+        var caja = document.getElementById("logros");
+        if (!caja) return;
+        var l = misLogros();
+        var n = LOGROS.filter(function (x) { return l[x.id]; }).length;
+        caja.querySelector(".lg-cuenta").textContent = n + " de " + LOGROS.length;
+        caja.querySelector(".lg-barra span").style.width = (n / LOGROS.length * 100) + "%";
+        caja.querySelector(".lg-rejilla").innerHTML = LOGROS.map(function (x) {
+            var si = !!l[x.id];
+            return '<div class="lg' + (si ? " si" : "") + '" title="' + x.pista + '">' +
+                '<span class="lg-ic">' + (si ? x.ic : "🔒") + '</span>' +
+                '<strong>' + x.nombre + '</strong><small>' + (si ? "¡Conseguido!" : x.pista) + '</small></div>';
+        }).join("");
+    }
+
+
+    /* ---------- Mi media (Andalucía: media de competencias específicas) ----------
+       El profe pone nota a cada CRITERIO. La nota de cada COMPETENCIA ESPECÍFICA
+       es la media de sus criterios, y la nota final es la media de las
+       competencias. Si cambian los criterios, basta con editar esta lista. */
+
+    var COMPETENCIAS = [
+        ["1", "Resolución de problemas", [["1.1", "Estrategias y herramientas para resolver problemas"], ["1.2", "Obtener todas las soluciones y describir el proceso"]]],
+        ["2", "Comprobación y razonamiento", [["2.1", "Comprobar la validez de las soluciones"], ["2.2", "Elegir la solución más adecuada al contexto"]]],
+        ["3", "Conjeturas e investigación", [["3.1", "Formular conjeturas y plantear problemas"], ["3.2", "Investigar con herramientas tecnológicas"]]],
+        ["4", "Pensamiento computacional", [["4.1", "Modelizar y resolver con pensamiento computacional"]]],
+        ["5", "Conexiones matemáticas", [["5.1", "Conectar ideas matemáticas entre sí"]]],
+        ["6", "Matemáticas en contexto", [["6.1", "Resolver problemas de otros ámbitos"], ["6.2", "Valorar la aportación de las matemáticas"]]],
+        ["7", "Representación", [["7.1", "Representar ideas con las herramientas adecuadas"], ["7.2", "Usar distintas formas de representación"]]],
+        ["8", "Comunicación", [["8.1", "Comunicar con orden, terminología y rigor"], ["8.2", "Usar el lenguaje matemático con precisión"]]],
+        ["9", "Destrezas personales y sociales", [["9.1", "Gestionar emociones y aprender del error"], ["9.2", "Perseverar y aceptar la crítica razonada"], ["9.3", "Trabajar en equipo"]]]
+    ];
+
+    function misNotas() { return leerJSON("notas-criterios", {}); }
+
+    /* «6 7,5» → [6, 7.5] (se pueden poner varias notas de un mismo criterio) */
+    function notasDe(texto) {
+        return String(texto || "").split(/[\s;\/|]+/).map(leerNum).filter(function (n) { return n !== null && n >= 0 && n <= 10; });
+    }
+
+    function mediaDe(lista) {
+        return lista.length ? lista.reduce(function (a, b) { return a + b; }, 0) / lista.length : null;
+    }
+
+    function calcularCompetencias(notas) {
+        var res = COMPETENCIAS.map(function (ce) {
+            var crit = ce[2].map(function (c) { return mediaDe(notasDe(notas[c[0]])); }).filter(function (n) { return n !== null; });
+            return { id: ce[0], nombre: ce[1], nota: mediaDe(crit), criterios: crit.length };
+        });
+        var conNota = res.filter(function (r) { return r.nota !== null; });
+        return { ces: res, final: mediaDe(conNota.map(function (r) { return r.nota; })), n: conNota.length };
+    }
+
+    function pintarMediaTile() {
+        var el = document.getElementById("media-num");
+        if (!el) return;
+        var r = calcularCompetencias(misNotas());
+        el.textContent = r.final !== null ? fmt(r.final, 2) : "—";
+        var sub = document.getElementById("media-sub");
+        if (sub) sub.textContent = r.n ? r.n + " de " + COMPETENCIAS.length + " competencias con nota" : "Apunta las notas de tus criterios";
+    }
+
+    var ventanaMedia = null;
+
+    function abrirMedia() {
+        if (!ventanaMedia) {
+            var cuerpo = '<div class="cp-cuerpo">' +
+                '<p class="cp-ayuda">Apunta la nota de cada criterio. Si un criterio tiene varias notas, escríbelas separadas por un espacio (por ejemplo <b>6 7,5</b>). Cada competencia es la media de sus criterios y tu nota es la media de las competencias, como se evalúa en Andalucía.</p>' +
+                COMPETENCIAS.map(function (ce) {
+                    return '<section class="ce" data-ce="' + ce[0] + '">' +
+                        '<div class="ce-cab"><span class="ce-num">CE ' + ce[0] + '</span><strong>' + ce[1] + '</strong><span class="ce-nota">—</span></div>' +
+                        ce[2].map(function (c) {
+                            return '<label class="crit"><span class="crit-cod">' + c[0] + '</span><span class="crit-txt">' + c[1] + '</span>' +
+                                '<input data-crit="' + c[0] + '" inputmode="decimal" placeholder="—" autocomplete="off"></label>';
+                        }).join("") + '</section>';
+                }).join("") +
+                '<button type="button" class="md-anadir md-borrar-todo">Borrar todas mis notas</button>' +
+                '</div>' +
+                '<div class="cp-resultado nm-resultado"><div class="cp-nota cp-nota-adm"><small>Tu nota (media de competencias)</small><strong id="md-media">—</strong></div>' +
+                '<p class="cp-mensaje" id="md-detalle"></p></div>' +
+                '<p class="cp-aviso">Orientativo. Las competencias sin ninguna nota todavía no cuentan en la media.</p>';
+
+            ventanaMedia = crearVentana("v-media", "Solo en tu móvil", "Mi media", cuerpo);
+            var V = ventanaMedia;
+            var guardadas = misNotas();
+
+            V.querySelectorAll("input[data-crit]").forEach(function (i) {
+                i.value = guardadas[i.getAttribute("data-crit")] || "";
+                i.addEventListener("input", function () {
+                    var n = misNotas();
+                    n[i.getAttribute("data-crit")] = i.value;
+                    guardar("notas-criterios", JSON.stringify(n));
+                    recalcular();
+                    pintarMediaTile();
+                });
+            });
+
+            V.querySelector(".md-borrar-todo").addEventListener("click", function () {
+                if (!window.confirm("¿Borrar todas tus notas de este dispositivo?")) return;
+                guardar("notas-criterios", "{}");
+                V.querySelectorAll("input[data-crit]").forEach(function (i) { i.value = ""; });
+                recalcular();
+                pintarMediaTile();
+            });
+
+            function recalcular() {
+                var r = calcularCompetencias(misNotas());
+                r.ces.forEach(function (ce) {
+                    var el = V.querySelector('.ce[data-ce="' + ce.id + '"] .ce-nota');
+                    el.textContent = ce.nota !== null ? fmt(ce.nota, 2) : "—";
+                    el.classList.toggle("baja", ce.nota !== null && ce.nota < 5);
+                });
+                V.querySelector("#md-media").textContent = r.final !== null ? fmt(r.final, 2) : "—";
+                V.querySelector("#md-detalle").textContent = r.n
+                    ? "Media de " + r.n + (r.n === 1 ? " competencia" : " competencias") + " con nota."
+                    : "Todavía no hay notas.";
+            }
+
+            recalcular();
+        }
+        ventanaMedia.abrir();
+    }
+
+
+    /* =====================================================
+       13. TARJETAS DE REPASO (contenido en tarjetas.js)
+    ===================================================== */
+
+    var promesaTarjetas = null;
+
+    function cargarTarjetas() {
+        if (window.TARJETAS) return Promise.resolve(window.TARJETAS);
+        if (promesaTarjetas) return promesaTarjetas;
+        promesaTarjetas = new Promise(function (ok, mal) {
+            var sc = document.createElement("script");
+            sc.src = raiz + "tarjetas.js?v=1";
+            sc.onload = function () { ok(window.TARJETAS || {}); };
+            sc.onerror = mal;
+            document.head.appendChild(sc);
+        });
+        return promesaTarjetas;
+    }
+
+    function claveTema(url) {
+        var m = /(ccss[12])\/tema(\d+)\.html/.exec(url || "");
+        return m ? m[1] + "/tema" + m[2] : null;
+    }
+
+    function barajar(a) {
+        for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; }
+        return a;
+    }
+
+    var ventanaRepaso = null;
+
+    function abrirRepaso(clave, titulo) {
+        cargarTarjetas().then(function (todas) {
+            var mazo = todas[clave];
+            if (!mazo || !mazo.length) return;
+
+            if (!ventanaRepaso) {
+                ventanaRepaso = crearVentana("v-repaso", "Repaso rápido", "Tarjetas",
+                    '<div class="cp-cuerpo rp-cuerpo">' +
+                    '<div class="rp-progreso"><div class="rp-barra"><span></span></div><span class="rp-cuenta"></span></div>' +
+                    '<div class="rp-escena"><button type="button" class="rp-tarjeta" aria-live="polite">' +
+                    '<span class="rp-cara rp-frente"><small>Pregunta</small><span class="rp-texto"></span><em>Toca para ver la respuesta</em></span>' +
+                    '<span class="rp-cara rp-dorso"><small>Respuesta</small><span class="rp-texto"></span></span>' +
+                    '</button></div>' +
+                    '<div class="rp-botones" hidden><button type="button" class="rp-otra">Repasar otra vez</button><button type="button" class="rp-se">¡Me la sé!</button></div>' +
+                    '<div class="rp-fin" hidden><span class="rp-fin-ic">🎉</span><h3>¡Mazo completado!</h3><p></p><button type="button" class="b-boton rp-reiniciar">Empezar de nuevo</button></div>' +
+                    '</div>');
+            }
+
+            var V = ventanaRepaso;
+            V.querySelector(".cp-cabecera h2").textContent = titulo || "Tarjetas";
+
+            var cola = barajar(mazo.slice()), total = mazo.length, sabidas = 0, intentos = 0;
+            var tarjeta = V.querySelector(".rp-tarjeta");
+            var botones = V.querySelector(".rp-botones");
+            var fin = V.querySelector(".rp-fin");
+
+            function mostrar() {
+                V.querySelector(".rp-barra span").style.width = (sabidas / total * 100) + "%";
+                V.querySelector(".rp-cuenta").textContent = sabidas + " de " + total + " sabidas";
+                if (!cola.length) {
+                    tarjeta.parentNode.hidden = true;
+                    botones.hidden = true;
+                    fin.hidden = false;
+                    fin.querySelector("p").textContent = "Te sabes las " + total + " tarjetas" +
+                        (intentos > total ? " (con " + (intentos - total) + " repasos extra)." : " a la primera. ¡Brutal!");
+                    desbloquear("repaso");
+                    return;
+                }
+                tarjeta.parentNode.hidden = false;
+                fin.hidden = true;
+                tarjeta.classList.remove("girada");
+                botones.hidden = true;
+                tarjeta.querySelector(".rp-frente .rp-texto").textContent = cola[0][0];
+                tarjeta.querySelector(".rp-dorso .rp-texto").textContent = cola[0][1];
+            }
+
+            tarjeta.onclick = function () {
+                tarjeta.classList.toggle("girada");
+                botones.hidden = !tarjeta.classList.contains("girada");
+            };
+            V.querySelector(".rp-se").onclick = function () { intentos++; sabidas++; cola.shift(); mostrar(); };
+            V.querySelector(".rp-otra").onclick = function () {
+                intentos++;
+                var c = cola.shift();
+                cola.splice(Math.min(cola.length, 3), 0, c);   /* vuelve a salir pronto */
+                mostrar();
+            };
+            V.querySelector(".rp-reiniciar").onclick = function () { cola = barajar(mazo.slice()); sabidas = 0; intentos = 0; mostrar(); };
+            V.onkeydown = function (e) {
+                if (e.key === " " && e.target === tarjeta) return;
+                if (e.key === " ") { e.preventDefault(); tarjeta.click(); }
+                if (!botones.hidden && e.key === "1") V.querySelector(".rp-otra").click();
+                if (!botones.hidden && e.key === "2") V.querySelector(".rp-se").click();
+            };
+
+            mostrar();
+            V.abrir();
+            setTimeout(function () { tarjeta.focus(); }, 60);
+        });
+    }
+
+    /* En cada página de tema: bloque «Repaso rápido» */
+    function repasoEnTema() {
+        var clave = claveTema(location.pathname);
+        var col = document.querySelector(".tema-columnas");
+        if (!clave || !col) return;
+        cargarTarjetas().then(function (todas) {
+            var mazo = todas[clave];
+            if (!mazo) return;
+            var h1 = document.querySelector(".tema-header .h1-txt") || document.querySelector(".tema-header h1");
+            var titulo = h1 ? limpiar(h1.textContent) : "Repaso";
+            var bloque = document.createElement("section");
+            bloque.className = "repaso-tema";
+            bloque.innerHTML =
+                '<div class="rt-pila"><span></span><span></span><span class="rt-top">?</span></div>' +
+                '<div class="rt-txt"><p class="b-etiqueta">Repaso rápido</p><h2>Tarjetas del tema</h2>' +
+                '<p>' + mazo.length + ' preguntas clave con su respuesta. Gíralas, marca las que te sabes y repite las que no.</p>' +
+                '<button type="button" class="b-boton">Empezar el repaso <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 5l7 7-7 7-1.4-1.4 4.6-4.6H4v-2h12.2l-4.6-4.6z"/></svg></button></div>';
+            bloque.querySelector("button").addEventListener("click", function () { abrirRepaso(clave, titulo); });
+            col.parentNode.insertBefore(bloque, col.nextSibling);
+        }).catch(function () {});
+    }
+
+    /* Botón «Repasar este tema» en la tarjeta del próximo examen */
+    function repasoEnExamen(caja, t) {
+        var clave = claveTema(t.url);
+        if (!clave || !caja) return;
+        cargarTarjetas().then(function (todas) {
+            if (!todas[clave] || caja.querySelector(".ep-repasar")) return;
+            var b = document.createElement("button");
+            b.type = "button";
+            b.className = "ep-calendario ep-repasar";
+            b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h12v14H4zM8 2h12v14h-2V4H8z"/></svg><span>Repasar tarjetas</span>';
+            b.addEventListener("click", function () { abrirRepaso(clave, t.titulo.replace(/^Tema\s+\d+\s*:\s*/i, "")); });
+            var cal = caja.querySelector(".ep-cal");
+            if (cal) { cal.classList.add("ep-acciones-fila"); cal.insertBefore(b, cal.firstChild.nextSibling); } else caja.appendChild(b);
+        }).catch(function () {});
+    }
+
+    /* Panel del móvil «Herramientas» → lista de mazos */
+    function panelRepaso() {
+        var p = panel("hoja-repaso", "Tarjetas de repaso", '<p class="hoja-cargando">Cargando…</p>');
+        abrirPanel(p);
+        Promise.all([cargarTarjetas(), cargarTemas()]).then(function (r) {
+            var todas = r[0], temas = r[1].temas;
+            p.querySelector(".hoja-cuerpo").innerHTML = temas.filter(function (t) { return todas[claveTema(t.url)]; }).map(function (t) {
+                var partes = /^(Tema\s*\d+)\s*[:.·-]?\s*(.*)$/i.exec(t.titulo) || [null, t.titulo, ""];
+                return '<button type="button" class="hoja-fila hf-tema" data-mazo="' + claveTema(t.url) + '" data-titulo="' + (partes[2] || partes[1]).replace(/"/g, "&quot;") + '">' +
+                    '<span class="hf-num">' + partes[1].replace(/\D/g, "") + '</span><span class="hf-txt"><strong>' + (partes[2] || partes[1]) + '</strong><small>' +
+                    todas[claveTema(t.url)].length + ' tarjetas</small></span><span class="hf-flecha">›</span></button>';
+            }).join("");
+        });
+    }
+
+    document.addEventListener("click", function (e) {
+        var b = e.target.closest("[data-mazo]");
+        if (!b) return;
+        cerrarPanel();
+        abrirRepaso(b.getAttribute("data-mazo"), b.getAttribute("data-titulo"));
+    });
 
 
     /* =====================================================
@@ -1783,6 +2662,12 @@
             lienzoHero();
             saludoYRacha();
             ocurrenciaDelDia();
+            aplicarPerfil(false);
+            pintarContinuar();
+            pintarLogros();
+            pintarMediaTile();
+            var bm = document.getElementById("abrir-media");
+            if (bm) bm.addEventListener("click", abrirMedia);
             proximoExamen();
             retoDelDia();
             var bc = document.getElementById("abrir-calculadora");
@@ -1794,6 +2679,10 @@
         }
 
         botonArriba();
+        barraInferior();
+        registrarVisita();
+        repasoEnTema();
+        setTimeout(comprobarLogros, 1500);
         abrirApartado();
         prepararAparicion();
 
