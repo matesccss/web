@@ -7589,3 +7589,49 @@
 
 /* «Sigue donde lo dejaste» ya no se muestra */
 :root .continuar { display: none !important; }
+
+
+/* ---------- Señalar lo nuevo dentro de cada tema ---------- */
+
+:root .nv-badge {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: #ff5a36;
+    color: #fff;
+    font-family: var(--sans);
+    font-size: .64rem;
+    font-weight: 700;
+    letter-spacing: .02em;
+    vertical-align: 2px;
+    -webkit-text-fill-color: #fff;
+    animation: nv-latir 1.6s ease-in-out 3;
+}
+
+:root .nv-badge-act { background: var(--c2, #2f6bff); }
+
+@keyframes nv-latir { 50% { transform: scale(1.12); } }
+
+:root .btn-tema.es-novedad {
+    border-color: #ff5a36;
+    box-shadow: 0 0 0 3px rgba(255, 90, 54, .15);
+}
+
+:root .aviso-examen.es-novedad { box-shadow: 0 0 0 3px rgba(255, 90, 54, .2), var(--sombra); }
+:root details.es-novedad { border-color: #ff5a36; }
+
+/* Punto rojo junto al tema en el menú desplegable del ordenador */
+:root .dropdown-content a.con-novedad { position: relative; font-weight: 600; }
+:root .dropdown-content a.con-novedad::after {
+    content: "";
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    margin-left: 8px;
+    border-radius: 50%;
+    background: #ff5a36;
+    vertical-align: 2px;
+}
+
+:root .hf-nuevo, :root .nv-badge { white-space: nowrap; display: inline-block; }

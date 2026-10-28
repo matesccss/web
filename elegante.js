@@ -344,10 +344,19 @@
         return new Date(+m[3], mes, +m[1], +(m[4] || 9), +(m[5] || 0)).getTime();
     }
 
-    function pedir(url) {
+    function pedirUnaVez(url) {
         return fetch(url, { cache: "no-cache" })
             .then(function (r) { if (!r.ok) throw new Error(r.status); return r.text(); })
             .then(function (t) { return new DOMParser().parseFromString(t, "text/html"); });
+    }
+
+    /* Si falla (red lenta, la app actualizándose…), lo vuelve a intentar dos veces */
+    function pedir(url) {
+        return pedirUnaVez(url).catch(function () {
+            return new Promise(function (ok) { setTimeout(ok, 500); }).then(function () { return pedirUnaVez(url); });
+        }).catch(function () {
+            return new Promise(function (ok) { setTimeout(ok, 1500); }).then(function () { return pedirUnaVez(url); });
+        });
     }
 
     var promesaTemas = null;
@@ -363,6 +372,8 @@
                 return promesaTemas;
             }
         } catch (e) {}
+
+        var incompleto = false;
 
         promesaTemas = pedir(raiz + "menu.html").then(function (menu) {
 
@@ -396,7 +407,7 @@
                             fuera: a.getAttribute("target") === "_blank" });
                     });
                     return t;
-                }).catch(function () { t.titulo = t.nombre; t.fecha = null; t.recursos = []; return t; });
+                }).catch(function () { incompleto = true; t.titulo = t.nombre; t.fecha = null; t.recursos = []; return t; });
             }));
 
         }).then(function (temas) {
@@ -422,10 +433,12 @@
                         if (s) p.apartados.push({ texto: limpiar(s.textContent), i: i });
                     });
                     return p;
-                }).catch(function () { p.apartados = []; return p; });
+                }).catch(function () { incompleto = true; p.apartados = []; return p; });
             })).then(function (paginasVideo) {
 
-                var datos = { temas: temas, videos: [] };
+                /* incompleto = alguna página no se pudo leer: sirve para mostrar,
+                   pero no para comparar novedades ni para guardarlo */
+                var datos = { temas: temas, videos: [], incompleto: incompleto };
 
                 paginasVideo.forEach(function (p) {
                     p.apartados.forEach(function (a) {
@@ -440,7 +453,11 @@
                     });
                 });
 
-                try { sessionStorage.setItem("indice-web", JSON.stringify({ t: Date.now(), datos: datos })); } catch (e) {}
+                if (!incompleto) {
+                    try { sessionStorage.setItem("indice-web", JSON.stringify({ t: Date.now(), datos: datos })); } catch (e) {}
+                } else {
+                    promesaTemas = null;   /* la próxima vez se vuelve a intentar */
+                }
 
                 return datos;
             });
@@ -2042,8 +2059,10 @@
                     var partes = /^(Tema\s*\d+)\s*[:.·-]?\s*(.*)$/i.exec(t.titulo) || [null, t.titulo, ""];
                     var aviso = t.fecha && t.fecha > ahora ?
                         ' <em class="hf-examen">Examen ' + new Date(t.fecha).toLocaleDateString("es-ES", { day: "numeric", month: "short" }) + '</em>' : "";
-                    var nuevo = misNovedades().some(function (n) { return n.tema === t.url && n.tipo === "tema"; })
-                        ? ' <em class="hf-nuevo">Nuevo</em>' : "";
+                    var nt = novedadesDeTema(t.url);
+                    var esNuevo = nt.some(function (n) { return n.tipo === "tema"; });
+                    var nuevo = esNuevo ? ' <em class="hf-nuevo">Nuevo</em>'
+                        : nt.length ? ' <em class="hf-nuevo">' + nt.length + (nt.length === 1 ? " novedad" : " novedades") + '</em>' : "";
                     return '<a class="hoja-fila hf-tema" href="' + t.url + '"><span class="hf-num">' + (partes[1].replace(/\D/g, "")) + '</span>' +
                         '<span class="hf-txt"><strong>' + (partes[2] || partes[1]) + nuevo + '</strong>' + aviso + '</span><span class="hf-flecha">›</span></a>';
                 }).join("");
@@ -2053,7 +2072,7 @@
             });
             p.querySelector(".hoja-cuerpo").innerHTML = html2;
             /* abrir el panel cuenta como «visto» */
-            if (misNovedades().length) setTimeout(borrarNovedades, 2500);
+
         });
     }
 
@@ -3130,6 +3149,8 @@
     function comprobarNovedades() {
         if (pagina === "juego") return;
         cargarTemas().then(function (datos) {
+            /* Si alguna página no se pudo leer, mejor no comparar: evita avisos que faltan o falsos */
+            if (datos.incompleto) { pintarNovedades(); marcarNovedadesEnPagina(); return; }
             var ahora = huellaWeb(datos);
             var antes = leerJSON("visto-web", null);
             guardar("visto-web", JSON.stringify(ahora));
@@ -3158,10 +3179,10 @@
                 Object.keys(actuales).forEach(function (tit) {
                     if (!(tit in previos)) {
                         añadir({ clave: "rec|" + t.url + "|" + tit + "|" + actuales[tit], tipo: "pdf", url: t.url, tema: t.url,
-                            texto: "Nuevo en " + nombre + ": " + tit });
+                            recurso: tit, estado: "nuevo", texto: "Nuevo en " + nombre + ": " + tit });
                     } else if (previos[tit] !== actuales[tit]) {
                         añadir({ clave: "rec|" + t.url + "|" + tit + "|" + actuales[tit], tipo: "pdf", url: t.url, tema: t.url,
-                            texto: "Actualizado en " + nombre + ": " + tit });
+                            recurso: tit, estado: "actualizado", texto: "Actualizado en " + nombre + ": " + tit });
                     }
                 });
             });
@@ -3175,12 +3196,85 @@
             Object.keys(nuevosVideos).forEach(function (pag) {
                 var vs = nuevosVideos[pag];
                 añadir({ clave: "videos|" + pag + "|" + vs.map(function (v) { return v.texto; }).join(","), tipo: "video", url: vs[0].url,
+                    pagina: pag, videos: vs.map(function (v) { return v.texto; }),
                     texto: (vs.length === 1 ? "Vídeo nuevo: " + vs[0].texto : vs.length + " vídeos nuevos") + " · " + vs[0].donde.split(" · ").slice(1, 3).join(" · ") });
             });
 
             guardar("novedades-web", JSON.stringify(nov.slice(-12)));
             pintarNovedades();
+            marcarNovedadesEnPagina();
         }).catch(function () {});
+    }
+
+    /* Novedades de un tema (contando las de sus páginas de vídeos) */
+    function novedadesDeTema(urlTema) {
+        var base = urlTema.replace(/\/tema(\d+)\.html.*$/, "");
+        var num = (/tema(\d+)\.html/.exec(urlTema) || [])[1];
+        return misNovedades().filter(function (n) {
+            if (n.tema === urlTema) return true;
+            var pag = n.pagina || (n.tipo === "video" ? n.url.split("?")[0] : "");
+            return pag && pag.indexOf(base + "/") === 0 && new RegExp("/tema" + num + "\\.html$").test(pag);
+        });
+    }
+
+    /* En la página del tema (o de sus vídeos): señala cada cosa nueva y la da por vista */
+    function marcarNovedadesEnPagina() {
+        var aqui = location.href.split("#")[0].split("?")[0];
+        var nov = misNovedades();
+        var vistas = [];
+
+        nov.forEach(function (n) {
+            var pag = n.pagina || (n.tipo === "video" ? n.url.split("?")[0] : "");
+
+            if (n.tema === aqui) {
+                vistas.push(n.clave);
+                if (n.tipo === "pdf") {
+                    var nombre = n.recurso || (/:\s*(.+)$/.exec(n.texto) || [])[1];
+                    var estado = n.estado || (/^Actualizado/.test(n.texto) ? "actualizado" : "nuevo");
+                    document.querySelectorAll("a.btn-tema").forEach(function (a) {
+                        var t = a.querySelector(".titulo");
+                        if (t && limpiar(t.textContent) === nombre) marcarElemento(a, t, estado === "actualizado" ? "Actualizado" : "Nuevo");
+                    });
+                }
+                if (n.tipo === "fecha") {
+                    var h2 = document.querySelector(".aviso-examen h2");
+                    if (h2) marcarElemento(document.querySelector(".aviso-examen"), h2, "Fecha nueva");
+                }
+            }
+
+            /* En el tema: el botón que lleva a esos vídeos avisa de que hay vídeos nuevos */
+            if (n.tipo === "video" && pag !== aqui) {
+                document.querySelectorAll("a.btn-tema").forEach(function (b) {
+                    if (b.href.split("#")[0].split("?")[0] === pag) {
+                        var t = b.querySelector(".titulo") || b;
+                        var cuantos = (n.videos || []).length;
+                        marcarElemento(b, t, cuantos > 1 ? cuantos + " vídeos nuevos" : "Vídeo nuevo");
+                    }
+                });
+            }
+
+            if (n.tipo === "video" && pag === aqui) {
+                vistas.push(n.clave);
+                document.querySelectorAll("details").forEach(function (d) {
+                    var su = d.querySelector("summary");
+                    if (su && (n.videos || []).indexOf(limpiar(su.textContent)) > -1) marcarElemento(d, su, "Nuevo");
+                });
+            }
+        });
+
+        if (vistas.length) {
+            guardar("novedades-web", JSON.stringify(nov.filter(function (n) { return vistas.indexOf(n.clave) === -1; })));
+            pintarNovedades();
+        }
+    }
+
+    function marcarElemento(caja, dondeEtiqueta, texto) {
+        if (!caja || caja.querySelector(".nv-badge")) return;
+        caja.classList.add("es-novedad");
+        var b = document.createElement("span");
+        b.className = "nv-badge" + (texto === "Actualizado" ? " nv-badge-act" : "");
+        b.textContent = texto;
+        dondeEtiqueta.appendChild(b);
     }
 
     function borrarNovedades() {
@@ -3195,8 +3289,15 @@
         /* punto en la pestaña Temas (móvil) y en «CCSS II» del menú (ordenador) */
         var tab = document.querySelector('.tab[data-tab="temas"]');
         if (tab) tab.classList.toggle("con-novedad", hay);
-        var dd = document.querySelectorAll("#menu-container .menu-dropdown")[1];
-        if (dd) dd.classList.toggle("con-novedad", hay);
+        document.querySelectorAll("#menu-container .menu-dropdown").forEach(function (dd) {
+            var algun = false;
+            dd.querySelectorAll(".dropdown-content a").forEach(function (a) {
+                var n = novedadesDeTema(a.href.split("#")[0].split("?")[0]).length;
+                a.classList.toggle("con-novedad", n > 0);
+                if (n > 0) algun = true;
+            });
+            dd.classList.toggle("con-novedad", algun);
+        });
 
         var caja = document.getElementById("novedades-aviso");
         if (!caja) return;
