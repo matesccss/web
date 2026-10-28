@@ -1,0 +1,1675 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<link rel="icon" type="image/png" href="../../icons/icon.png">
+<style>:root{color-scheme:light}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>CCSS II · Tema 2 · Sistemas y Programación Lineal</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: cuaderno de cuadrícula. Pestañas arriba; en cada pestaña: enunciado → resolutor (entrada | gráfica) → pasos → dudas. */
+:root{
+  --paper:#f5f8fd; --gridline:#e2e9f5; --card:#ffffff; --ink:#15203a; --muted:#56637f; --line:#d3dcec;
+  --accent:#2950c8; --accent-soft:#e7edfc; --marker:#ffe27a; --good:#137f54; --good-soft:#e0f3ea; --bad:#c23636; --bad-soft:#fbe6e6;
+  --p1:#2f5fe0; --p2:#e04d36; --p3:#12996a; --p4:#9356cf; --p5:#c98510; --p6:#118cb0;
+  --f-display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --f-body:"Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#0e1421; --gridline:#18213a; --card:#141c2c; --ink:#e5ebf7; --muted:#9aa6bf; --line:#27334b;
+  --accent:#86a6ff; --accent-soft:#1d2a47; --marker:#6b5714; --good:#4fd19c; --good-soft:#123326; --bad:#ff8484; --bad-soft:#3a1a1f;
+  --p1:#7fa0ff; --p2:#ff8a72; --p3:#47cf98; --p4:#c49af0; --p5:#f0b648; --p6:#4cc4e6; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#0e1421; --gridline:#18213a; --card:#141c2c; --ink:#e5ebf7; --muted:#9aa6bf; --line:#27334b;
+  --accent:#86a6ff; --accent-soft:#1d2a47; --marker:#6b5714; --good:#4fd19c; --good-soft:#123326; --bad:#ff8484; --bad-soft:#3a1a1f;
+  --p1:#7fa0ff; --p2:#ff8a72; --p3:#47cf98; --p4:#c49af0; --p5:#f0b648; --p6:#4cc4e6; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{
+  background-color:var(--paper); color:var(--ink); font-family:var(--f-body); font-size:16px; line-height:1.5;
+  background-image:linear-gradient(var(--gridline) 1px,transparent 1px),linear-gradient(90deg,var(--gridline) 1px,transparent 1px);
+  background-size:24px 24px;
+}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 56px}
+header.top{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:12px 24px;margin-bottom:18px}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(1.6rem,3.6vw,2.4rem);line-height:1.05;margin:0;letter-spacing:-.01em;text-wrap:balance}
+h1 em{font-style:normal;color:var(--accent)}
+.sub{color:var(--muted);margin:6px 0 0;max-width:62ch}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.seg{display:inline-flex;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:3px}
+.seg button{font:inherit;font-size:.9rem;border:0;background:transparent;color:var(--muted);padding:6px 14px;border-radius:999px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--card);font-weight:700}
+.seg button:focus-visible,.btn:focus-visible,.chip:focus-visible,textarea:focus-visible,input:focus-visible,select:focus-visible,.bankitem:focus-visible,.tabbar button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.tabbar{display:flex;flex-wrap:wrap;gap:4px;border-bottom:2px solid var(--line);margin-bottom:18px}
+.tabbar button{font-family:var(--f-display);font-weight:600;font-size:1.05rem;border:0;background:none;color:var(--muted);padding:10px 16px;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px}
+.tabbar button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.grid2{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:18px;align-items:start}
+@media (max-width:860px){.grid2{grid-template-columns:minmax(0,1fr)}}
+.stack{display:flex;flex-direction:column;gap:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;min-width:0}
+.card h2{font-family:var(--f-display);font-size:1.15rem;margin:0 0 10px;font-weight:600}
+.card.ai{border-color:var(--accent);border-width:1.5px}
+.eyebrow{font-size:.75rem;text-transform:uppercase;letter-spacing:.09em;color:var(--accent);font-weight:700;margin:0 0 4px}
+label.lbl{display:block;font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700;margin:12px 0 6px}
+textarea,input[type=text],select{width:100%;font-family:var(--f-mono);font-size:1rem;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 12px;line-height:1.7}
+textarea{resize:vertical;min-height:7.2em}
+textarea.prose{font-family:var(--f-body);line-height:1.5;min-height:5.5em}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{font:inherit;font-size:.85rem;background:var(--accent-soft);color:var(--ink);border:1px solid transparent;border-radius:999px;padding:5px 12px;cursor:pointer}
+.chip:hover{border-color:var(--accent)}
+.btn{font:inherit;font-weight:700;background:var(--accent);color:var(--card);border:0;border-radius:8px;padding:10px 18px;cursor:pointer}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+.btn.small{padding:6px 12px;font-size:.88rem}
+.filebtn{display:inline-flex;align-items:center;gap:6px;font-weight:700;color:var(--accent);border:1px dashed var(--accent);border-radius:8px;padding:9px 14px;cursor:pointer;font-size:.92rem}
+.filebtn input{position:absolute;opacity:0;width:1px;height:1px}
+.hint{font-size:.85rem;color:var(--muted);margin:10px 0 0}
+.hint code{font-family:var(--f-mono);background:var(--accent-soft);padding:1px 5px;border-radius:4px;font-size:.85em}
+.err{margin-top:12px;background:var(--bad-soft);color:var(--bad);border-radius:8px;padding:10px 12px;font-size:.92rem}
+.okbox{margin-top:12px;background:var(--good-soft);color:var(--ink);border-radius:8px;padding:10px 12px;font-size:.95rem}
+.status{font-size:.9rem;color:var(--muted);margin-top:10px}
+.badge{display:inline-flex;align-items:center;gap:8px;font-weight:700;border-radius:999px;padding:4px 12px;font-size:.9rem}
+.badge.scd{background:var(--good-soft);color:var(--good)}
+.badge.sci{background:var(--accent-soft);color:var(--accent)}
+.badge.si{background:var(--bad-soft);color:var(--bad)}
+.vhead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}
+canvas{display:block;width:100%;border-radius:8px;background:var(--paper);touch-action:none}
+#cv3{cursor:grab;aspect-ratio:4/3;max-width:100%}
+#cv3:active{cursor:grabbing}
+canvas.big{aspect-ratio:5/4;max-width:100%}
+canvas.mini{aspect-ratio:1/1;max-width:100%;touch-action:auto}
+canvas.mid{aspect-ratio:5/4;max-width:560px;touch-action:auto}
+.legend{display:flex;flex-direction:column;gap:4px;margin-top:10px;font-size:.92rem}
+.legend label{display:flex;gap:8px;align-items:center;cursor:pointer;min-width:0}
+.legend .sw{width:14px;height:14px;border-radius:3px;flex:none}
+.legend .eq{font-family:var(--f-mono);font-size:.88rem;overflow-wrap:anywhere}
+.small{font-size:.85rem;color:var(--muted)}
+/* pasos */
+.steps{display:flex;flex-direction:column;gap:14px}
+.steps:not(:empty){margin-top:18px}
+.step{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;min-width:0}
+.step header{display:flex;gap:12px;align-items:baseline;margin-bottom:8px;flex-wrap:wrap}
+.step .num{font-family:var(--f-mono);font-size:.78rem;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;white-space:nowrap}
+.step h3{font-family:var(--f-display);font-weight:600;font-size:1.1rem;margin:0;text-wrap:balance}
+.step p{margin:6px 0;max-width:72ch}
+.ops{display:flex;flex-direction:column;gap:4px;margin:8px 0;padding:0;list-style:none}
+.ops li{font-family:var(--f-mono);font-size:.95rem;background:var(--accent-soft);border-radius:6px;padding:4px 10px;align-self:flex-start;max-width:100%;overflow-wrap:anywhere}
+.flex{display:flex;flex-wrap:wrap;gap:18px 28px;align-items:center}
+.scroll{overflow-x:auto;max-width:100%}
+.stepnav{display:flex;gap:8px;flex-wrap:wrap}
+/* tarjetas con gráfica al lado */
+.pair{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,250px);gap:14px 20px;align-items:start;border:1px solid var(--line);border-radius:10px;padding:14px;margin-top:12px}
+@media (max-width:600px){.pair{grid-template-columns:minmax(0,1fr)}.pair canvas{max-width:300px}}
+.pair h4{margin:0 0 6px;font-family:var(--f-mono);font-size:1rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.pair ol{margin:4px 0 0;padding-left:1.4em;display:flex;flex-direction:column;gap:6px}
+.pair ol li{padding-left:2px}
+.vname{display:inline-grid;place-items:center;width:1.9em;height:1.9em;border-radius:50%;background:var(--marker);color:var(--ink);font-family:var(--f-display);font-weight:800}
+table.pts{border-collapse:collapse;font-family:var(--f-mono);font-size:.92rem;margin:4px 0}
+table.pts td,table.pts th{border:1px solid var(--line);padding:2px 12px;text-align:center}
+table.pts th{background:var(--accent-soft)}
+.redu{display:inline-grid;grid-template-columns:auto auto auto;gap:4px 12px;font-family:var(--f-mono);align-items:center;margin:6px 0 6px 6px}
+.redu .rl{border-top:1.5px solid var(--ink);padding-top:3px}
+.redu .small{font-family:var(--f-body)}
+/* matrices */
+.matwrap{display:inline-flex;align-items:stretch;gap:6px;font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.mlab{display:flex;flex-direction:column;justify-content:space-around;padding:6px 0;color:var(--muted);font-size:.8rem}
+.mlab span{height:2.4em;display:flex;align-items:center}
+.mat{display:inline-grid;position:relative;padding:6px 10px;column-gap:0;border-left:2px solid var(--ink);border-right:2px solid var(--ink);border-radius:7px}
+.mat > span{height:2.4em;min-width:2.8em;padding:0 8px;display:flex;align-items:center;justify-content:center;border-radius:5px}
+.mat > span.bar{min-width:0;width:1px;padding:0;border-left:1.5px dashed var(--muted);border-radius:0}
+.mat > span.piv{background:var(--marker);font-weight:700}
+.mat > span.zer{color:var(--good);font-weight:700;box-shadow:inset 0 -2px 0 var(--good)}
+.mat > span.chg{background:var(--accent-soft)}
+.det{border-radius:0}
+.fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;font-size:.82em;line-height:1.05;margin:0 1px}
+.fr > span:first-child{border-bottom:1.2px solid currentColor;padding:0 2px}
+.fr > span:last-child{padding:0 2px}
+.eqs{font-family:var(--f-mono);display:flex;flex-direction:column;gap:6px;margin:8px 0;padding-left:14px;border-left:3px solid var(--line)}
+.eqs.brace{border-left-color:var(--accent)}
+.math{font-family:var(--f-mono);font-size:.97rem;line-height:2}
+.sol{font-family:var(--f-mono);font-size:1.05rem;background:var(--good-soft);color:var(--ink);border-radius:8px;padding:10px 14px;display:inline-block;max-width:100%;overflow-wrap:anywhere}
+.sol.bad{background:var(--bad-soft)}
+.sol + .sol{margin-top:8px}
+i.v{font-style:italic;font-family:var(--f-mono)}
+.quote{border-left:3px solid var(--marker);padding:4px 10px;background:var(--paper);border-radius:0 6px 6px 0;font-style:italic;margin:6px 0}
+.expr{display:inline-block;font-family:var(--f-mono);background:var(--accent-soft);border-radius:6px;padding:4px 10px;margin-top:4px;max-width:100%;overflow-wrap:anywhere}
+.tip{border:1px dashed var(--line);border-radius:8px;padding:8px 12px;margin-top:10px;font-size:.93rem}
+.tip b{color:var(--accent)}
+/* esquema Rouché */
+.rouche{display:flex;flex-direction:column;gap:10px;margin:10px 0}
+.rtop{align-self:flex-start;font-family:var(--f-mono);border:2px solid var(--ink);border-radius:8px;padding:6px 12px;font-size:.95rem}
+.rbr{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media (max-width:620px){.rbr{grid-template-columns:minmax(0,1fr)}}
+.rb{border:1.5px dashed var(--line);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:2px;color:var(--muted);font-size:.9rem}
+.rb .cond{font-family:var(--f-mono);font-size:.85rem}
+.rb b{font-family:var(--f-display);font-size:1.2rem;color:var(--muted)}
+.rb.on{border:2px solid var(--accent);background:var(--accent-soft);color:var(--ink)}
+.rb.on b{color:var(--accent)}
+table.t{border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:.94rem}
+table.t th,table.t td{border-bottom:1px solid var(--line);padding:7px 12px;text-align:left;vertical-align:middle}
+table.t th{font-size:.75rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+table.t td.m{font-family:var(--f-mono)}
+table.t tr.best td{background:var(--good-soft);font-weight:700}
+table.t tr.bestmin td{background:var(--accent-soft);font-weight:700}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:middle;flex:none}
+.ok{color:var(--good);font-weight:700}.no{color:var(--bad);font-weight:700}
+.slider{display:flex;align-items:center;gap:12px;margin-top:10px;flex-wrap:wrap}
+.slider input{flex:1;min-width:160px;accent-color:var(--accent)}
+.slider output{font-family:var(--f-mono);min-width:7em}
+.ctx{font-size:.92rem;background:var(--accent-soft);border-radius:8px;padding:8px 12px;margin-top:10px}
+.answer{white-space:pre-wrap;margin-top:12px;background:var(--paper);border-radius:8px;padding:12px 14px;line-height:1.55}
+.answer:empty{display:none}
+/* práctica */
+.bankgrid{display:grid;grid-template-columns:minmax(0,320px) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:860px){.bankgrid{grid-template-columns:minmax(0,1fr)}}
+.banklist{display:flex;flex-direction:column;gap:8px}
+.bankitem{font:inherit;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer;color:var(--ink);display:flex;flex-direction:column;gap:2px}
+.bankitem[aria-current="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.bankitem b{font-family:var(--f-display);font-weight:600}
+.tag{align-self:flex-start;font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;font-weight:700;border-radius:4px;padding:1px 6px;background:var(--accent-soft);color:var(--accent)}
+.tag.pl{background:var(--good-soft);color:var(--good)}
+.enun{font-size:1.02rem;line-height:1.6;max-width:70ch}
+.hints{display:flex;flex-direction:column;gap:10px;margin-top:10px}
+.hintc{border:1px solid var(--line);border-radius:10px;padding:10px 14px}
+.hintc .k{font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700}
+.feed{margin-top:12px;display:flex;flex-direction:column;gap:6px}
+.feed div{border-radius:8px;padding:8px 12px;font-size:.95rem}
+.chip[aria-pressed="true"]{background:var(--accent);color:var(--card);font-weight:700}
+.dict summary{cursor:pointer;font-family:var(--f-display)}
+.dict td{font-size:.9rem;padding:6px 8px}
+.dict table{width:100%}
+.dict td.m{white-space:nowrap;font-size:.84rem}
+.feed .g{background:var(--good-soft)}.feed .b{background:var(--bad-soft)}.feed .n{background:var(--accent-soft)}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+
+<div class="wrap">
+  <a href="../tema2.html" style="display:inline-block;margin-bottom:12px;color:var(--accent);font-weight:700;text-decoration:none">← Volver al Tema 2</a>
+  <header class="top">
+    <div>
+      <h1>Sistemas <em>3×3</em> y Programación Lineal</h1>
+      <p class="sub">Del enunciado a las ecuaciones y de las ecuaciones a la solución, explicado paso a paso: Gauss, Rouché, Cramer, región factible y vértices.</p>
+    </div>
+    <div class="tabs">
+      <span class="small">Mostrar:</span>
+      <div class="seg" role="group" aria-label="Modo de los pasos">
+        <button id="modeAll" aria-pressed="true">Todo</button>
+        <button id="modeStep" aria-pressed="false">Paso a paso</button>
+      </div>
+    </div>
+  </header>
+
+  <nav class="tabbar" role="tablist">
+    <button role="tab" id="tab-sistemas" data-tab="sistemas" aria-selected="true">Sistemas 3×3</button>
+    <button role="tab" id="tab-pl" data-tab="pl" aria-selected="false">Programación lineal</button>
+    <button role="tab" id="tab-practicar" data-tab="practicar" aria-selected="false">Practicar</button>
+  </nav>
+
+  <!-- ============ SISTEMAS ============ -->
+  <section id="panel-sistemas">
+    <div class="card ai">
+      <p class="eyebrow">Paso 0 · Si tu ejercicio es un problema con texto</p>
+      <h2>Del enunciado a las ecuaciones</h2>
+      <p style="margin:0 0 10px">Elige tu problema del boletín y verás, paso a paso, cómo se sacan las ecuaciones.</p>
+      <div class="row" style="flex-wrap:nowrap"><select id="bolSelS" aria-label="Problema del boletín" style="font-family:var(--f-body);min-width:0"></select><button class="btn" id="bolGoS" style="flex:none">Ver planteamiento</button></div>
+      <p class="hint">¿Es otro problema? En «Practicar» tienes la tabla de frases típicas para sistemas.</p>
+    </div>
+    <div class="card ai" id="aiCardS" style="margin-top:18px" hidden>
+      <p class="eyebrow">Con Claude · Cualquier otro enunciado</p>
+      <h2>Pega un enunciado nuevo</h2>
+      <textarea class="prose" id="aiTextS" spellcheck="true" rows="3" placeholder="Pega aquí el enunciado. Por ejemplo: «Un monedero contiene 1 euro en monedas de 2, 5 y 10 céntimos; en total hay 22 monedas…»"></textarea>
+      <div class="row" style="margin-top:10px">
+        <button class="btn" id="aiGoS">Explícame cómo plantearlo</button>
+        <label class="filebtn" id="aiImgLblS" hidden>Añadir foto del enunciado<input type="file" id="aiImgS" accept="image/*"></label>
+        <span class="small" id="aiImgNameS"></span>
+        <button class="btn ghost small" id="aiStopS" hidden>Parar</button>
+      </div>
+      <div class="status" id="aiStatusS"></div>
+    </div>
+    <div class="steps" id="aiOutS"></div>
+
+    <div class="grid2" style="margin-top:18px">
+      <div class="card">
+        <h2>Tu sistema</h2>
+        <label class="lbl">Ejemplos</label>
+        <div class="chips" id="exS"></div>
+        <label class="lbl" for="sysIn">Una ecuación por línea</label>
+        <textarea id="sysIn" spellcheck="false" rows="4"></textarea>
+        <div id="sysCtx"></div>
+        <label class="lbl">Método</label>
+        <div class="row">
+          <div class="seg" role="group" aria-label="Método">
+            <button id="mGauss" aria-pressed="true">Gauss</button>
+            <button id="mCramer" aria-pressed="false">Cramer</button>
+          </div>
+          <button class="btn" id="sysGo">Resolver</button>
+        </div>
+        <p class="hint">Escribe como en el cuaderno: <code>2x - y + 3z = 5</code>. Vale <code>x/2</code>, <code>3/4y</code>, <code>0,5z</code>. Las incógnitas son <i class="v">x</i>, <i class="v">y</i>, <i class="v">z</i>.</p>
+        <div id="sysErr" class="err" hidden></div>
+      </div>
+      <div class="card">
+        <div class="vhead">
+          <h2 style="margin:0">Interpretación geométrica</h2>
+          <span id="sysBadge"></span>
+        </div>
+        <canvas id="cv3" aria-label="Planos del sistema en 3D"></canvas>
+        <div class="row" style="justify-content:space-between;margin-top:8px">
+          <span class="small">Arrastra para girar los planos.</span>
+          <button class="btn ghost small" id="v3reset">Vista inicial</button>
+        </div>
+        <div class="legend" id="legend3"></div>
+      </div>
+    </div>
+    <div class="steps" id="sysSteps"></div>
+    <div class="card" id="askCardS" style="margin-top:18px" hidden>
+      <h2>¿No entiendes algún paso?</h2>
+      <div class="row" style="flex-wrap:nowrap"><input type="text" id="askS" placeholder="Por ejemplo: ¿por qué en el paso 3 multiplicamos por 2?" style="font-family:var(--f-body);min-width:0"><button class="btn" id="askGoS">Preguntar</button></div>
+      <div class="answer" id="askOutS"></div>
+    </div>
+  </section>
+
+  <!-- ============ PROGRAMACIÓN LINEAL ============ -->
+  <section id="panel-pl" hidden>
+    <div class="card ai">
+      <p class="eyebrow">Paso 0 · Si tu ejercicio es un problema con texto</p>
+      <h2>Del enunciado a las inecuaciones</h2>
+      <p style="margin:0 0 10px">Elige tu problema del boletín y verás, paso a paso, cómo se sacan las inecuaciones y la función objetivo.</p>
+      <div class="row" style="flex-wrap:nowrap"><select id="bolSelP" aria-label="Problema del boletín" style="font-family:var(--f-body);min-width:0"></select><button class="btn" id="bolGoP" style="flex:none">Ver planteamiento</button></div>
+      <p class="hint">¿Es otro problema? En «Practicar» tienes la tabla de frases típicas para programación lineal.</p>
+    </div>
+    <div class="card ai" id="aiCardP" style="margin-top:18px" hidden>
+      <p class="eyebrow">Con Claude · Cualquier otro enunciado</p>
+      <h2>Pega un enunciado nuevo</h2>
+      <textarea class="prose" id="aiTextP" spellcheck="true" rows="3" placeholder="Pega aquí el enunciado. Por ejemplo: «Una sastrería dispone de 70 m² de tela de lino y 150 m² de algodón…»"></textarea>
+      <div class="row" style="margin-top:10px">
+        <button class="btn" id="aiGoP">Explícame cómo plantearlo</button>
+        <label class="filebtn" id="aiImgLblP" hidden>Añadir foto del enunciado<input type="file" id="aiImgP" accept="image/*"></label>
+        <span class="small" id="aiImgNameP"></span>
+        <button class="btn ghost small" id="aiStopP" hidden>Parar</button>
+      </div>
+      <div class="status" id="aiStatusP"></div>
+    </div>
+    <div class="steps" id="aiOutP"></div>
+
+    <div class="grid2" style="margin-top:18px">
+      <div class="card">
+        <h2>Tu problema</h2>
+        <label class="lbl">Ejemplos</label>
+        <div class="chips" id="exP"></div>
+        <label class="lbl" for="lpObj">Función objetivo f(x, y) <span style="text-transform:none;letter-spacing:0;font-weight:400">(déjala vacía si solo piden la región y los vértices)</span></label>
+        <div class="row" style="flex-wrap:nowrap">
+          <select id="lpSense" style="width:auto;flex:none" aria-label="Qué buscamos">
+            <option value="max">Máximo</option>
+            <option value="min">Mínimo</option>
+            <option value="ambos">Máximo y mínimo</option>
+          </select>
+          <input type="text" id="lpObj" spellcheck="false" style="min-width:0">
+        </div>
+        <label class="lbl" for="lpCons">Restricciones (una por línea)</label>
+        <textarea id="lpCons" spellcheck="false" rows="5"></textarea>
+        <div id="lpCtx"></div>
+        <div class="row" style="margin-top:12px"><button class="btn" id="lpGo">Resolver</button></div>
+        <p class="hint">Usa <code>&lt;=</code> o <code>≤</code>, <code>&gt;=</code> o <code>≥</code>. Puedes escribir <code>x, y &gt;= 0</code> en una sola línea.</p>
+        <div id="lpErr" class="err" hidden></div>
+      </div>
+      <div class="card">
+        <div class="vhead">
+          <h2 style="margin:0">Región factible</h2>
+          <span id="lpBadge"></span>
+        </div>
+        <canvas id="cvlp" class="big" aria-label="Región factible"></canvas>
+        <div class="slider" id="lvlRow">
+          <label for="lvl" class="small">Recta de nivel</label>
+          <input type="range" id="lvl" min="0" max="1" step="0.01" value="0">
+          <output id="lvlOut"></output>
+        </div>
+        <p class="small" style="margin:4px 0 0">Mueve la recta de nivel: el óptimo es el último punto de la región que toca.</p>
+      </div>
+    </div>
+    <div class="steps" id="lpSteps"></div>
+    <div class="card" id="askCardP" style="margin-top:18px" hidden>
+      <h2>¿No entiendes algún paso?</h2>
+      <div class="row" style="flex-wrap:nowrap"><input type="text" id="askP" placeholder="Por ejemplo: ¿por qué el punto (0, 0) no está en la región?" style="font-family:var(--f-body);min-width:0"><button class="btn" id="askGoP">Preguntar</button></div>
+      <div class="answer" id="askOutP"></div>
+    </div>
+  </section>
+
+  <!-- ============ PRACTICAR ============ -->
+  <section id="panel-practicar" hidden>
+    <div class="bankgrid">
+      <div class="stack">
+        <div>
+          <p class="small" style="margin:0 0 10px">Los problemas con enunciado del boletín, con su planteamiento paso a paso, y problemas extra del mismo nivel.</p>
+          <div class="chips" id="bankFilt" style="margin-bottom:10px"></div>
+          <div class="banklist" id="bankList"></div>
+        </div>
+        <details class="card dict" id="dict" open>
+          <summary><b>Cómo traducir frases típicas</b></summary>
+          <div class="seg" role="group" aria-label="Tipo de problema" style="margin-top:10px">
+            <button id="dictS" aria-pressed="true">Sistemas</button>
+            <button id="dictP" aria-pressed="false">Programación lineal</button>
+          </div>
+          <div id="dictBodyS">
+            <p class="small">En los sistemas cada dato se convierte en una <b>igualdad</b> (=). Necesitas tantas ecuaciones independientes como incógnitas para que haya una única solución.</p>
+            <table class="t"><tbody><tr><td>en total hay…, entre todos suman…</td><td class="m">x + y + z = …</td></tr><tr><td>ha pagado, recaudado, ganado… (precio por cantidad)</td><td class="m">25x + 18y + 40z = …</td></tr><tr><td>el doble / el triple de y</td><td class="m">2y / 3y</td></tr><tr><td>la mitad / un tercio de y</td><td class="m">y/2 / y/3</td></tr><tr><td>A supera (excede) en 6 a B</td><td class="m">A = B + 6</td></tr><tr><td>A es 100 menos que B</td><td class="m">A = B − 100</td></tr><tr><td>A es lo mismo que B y C juntos</td><td class="m">A = B + C</td></tr><tr><td>x es un tercio del total</td><td class="m">x = (x + y + z)/3</td></tr><tr><td>el 6 % de x</td><td class="m">0,06x</td></tr><tr><td>x con un 20 % de descuento</td><td class="m">0,8x</td></tr><tr><td>x con un 12 % de impuesto · un 40 % más</td><td class="m">1,12x<br>1,4x</td></tr><tr><td>el 20 % de x es el 5 % del total</td><td class="m">0,2x =<br>0,05(x + y + z)</td></tr><tr><td>dividir A entre B da cociente c y resto r</td><td class="m">A = B·c + r</td></tr><tr><td>número de tres cifras x y z</td><td class="m">100x + 10y + z</td></tr><tr><td>el número con las cifras de los extremos intercambiadas</td><td class="m">100z + 10y + x</td></tr></tbody></table>
+          </div>
+          <div id="dictBodyP" hidden>
+            <p class="small">En programación lineal casi todos los datos son <b>desigualdades</b> (≤ o ≥), y hay una función que maximizar o minimizar.</p>
+            <table class="t"><tbody><tr><td>al menos, como mínimo, no menos de, no inferior a</td><td class="m">≥</td></tr><tr><td>como mucho, como máximo, no más de, no puede superar</td><td class="m">≤</td></tr><tr><td>dispone de 80 horas, hay 100 kg… (un recurso)</td><td class="m">gasto ≤ 80</td></tr><tr><td>hay que cubrir un pedido de…, se necesitan al menos…</td><td class="m">producción ≥ …</td></tr><tr><td>entre 12 y 40 en total</td><td class="m">x + y ≥ 12 <br>x + y ≤ 40</td></tr><tr><td>A no puede superar a B · A tantos o más que B</td><td class="m">A ≤ B<br>A ≥ B</td></tr><tr><td>por cada y, al menos dos x</td><td class="m">x ≥ 2y</td></tr><tr><td>y no puede ser más de la mitad de x</td><td class="m">y ≤ x/2</td></tr><tr><td>x es al menos el 20 % del total</td><td class="m">x ≥ 0,2(x + y)</td></tr><tr><td>la diferencia no es mayor que 10</td><td class="m">x − y ≤ 10 <br>y − x ≤ 10</td></tr><tr><td>«más de», «menos de» (estrictas)</td><td class="m">&gt; · &lt;</td></tr><tr><td>cantidades de objetos, personas, horas…</td><td class="m">x ≥ 0, y ≥ 0</td></tr><tr><td>beneficio, ingresos, audiencia, producción…</td><td class="m">maximizar f</td></tr><tr><td>coste, gasto, consumo…</td><td class="m">minimizar f</td></tr></tbody></table>
+          </div>
+          <p class="small">Revisa las unidades antes de escribir: gramos y kilos, minutos y horas, céntimos y euros.</p>
+        </details>
+      </div>
+      <div class="stack" id="bankDetail"></div>
+    </div>
+  </section>
+</div>
+
+<script>
+/* ===================== MOTOR (sin DOM) ===================== */
+function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){[a,b]=[b,a%b]}return a}
+function lcm(a,b){return a/gcd(a,b)*b}
+class Q{
+  constructor(n,d=1){if(d===0)throw new Error('Aparece una división entre cero.');if(d<0){n=-n;d=-d}const g=gcd(n,d)||1;this.n=n/g;this.d=d/g;if(this.n===0){this.n=0;this.d=1}}
+  static of(x){return x instanceof Q?x:new Q(x)}
+  add(o){o=Q.of(o);return new Q(this.n*o.d+o.n*this.d,this.d*o.d)}
+  sub(o){o=Q.of(o);return new Q(this.n*o.d-o.n*this.d,this.d*o.d)}
+  mul(o){o=Q.of(o);return new Q(this.n*o.n,this.d*o.d)}
+  div(o){o=Q.of(o);return new Q(this.n*o.d,this.d*o.n)}
+  neg(){return new Q(-this.n,this.d)}
+  abs(){return new Q(Math.abs(this.n),this.d)}
+  z(){return this.n===0}
+  cmp(o){o=Q.of(o);return Math.sign(this.n*o.d-o.n*this.d)}
+  eq(o){return this.cmp(o)===0}
+  num(){return this.n/this.d}
+  isOne(){return this.n===1&&this.d===1}
+}
+const Q0=new Q(0),Q1=new Q(1);
+const SUBS='₀₁₂₃₄₅₆₇₈₉';const ix=n=>String(n).split('').map(c=>SUBS[c]).join('');
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function fq(q){const a=Math.abs(q.n);const body=q.d===1?`${a}`:`<span class="fr"><span>${a}</span><span>${q.d}</span></span>`;return (q.n<0?'−':'')+body}
+function fqp(q){return q.n<0?`(${fq(q)})`:fq(q)}
+function ftxt(q){return (q.n<0?'−':'')+Math.abs(q.n)+(q.d===1?'':'/'+q.d)}
+const coefStr=a=>a.isOne()?'':(a.n===-1&&a.d===1)?'−':fq(a);
+const VN=['x','y','z'];const VH=VN.map(v=>`<i class="v">${v}</i>`);
+const LV=['x','y'];const LH=LV.map(v=>`<i class="v">${v}</i>`);
+const PAR=['λ','μ'];
+const ORD=['1ª','2ª','3ª','4ª'];
+function lin(coefs,names){let out='';coefs.forEach((q,i)=>{if(q.z())return;const a=q.abs();const cs=a.isOne()?'':fq(a);const t=cs+names[i];out+=out?(q.n<0?' − ':' + ')+t:(q.n<0?'−':'')+t});return out||'0'}
+function aff(v){let out='';v.forEach((q,i)=>{if(q.z())return;const a=q.abs();const nm=i===0?'':PAR[i-1];const cs=(i>0&&a.isOne())?'':fq(a);const t=cs+nm;out+=out?(q.n<0?' − ':' + ')+t:(q.n<0?'−':'')+t});return out||'0'}
+const affConst=v=>v.slice(1).every(q=>q.z());
+const affWrap=v=>{const s=aff(v);return (affConst(v)&&v[0].n>=0)?s:`(${s})`};
+const pretty=s=>esc(String(s).replace(/<=/g,'≤').replace(/>=/g,'≥').replace(/\*/g,'·')).replace(/-/g,'−');
+
+function parseNum(s){s=s.replace(',','.');if(s.includes('/')){const[a,b]=s.split('/');return parseNum(a).div(parseNum(b))}
+  if(s.includes('.')){const k=s.split('.')[1].length;return new Q(Math.round(parseFloat(s)*10**k),10**k)}return new Q(parseInt(s,10))}
+function parseLinear(str,vars){
+  let s=str.replace(/\s+/g,'').replace(/[−–]/g,'-').replace(/[·*]/g,'').toLowerCase();
+  if(!s)throw new Error('Falta un miembro en alguna ecuación.');
+  if(!/^[+-]/.test(s))s='+'+s;
+  const terms=s.match(/[+-][^+-]+/g);
+  if(!terms||terms.join('')!==s)throw new Error(`No entiendo «${str.trim()}». Revisa los signos.`);
+  const coef=vars.map(()=>Q0);let c=Q0;
+  for(const t of terms){
+    const neg=t[0]==='-';const body=t.slice(1);
+    const m=body.match(/^(\d+(?:[.,]\d+)?(?:\/\d+(?:[.,]\d+)?)?)?([a-z])?(?:\/(\d+(?:[.,]\d+)?))?$/);
+    if(!m||(!m[1]&&!m[2]))throw new Error(`No entiendo el término «${t}». Si hay paréntesis, quítalos operando.`);
+    let q=m[1]?parseNum(m[1]):Q1;if(m[3])q=q.div(parseNum(m[3]));if(neg)q=q.neg();
+    if(m[2]){const k=vars.indexOf(m[2]);if(k<0)throw new Error(`La letra «${m[2]}» no es una incógnita. Usa ${vars.join(', ')}.`);coef[k]=coef[k].add(q)}else c=c.add(q);
+  }
+  return{coef,c};
+}
+function parseRel(line,vars){
+  const norm=line.replace(/≤/g,'<=').replace(/≥/g,'>=').replace(/=</g,'<=').replace(/=>/g,'>=');
+  const parts=norm.split(/(<=|>=|=|<|>)/);
+  if(parts.length!==3)throw new Error(`«${line.trim()}» debe tener un único signo =, ≤ o ≥.`);
+  const L=parseLinear(parts[0],vars),R=parseLinear(parts[2],vars);
+  return{coef:L.coef.map((q,i)=>q.sub(R.coef[i])),c:R.c.sub(L.c),op:parts[1],raw:line.trim()};
+}
+function proportional(u,v){const nz=x=>x.some(q=>!q.z());if(!nz(u)||!nz(v))return false;
+  for(let i=0;i<u.length;i++)for(let j=0;j<u.length;j++)if(!u[i].mul(v[j]).eq(u[j].mul(v[i])))return false;return true}
+
+/* ---------- sistemas: Gauss ---------- */
+function clone(M){return M.map(r=>r.slice())}
+function rowGcd(r){return r.reduce((g,q)=>gcd(g,q.n),0)}
+function matHTML(M,hl={}){
+  const cols=M[0].length;
+  const lab='<div class="mlab">'+M.map((_,i)=>`<span>F${ix(i+1)}</span>`).join('')+'</div>';
+  let cells='';
+  M.forEach((row,i)=>row.forEach((q,j)=>{
+    if(j===cols-1)cells+='<span class="bar"></span>';
+    let cls='';
+    if(hl.pivot&&hl.pivot[0]===i&&hl.pivot[1]===j)cls='piv';
+    else if(hl.zero&&hl.zero.some(([a,b])=>a===i&&b===j))cls='zer';
+    else if(hl.rows&&hl.rows.includes(i))cls='chg';
+    cells+=`<span class="${cls}">${fq(q)}</span>`;
+  }));
+  return `<div class="scroll"><div class="matwrap">${lab}<div class="mat" style="grid-template-columns:repeat(${cols-1},auto) 1px auto">${cells}</div></div></div>`;
+}
+function detHTML(M,name){return `<div class="matwrap"><div class="mlab" style="justify-content:center"><span>${name} =</span></div><div class="mat det" style="grid-template-columns:repeat(3,auto)">${M.flat().map(q=>`<span>${fq(q)}</span>`).join('')}</div></div>`}
+function det2HTML(cells,name){return `<div class="matwrap">${name?`<div class="mlab" style="justify-content:center"><span>${name} =</span></div>`:''}<div class="mat det" style="grid-template-columns:repeat(2,auto)">${cells.flat().map(c=>`<span>${c}</span>`).join('')}</div></div>`}
+function eqHTML(row){return `${lin(row.slice(0,3),VH)} = ${fq(row[3])}`}
+
+function gauss(A0){
+  const A=clone(A0),m=A.length,steps=[];
+  let ops=[];
+  A.forEach((r,i)=>{const L=r.reduce((l,q)=>lcm(l,q.d),1);if(L>1){A[i]=r.map(q=>q.mul(L));ops.push(`F${ix(i+1)} → ${L}·F${ix(i+1)}`)}});
+  if(ops.length)steps.push({t:'Quitamos denominadores y decimales',h:`<p>Multiplicamos cada fila con fracciones o decimales por el m.c.m. de sus denominadores. El sistema es equivalente y trabajamos solo con enteros.</p><ul class="ops">${ops.map(o=>`<li>${o}</li>`).join('')}</ul>${matHTML(A)}`});
+  let r=0;const piv=[];
+  for(let c=0;c<3&&r<m;c++){
+    const cands=[];for(let i=r;i<m;i++)if(!A[i][c].z())cands.push(i);
+    if(!cands.length)continue;
+    let p=cands.find(i=>Math.abs(A[i][c].n)===1);
+    if(p===undefined)p=cands.includes(r)?r:cands.reduce((a,b)=>Math.abs(A[b][c].n)<Math.abs(A[a][c].n)?b:a);
+    if(p!==r){[A[p],A[r]]=[A[r],A[p]];
+      steps.push({t:'Intercambiamos filas',h:`<p>Buscamos un pivote cómodo (si puede ser, un 1) en la columna de ${VH[c]}. Lo subimos a su sitio.</p><ul class="ops"><li>F${ix(r+1)} ↔ F${ix(p+1)}</li></ul>${matHTML(A,{pivot:[r,c]})}`})}
+    ops=[];const zeroed=[],rows=[];
+    const a=A[r][c].n;
+    for(let i=r+1;i<m;i++){
+      const b=A[i][c].n;if(b===0)continue;
+      const g=gcd(a,b);let ma=a/g,mb=b/g;if(ma<0){ma=-ma;mb=-mb}
+      A[i]=A[i].map((q,j)=>q.mul(ma).sub(A[r][j].mul(mb)));
+      let txt=`F${ix(i+1)} → ${ma===1?'':ma}F${ix(i+1)} ${mb>0?'−':'+'} ${Math.abs(mb)===1?'':Math.abs(mb)}F${ix(r+1)}`;
+      let gg=rowGcd(A[i]);const lead=A[i].find(q=>!q.z());
+      if(gg>1){if(lead&&lead.n<0)gg=-gg;A[i]=A[i].map(q=>q.div(gg));txt+=`  y simplificamos: F${ix(i+1)} ÷ ${gg<0?'('+gg+')':gg}`}
+      ops.push(txt);zeroed.push([i,c]);rows.push(i);
+    }
+    piv.push([r,c]);
+    if(ops.length)steps.push({t:`Hacemos ceros debajo del pivote de ${VH[c]}`,h:`<p>El pivote es ${fq(A[r][c])} (marcado). Combinamos cada fila de abajo con F${ix(r+1)} para que su coeficiente de ${VH[c]} sea 0.</p><ul class="ops">${ops.map(o=>`<li>${o}</li>`).join('')}</ul>${matHTML(A,{pivot:[r,c],zero:zeroed,rows})}`});
+    r++;
+  }
+  const tail=A.splice(r).sort((u,v)=>(v[3].z()?0:1)-(u[3].z()?0:1));A.push(...tail);
+  return{A,steps,piv};
+}
+function roucheHTML(rA,rAs,n){
+  const k=rA!==rAs?'SI':(rA===n?'SCD':'SCI');
+  return `<div class="rouche"><div class="rtop">rg(A) = <b>${rA}</b> · rg(A*) = <b>${rAs}</b> · n = <b>${n}</b> incógnitas</div>
+  <div class="rbr">
+   <div class="rb ${k==='SCD'?'on':''}"><span class="cond">rg A = rg A* = n</span><b>SCD</b><span>Compatible determinado: una única solución.</span></div>
+   <div class="rb ${k==='SCI'?'on':''}"><span class="cond">rg A = rg A* &lt; n</span><b>SCI</b><span>Compatible indeterminado: infinitas soluciones con n − rg parámetros.</span></div>
+   <div class="rb ${k==='SI'?'on':''}"><span class="cond">rg A ≠ rg A*</span><b>SI</b><span>Incompatible: no tiene solución.</span></div>
+  </div></div>`;
+}
+function sarrus(M){
+  const[a,b,c]=M;const pos=[[a[0],b[1],c[2]],[a[1],b[2],c[0]],[a[2],b[0],c[1]]];const neg=[[a[2],b[1],c[0]],[a[0],b[2],c[1]],[a[1],b[0],c[2]]];
+  const prod=t=>t.reduce((p,q)=>p.mul(q),Q1);
+  const P=pos.map(prod),N=neg.map(prod);
+  const val=P.reduce((s,q)=>s.add(q),Q0).sub(N.reduce((s,q)=>s.add(q),Q0));
+  const ts=t=>t.map(fqp).join('·');
+  const line2=P.map((q,i)=>i===0?fq(q):(q.n<0?' − '+fq(q.abs()):' + '+fq(q))).join('')+N.map(q=>q.n<0?' + '+fq(q.abs()):' − '+fq(q)).join('');
+  return{val,html:`<div class="math">= ${ts(pos[0])} + ${ts(pos[1])} + ${ts(pos[2])} − ${ts(neg[0])} − ${ts(neg[1])} − ${ts(neg[2])}<br>= ${line2} = <b>${fq(val)}</b></div>`};
+}
+const mulAff=(u,v)=>affConst(u)?v.map(x=>x.mul(u[0])):u.map(x=>x.mul(v[0]));
+const subAff=(u,v)=>u.map((x,t)=>x.sub(v[t]));
+function cramerSingular(A0,Am,steps){
+  const pairs=[[0,1],[0,2],[1,2]];let mn=null;
+  for(const[p,q]of pairs){for(const[i,j]of pairs){const d=Am[i][p].mul(Am[j][q]).sub(Am[i][q].mul(Am[j][p]));if(!d.z()){mn={i,j,p,q,d};break}}if(mn)break}
+  if(!mn){
+    const r0=[0,1,2].find(r=>Am[r].some(q=>!q.z()));
+    if(r0===undefined)throw new Error('Todos los coeficientes de las incógnitas son 0. Revisa el sistema.');
+    let h=`<p>Como |A| = 0, rg(A) &lt; 3. Además todos los menores de orden 2 de A valen 0 (las filas son proporcionales), así que <b>rg(A) = 1</b>.</p>`;
+    let bad=null;
+    for(const[i,j]of pairs){for(let c=0;c<3;c++){const d=Am[i][c].mul(A0[j][3]).sub(A0[i][3].mul(Am[j][c]));if(!d.z()){bad={i,j,c,d};break}}if(bad)break}
+    if(bad){const{i,j,c,d}=bad;
+      h+=`<p>En A* buscamos un menor de orden 2 con la columna de términos independientes (filas F${ix(i+1)}, F${ix(j+1)}):</p><div class="flex">${det2HTML([[fq(Am[i][c]),fq(A0[i][3])],[fq(Am[j][c]),fq(A0[j][3])]])}<span class="math">= <b>${fq(d)}</b> ≠ 0</span></div><p>Por tanto rg(A*) = 2.</p>${roucheHTML(1,2,3)}`;
+      steps.push({t:'Estudiamos los rangos',h});return{kind:'SI',rA:1,rAs:2,vals:null,nfree:0}}
+    const row=Am[r0],pc=row.findIndex(q=>!q.z()),free=[0,1,2].filter(c=>c!==pc);
+    h+=`<p>Todos los menores de orden 2 de A* también valen 0, así que rg(A*) = 1.</p>${roucheHTML(1,1,3)}`;
+    steps.push({t:'Estudiamos los rangos',h});
+    const vals=[];free.forEach((c,k)=>vals[c]=[Q0,k===0?Q1:Q0,k===1?Q1:Q0]);
+    vals[pc]=[A0[r0][3],row[free[0]].neg(),row[free[1]].neg()].map(q=>q.div(row[pc]));
+    steps.push({t:`Nos quedamos con F${ix(r0+1)} y usamos dos parámetros`,h:`<p>Las tres ecuaciones dicen lo mismo, así que basta una. Hacemos ${VH[free[0]]} = λ, ${VH[free[1]]} = μ y despejamos ${VH[pc]}:</p><div class="math">${eqHTML(A0[r0])}<br>⇒ <b>${VH[pc]} = ${aff(vals[pc])}</b></div>`});
+    return{kind:'SCI',rA:1,rAs:1,vals,nfree:2};
+  }
+  const{i,j,p,q,d}=mn;
+  steps.push({t:'|A| = 0: buscamos un menor de orden 2',h:`<p>Como |A| = 0, rg(A) &lt; 3. Buscamos un menor de orden 2 distinto de 0. Tomamos las filas F${ix(i+1)} y F${ix(j+1)} y las columnas de ${VH[p]} y ${VH[q]}:</p><div class="flex">${det2HTML([[fq(Am[i][p]),fq(Am[i][q])],[fq(Am[j][p]),fq(Am[j][q])]])}<span class="math">= ${fqp(Am[i][p])}·${fqp(Am[j][q])} − ${fqp(Am[i][q])}·${fqp(Am[j][p])} = <b>${fq(d)}</b> ≠ 0</span></div><p>Por tanto <b>rg(A) = 2</b>.</p>`});
+  let h=`<p>Para el rango de A* estudiamos los menores de orden 3 que llevan la columna de términos independientes: |A<sub>x</sub>|, |A<sub>y</sub>| y |A<sub>z</sub>| (en A cambiamos la columna de cada incógnita por la de términos independientes).</p>`;
+  let nzk=-1;
+  for(let k=0;k<3;k++){const Mk=Am.map((r,t)=>r.map((x,c)=>c===k?A0[t][3]:x));const Dk=sarrus(Mk);
+    h+=`<div style="margin:12px 0"><div class="flex">${detHTML(Mk,'|A<sub>'+VN[k]+'</sub>|')}</div>${Dk.html}</div>`;if(!Dk.val.z()){nzk=k;break}}
+  if(nzk>=0){h+=`<p>|A<sub>${VN[nzk]}</sub>| ≠ 0, así que <b>rg(A*) = 3</b>${nzk<2?' (no hace falta calcular los demás)':''}.</p>${roucheHTML(2,3,3)}`;
+    steps.push({t:'Estudiamos el rango de A*',h});return{kind:'SI',rA:2,rAs:3,vals:null,nfree:0}}
+  h+=`<p>Los tres valen 0, así que rg(A*) &lt; 3. Como A* contiene el menor de orden 2 de antes, <b>rg(A*) = 2</b>.</p>${roucheHTML(2,2,3)}`;
+  steps.push({t:'Estudiamos el rango de A*',h});
+  const f=[0,1,2].find(c=>c!==p&&c!==q);const other=[0,1,2].find(r=>r!==i&&r!==j);
+  const bp=[i,j].map(r=>[A0[r][3],Am[r][f].neg()]);
+  const nm=[VH[p],VH[q]];
+  steps.push({t:`Nos quedamos con F${ix(i+1)} y F${ix(j+1)} y hacemos ${VN[f]} = λ`,h:`<p>Usamos las dos ecuaciones del menor; F${ix(other+1)} sobra porque es combinación de ellas. La incógnita que no está en el menor pasa a ser el parámetro, ${VH[f]} = λ, y la llevamos a los términos independientes:</p><div class="eqs brace">${[i,j].map((r,t)=>`<span>${lin([Am[r][p],Am[r][q]],nm)} = ${aff(bp[t])}</span>`).join('')}</div>`});
+  const C=[[Am[i][p],Am[i][q]],[Am[j][p],Am[j][q]]].map(r=>r.map(x=>[x,Q0]));
+  const Mp=[[bp[0],C[0][1]],[bp[1],C[1][1]]],Mq=[[C[0][0],bp[0]],[C[1][0],bp[1]]];
+  const vals=[];vals[f]=[Q0,Q1];
+  let html=`<p>Es un sistema de Cramer de 2×2 con el parámetro en los términos independientes.</p><div class="flex">${det2HTML(C.map(r=>r.map(aff)),'Δ')}<span class="math">= <b>${fq(d)}</b></span></div>`;
+  [[Mp,p],[Mq,q]].forEach(([Mk,v])=>{const Dk=subAff(mulAff(Mk[0][0],Mk[1][1]),mulAff(Mk[0][1],Mk[1][0]));vals[v]=Dk.map(x=>x.div(d));
+    html+=`<div style="margin:12px 0"><div class="flex">${det2HTML(Mk.map(r=>r.map(aff)),'Δ<sub>'+VN[v]+'</sub>')}<span class="math">= ${affWrap(Mk[0][0])}·${affWrap(Mk[1][1])} − ${affWrap(Mk[0][1])}·${affWrap(Mk[1][0])} = <b>${aff(Dk)}</b></span></div><div class="math">${VH[v]} = <span class="fr"><span>Δ<sub>${VN[v]}</sub></span><span>Δ</span></span> = <span class="fr"><span>${aff(Dk)}</span><span>${fq(d)}</span></span> = <b>${aff(vals[v])}</b></div></div>`});
+  steps.push({t:'Resolvemos por Cramer con λ',h:html});
+  return{kind:'SCI',rA:2,rAs:2,vals,nfree:1};
+}
+
+/* Construye toda la resolución de un sistema. Devuelve {steps, SYS, badge}. */
+function buildSys(text,method){
+  const lines=text.split(/[\n;]/).map(s=>s.trim()).filter(Boolean);
+  if(lines.length<2)throw new Error('Escribe al menos dos ecuaciones, una por línea.');
+  if(lines.length>4)throw new Error('Como máximo cuatro ecuaciones.');
+  const eqs=lines.map(l=>{const e=parseRel(l,VN);if(e.op!=='=')throw new Error(`«${l}» tiene que ser una igualdad (=).`);return e});
+  const A0=eqs.map(e=>[...e.coef,e.c]);
+  const m=A0.length,steps=[];
+  steps.push({t:'Escribimos la matriz ampliada',h:`<p>Primero ordenamos cada ecuación: las incógnitas a la izquierda (en el orden ${VH.join(', ')}) y los números a la derecha. El sistema queda:</p><div class="eqs brace">${A0.map(r=>`<span>${eqHTML(r)}</span>`).join('')}</div><p><b>A</b> es la matriz de los coeficientes y <b>A*</b> (ampliada) le añade la columna de términos independientes, separada con la línea discontinua. Si falta una incógnita, su coeficiente es 0.</p>${matHTML(A0)}`});
+  let cram=null;
+  if(method==='cramer'){
+    if(m!==3)steps.push({t:'Cramer no se puede aplicar',h:'<p>Cramer necesita tantas ecuaciones como incógnitas (3). Resolvemos por Gauss.</p>'});
+    else{
+      const Am=A0.map(r=>r.slice(0,3));const D=sarrus(Am);
+      steps.push({t:'Calculamos |A| por la regla de Sarrus',h:`<div class="flex">${detHTML(Am,'|A|')}</div>${D.html}`});
+      if(D.val.z())cram=cramerSingular(A0,Am,steps);
+      else{
+        steps.push({t:'Clasificamos el sistema',h:`<p>|A| = ${fq(D.val)} ≠ 0, así que rg(A) = 3. Como A* solo tiene 3 filas, rg(A*) = 3 también.</p>${roucheHTML(3,3,3)}`});
+        const sol=[];let html='';
+        for(let k=0;k<3;k++){
+          const Mk=Am.map((r,i)=>r.map((q,j)=>j===k?A0[i][3]:q));const Dk=sarrus(Mk);sol.push(Dk.val.div(D.val));
+          html+=`<div style="margin:14px 0"><div class="flex">${detHTML(Mk,'|A<sub>'+VN[k]+'</sub>|')}</div>${Dk.html}<div class="math">${VH[k]} = <span class="fr"><span>|A<sub>${VN[k]}</sub>|</span><span>|A|</span></span> = <span class="fr"><span>${fq(Dk.val)}</span><span>${fq(D.val)}</span></span> = <b>${fq(sol[k])}</b></div></div>`;
+        }
+        steps.push({t:'Aplicamos la regla de Cramer',h:`<p>Cada incógnita es un cociente: en el numerador cambiamos su columna por la de términos independientes.</p>${html}`});
+        cram={kind:'SCD',rA:3,rAs:3,vals:sol.map(q=>[q]),nfree:0};
+      }
+    }
+  }
+  let kind,rA,rAs,vals=null,nfree=0;
+  if(cram){({kind,rA,rAs,vals,nfree}=cram)}
+  else{
+    const G=gauss(A0);steps.push(...G.steps);
+    const E=G.A;rA=G.piv.length;rAs=rA+(E.slice(rA).some(r=>!r[3].z())?1:0);
+    kind=rA!==rAs?'SI':(rA===3?'SCD':'SCI');
+    const bad=E.slice(rA).find(r=>!r[3].z());
+    steps.push({t:'Clasificamos con Rouché–Frobenius',h:`<p>La matriz ya está escalonada. El sistema equivalente es:</p><div class="eqs brace">${E.map(r=>`<span>${r.slice(0,3).every(q=>q.z())?`0 = ${fq(r[3])}${r[3].z()?'':' <span class="no">← imposible</span>'}`:eqHTML(r)}</span>`).join('')}</div>
+      <p>El rango es el número de filas no nulas: en A (sin la última columna) hay <b>${rA}</b>; en A* hay <b>${rAs}</b>.${bad?` La fila 0 0 0 | ${fq(bad[3])} significa 0 = ${fq(bad[3])}, que es imposible.`:''}</p>${roucheHTML(rA,rAs,3)}`});
+    if(kind!=='SI'){
+      const pc=G.piv.map(p=>p[1]);const free=[0,1,2].filter(c=>!pc.includes(c));nfree=free.length;
+      const val=[];free.forEach((c,k)=>{val[c]=Array.from({length:nfree+1},(_,t)=>t===k+1?Q1:Q0)});
+      let html='';
+      if(nfree)html+=`<p>Hay ${nfree} incógnita${nfree>1?'s':''} libre${nfree>1?'s':''}: ${free.map((c,k)=>`${VH[c]} = ${PAR[k]}`).join(', ')}, con ${free.map((_,k)=>PAR[k]).join(', ')} ∈ ℝ.</p>`;
+      for(let k=G.piv.length-1;k>=0;k--){
+        const[r,c]=G.piv[k];const row=E[r];
+        let rhs=Array.from({length:nfree+1},(_,t)=>t===0?row[3]:Q0);
+        let subs=`${coefStr(row[c])}${VH[c]}`;let any=false;
+        for(let j=c+1;j<3;j++){if(row[j].z())continue;any=true;
+          rhs=rhs.map((q,t)=>q.sub(row[j].mul(val[j][t])));
+          const ab=row[j].abs();subs+=`${row[j].n<0?' − ':' + '}${ab.isOne()?'':fq(ab)+'·'}${affWrap(val[j])}`}
+        val[c]=rhs.map(q=>q.div(row[c]));
+        html+=`<div class="math" style="margin:10px 0">${eqHTML(row)}`;
+        if(any)html+=`<br>⇒ ${subs} = ${fq(row[3])}`;
+        if(any||!row[c].isOne())html+=`<br>⇒ ${coefStr(row[c])}${VH[c]} = ${aff(rhs)}`;
+        html+=`<br>⇒ <b>${VH[c]} = ${aff(val[c])}</b></div>`;
+      }
+      steps.push({t:'Resolvemos de abajo arriba (sustitución regresiva)',h:`<p>Empezamos por la última ecuación con incógnitas y sustituimos hacia arriba.</p>${html}`});
+      vals=val;
+    }
+  }
+  const rows=A0;const nonzero=rows.filter(r=>r.slice(0,3).some(q=>!q.z()));
+  let geo='';
+  if(m===3&&nonzero.length===3){
+    const pairs=[[0,1],[0,2],[1,2]];
+    const coinc=pairs.filter(([i,j])=>proportional(rows[i],rows[j]));
+    const par=pairs.filter(([i,j])=>proportional(rows[i].slice(0,3),rows[j].slice(0,3))&&!proportional(rows[i],rows[j]));
+    const nm=([i,j])=>`π${ix(i+1)} y π${ix(j+1)}`;
+    if(kind==='SCD')geo='Los tres planos se cortan en un único punto.';
+    else if(kind==='SCI'&&rA===2)geo=coinc.length?`Los planos ${nm(coinc[0])} coinciden y el tercero los corta en una recta.`:'Los tres planos se cortan en una misma recta (forman un haz de planos).';
+    else if(kind==='SCI'&&rA===1)geo='Los tres planos son el mismo plano (coincidentes): las soluciones forman un plano.';
+    else if(kind==='SI'&&rA===2)geo=par.length?`Los planos ${par.map(nm).join(' y ')} son paralelos, así que no hay ningún punto común a los tres.`:'Los planos se cortan dos a dos en tres rectas paralelas (como una tienda de campaña), pero no hay ningún punto común a los tres.';
+    else if(kind==='SI'&&rA===1)geo='Los tres planos son paralelos'+(coinc.length?' (dos de ellos coinciden)':'')+': no tienen ningún punto común.';
+  }
+  let fin='',badge='';
+  if(kind==='SCD'){
+    const s=vals.map(v=>v[0]);
+    fin=`<div class="sol">(${VH.join(', ')}) = (${s.map(fq).join(', ')})</div>`;
+    fin+=`<p><b>Comprobación</b> en las ecuaciones originales:</p><div class="eqs">${A0.map(r=>{let t='';let tot=Q0;r.slice(0,3).forEach((q,j)=>{if(q.z())return;tot=tot.add(q.mul(s[j]));const ab=q.abs();t+=(t?(q.n<0?' − ':' + '):(q.n<0?'−':''))+(ab.isOne()?'':fq(ab)+'·')+fqp(s[j])});return `<span>${t||'0'} = ${fq(tot)} ${tot.eq(r[3])?'<span class="ok">✓</span>':'<span class="no">✗</span>'}</span>`}).join('')}</div>`;
+    badge=`<span class="badge scd">SCD · (${s.map(ftxt).join(', ')})</span>`;
+  }else if(kind==='SCI'){
+    fin=`<div class="sol">${VH.map((h,c)=>`${h} = ${aff(vals[c])}`).join(',&nbsp; ')}&nbsp; con ${PAR.slice(0,nfree).join(', ')} ∈ ℝ</div>`;
+    const ex=[0,1].map(t=>vals.map(v=>v.reduce((s,q,i)=>i===0?q:s.add(q.mul(t)),Q0)));
+    fin+=`<p>Cada valor del parámetro da una solución. Por ejemplo, con ${PAR[0]} = 0 sale (${ex[0].map(fq).join(', ')}) y con ${PAR[0]} = 1 sale (${ex[1].map(fq).join(', ')}).</p>`;
+    badge=`<span class="badge sci">SCI · ${nfree} parámetro${nfree>1?'s':''}</span>`;
+  }else{
+    fin=`<div class="sol bad">El sistema no tiene solución.</div>`;
+    badge=`<span class="badge si">SI · sin solución</span>`;
+  }
+  if(geo)fin+=`<p><b>Interpretación geométrica:</b> cada ecuación es un plano del espacio. ${geo} Gira la gráfica para verlo.</p>`;
+  steps.push({t:'Solución',h:fin});
+  return{steps,SYS:{rows:A0,kind,vals,nfree,rA},badge};
+}
+
+/* ---------- 2×2 explicado (vértices) ---------- */
+function substLine(e,v,val,w,ordTxt){
+  const a=e[w],b=e[v];let s='',first=true;
+  for(const i of[0,1]){
+    const q=i===w?a:b;if(q.z())continue;const ab=q.abs();
+    s+=(first?(q.n<0?'−':''):(q.n<0?' − ':' + '))+(i===w?(ab.isOne()?'':fq(ab))+LH[w]:(ab.isOne()?'':fq(ab)+'·')+fqp(val));first=false;
+  }
+  const rhs=e[2].sub(b.mul(val)),res=rhs.div(a);
+  const L=[`${s} = ${fq(e[2])}`];
+  if(!b.z())L.push(`${coefStr(a)}${LH[w]} = ${fq(rhs)}`);
+  if(!a.isOne())L.push(`${LH[w]} = ${fq(res)}`);
+  if(L.length===1)L[0]=`${coefStr(a)}${LH[w]} = ${fq(e[2])}`;
+  L[L.length-1]=`<b>${L[L.length-1]}</b>`;
+  return{html:`<p>Sustituimos ${LH[v]} = ${fq(val)} en la ${ordTxt} ecuación:</p><div class="math">${L.join('<br>⇒ ')}</div>`,res};
+}
+function explain2x2(e1,e2){
+  let E=[e1,e2].map(e=>e.slice());let html='';
+  const eqL=e=>`${lin([e[0],e[1]],LH)} = ${fq(e[2])}`;
+  const cl=[];E=E.map((e,k)=>{const L=e.reduce((l,q)=>lcm(l,q.d),1);if(L>1){cl.push(`${ORD[k]} × ${L}`);return e.map(q=>q.mul(L))}return e});
+  html+=`<div class="eqs brace">${E.map(e=>`<span>${eqL(e)}</span>`).join('')}</div>`;
+  if(cl.length)html+=`<p class="small">Hemos quitado denominadores (${cl.join(', ')}).</p>`;
+  const sol=[null,null];
+  const single=E.findIndex(e=>e[0].z()!==e[1].z());
+  if(single>=0){
+    const e=E[single],v=e[0].z()?1:0,w=1-v;sol[v]=e[2].div(e[v]);
+    html+=`<p>La ${ORD[single]} ecuación solo tiene ${LH[v]}, así que la despejamos directamente: ${e[v].isOne()?'':`${eqL(e)} ⇒ `}<b>${LH[v]} = ${fq(sol[v])}</b>.</p>`;
+    const r=substLine(E[1-single],v,sol[v],w,ORD[1-single]);html+=r.html;sol[w]=r.res;
+  }else{
+    const opt=[0,1].map(v=>{const a1=E[0][v].n,a2=E[1][v].n,g=gcd(a1,a2);const k1=Math.abs(a2)/g,k2=Math.abs(a1)/g;return{v,k1,k2,cost:Math.max(k1,k2)+(v===1?0.01:0)}});
+    const{v,k1,k2}=opt[0].cost<=opt[1].cost?opt[0]:opt[1];const w=1-v;
+    const same=Math.sign(E[0][v].n)===Math.sign(E[1][v].n);
+    let M1=E[0].map(q=>q.mul(k1)),M2=E[1].map(q=>q.mul(k2)),l1=`${ORD[0]}${k1===1?'':' × '+k1}`,l2=`${ORD[1]}${k2===1?'':' × '+k2}`;
+    let R=same?M1.map((q,t)=>q.sub(M2[t])):M1.map((q,t)=>q.add(M2[t]));
+    if(same&&R[w].n<0){[M1,M2]=[M2,M1];[l1,l2]=[l2,l1];R=R.map(q=>q.neg())}
+    const mult=k1===1&&k2===1?'':` Primero multiplicamos ${k1!==1?`la ${ORD[0]} por ${k1}`:''}${k1!==1&&k2!==1?' y ':''}${k2!==1?`la ${ORD[1]} por ${k2}`:''} para que ${LH[v]} tenga el mismo coeficiente${same?'':' (con signo contrario)'}.`;
+    html+=`<p>Usamos <b>reducción</b> para eliminar ${LH[v]}.${mult} Después las ${same?'restamos':'sumamos'}:</p>
+      <div class="scroll"><div class="redu"><span></span><span>${eqL(M1)}</span><span class="small">(${l1})</span><span>${same?'−':'+'}</span><span>${eqL(M2)}</span><span class="small">(${l2})</span><span></span><span class="rl">${eqL(R)}</span><span class="small">${same?'restamos':'sumamos'}</span></div></div>`;
+    sol[w]=R[2].div(R[w]);
+    html+=`<div class="math">⇒ <b>${LH[w]} = ${R[w].isOne()?'':`<span class="fr"><span>${fq(R[2])}</span><span>${fq(R[w])}</span></span> = `}${fq(sol[w])}</b></div>`;
+    const pick=Math.abs(E[0][v].num())+Math.abs(E[0][w].num())<=Math.abs(E[1][v].num())+Math.abs(E[1][w].num())?0:1;
+    const r=substLine(E[pick],w,sol[w],v,ORD[pick]);html+=r.html;sol[v]=r.res;
+  }
+  return{html,x:sol[0],y:sol[1]};
+}
+
+/* ---------- programación lineal ---------- */
+const OPH={'<=':'≤','>=':'≥','=':'='};
+function parseCons(text){
+  const raw=text.split(/[\n;]/).map(s=>s.trim()).filter(Boolean);
+  const lines=[];
+  raw.forEach(l=>{const m=l.replace(/\s/g,'').match(/^([xy](?:,[xy])+)(<=|>=|≤|≥)(.+)$/);if(m)m[1].split(',').forEach(v=>lines.push(v+' '+m[2]+' '+m[3]));else lines.push(l)});
+  let strict=false;const cons=[];
+  for(const l of lines){const r=parseRel(l,LV);let op=r.op;if(op==='<'){op='<=';strict=true}if(op==='>'){op='>=';strict=true}
+    const con={a:r.coef[0],b:r.coef[1],c:r.c,op,raw:l};
+    if(con.a.z()&&con.b.z()){if(!feas(con,Q0,Q0))throw new Error(`La restricción «${l}» es imposible.`);continue}
+    cons.push(con)}
+  return{cons,strict};
+}
+function feas(con,x,y){const v=con.a.mul(x).add(con.b.mul(y));const c=v.cmp(con.c);return con.op==='<='?c<=0:con.op==='>='?c>=0:c===0}
+function computeLP(objS,sense,consS){
+  objS=(objS||'').trim();if(objS.includes('='))objS=objS.slice(objS.lastIndexOf('=')+1);
+  const O=objS.trim()?parseLinear(objS,LV):null;
+  if(O&&O.coef.every(q=>q.z()))throw new Error('La función objetivo tiene que depender de x o de y.');
+  const{cons,strict}=parseCons(consS||'');
+  if(!cons.length)throw new Error('Escribe al menos una restricción.');
+  if(cons.length>10)throw new Error('Como máximo diez restricciones.');
+  let big=10;cons.forEach(k=>{if(!k.a.z())big=Math.max(big,Math.abs(k.c.div(k.a).num()));if(!k.b.z())big=Math.max(big,Math.abs(k.c.div(k.b).num()))});
+  const M=new Q(10**Math.ceil(Math.log10(big*100)));
+  const box=[{a:Q1,b:Q0,c:M,op:'<='},{a:Q1,b:Q0,c:M.neg(),op:'>='},{a:Q0,b:Q1,c:M,op:'<='},{a:Q0,b:Q1,c:M.neg(),op:'>='}];
+  const all=[...cons,...box];
+  let pts=[];
+  for(let i=0;i<all.length;i++)for(let j=i+1;j<all.length;j++){
+    const p=all[i],q=all[j];const det=p.a.mul(q.b).sub(q.a.mul(p.b));if(det.z())continue;
+    const x=p.c.mul(q.b).sub(q.c.mul(p.b)).div(det),y=p.a.mul(q.c).sub(q.a.mul(p.c)).div(det);
+    if(!all.every(k=>feas(k,x,y)))continue;
+    const ex=pts.find(t=>t.x.eq(x)&&t.y.eq(y));
+    if(ex){[i,j].forEach(k=>{if(!ex.L.includes(k))ex.L.push(k)})}else pts.push({x,y,L:[i,j]});
+  }
+  pts.forEach(p=>p.art=p.L.some(k=>k>=cons.length));
+  const D={cons,O,sense,strict,pts:[],real:[],empty:!pts.length};
+  if(D.empty){D.view=viewFor(cons,[],false);return D}
+  const cxm=pts.reduce((s,p)=>s+p.x.num(),0)/pts.length,cym=pts.reduce((s,p)=>s+p.y.num(),0)/pts.length;
+  pts.sort((a,b)=>Math.atan2(a.y.num()-cym,a.x.num()-cxm)-Math.atan2(b.y.num()-cym,b.x.num()-cxm));
+  const real=pts.filter(p=>!p.art);
+  if(real.length){let s0=0;real.forEach((p,i)=>{if(Math.hypot(p.x.num(),p.y.num())<Math.hypot(real[s0].x.num(),real[s0].y.num())-1e-12)s0=i});
+    real.slice(s0).concat(real.slice(0,s0)).forEach((p,i)=>p.name=String.fromCharCode(65+i))}
+  D.pts=pts;D.real=real.slice().sort((a,b)=>a.name.localeCompare(b.name));D.unb=pts.some(p=>p.art);
+  if(O){
+    pts.forEach(p=>p.f=O.coef[0].mul(p.x).add(O.coef[1].mul(p.y)).add(O.c));
+    const optimum=s=>{const better=(a,b)=>s==='max'?a.cmp(b)>0:a.cmp(b)<0;
+      let best=null;D.real.forEach(p=>{if(!best||better(p.f,best.f))best=p});
+      const artBetter=!best||pts.some(p=>p.art&&better(p.f,best.f));
+      const artTie=!!best&&pts.some(p=>p.art&&p.f.eq(best.f));
+      return{best,artBetter,artTie,opts:best&&!artBetter?D.real.filter(p=>p.f.eq(best.f)):[]}};
+    D.res={};(sense==='ambos'?['max','min']:[sense]).forEach(s=>D.res[s]=optimum(s));
+  }
+  D.view=viewFor(cons,D.real,D.unb);
+  return D;
+}
+function viewFor(cons,real,unb){
+  const xs=[0],ys=[0];real.forEach(p=>{xs.push(p.x.num());ys.push(p.y.num())});
+  cons.forEach(k=>{if(!k.a.z()&&!k.c.z())xs.push(k.c.div(k.a).num());if(!k.b.z()&&!k.c.z())ys.push(k.c.div(k.b).num())});
+  let x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys);
+  if(x1-x0<1e-9)x1=x0+10;if(y1-y0<1e-9)y1=y0+10;
+  const ex=unb?0.45:0.12;const dx=(x1-x0),dy=(y1-y0);
+  return{x0:x0-dx*0.08,x1:x1+dx*ex,y0:y0-dy*0.08,y1:y1+dy*ex};
+}
+/* ===================== FIN MOTOR ===================== */
+</script>
+
+<script>
+/* ===================== INTERFAZ ===================== */
+const $=s=>document.querySelector(s);
+function cssv(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim()}
+const reduceMotion=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
+const scrollTo=el=>el&&el.scrollIntoView({behavior:reduceMotion()?'auto':'smooth',block:'start'});
+
+/* --- gráficas incrustadas en los pasos --- */
+const PLOTS=new Map();let plotSeq=0;
+function plotSlot(fn,cls='mini'){const id='pl'+(++plotSeq);PLOTS.set(id,fn);return `<canvas class="${cls}" data-plot="${id}" aria-hidden="true"></canvas>`}
+function redrawPlots(){document.querySelectorAll('canvas[data-plot]').forEach(cv=>{if(cv.offsetParent===null)return;const fn=PLOTS.get(cv.dataset.plot);if(fn)fn(cv)})}
+
+/* --- paso a paso --- */
+let stepMode=false;try{stepMode=localStorage.getItem('modo')==='paso'}catch(e){}
+function mountSteps(el,steps){
+  el.innerHTML=steps.map((s,i)=>`<section class="step"><header><span class="num">Paso ${i+1}</span><h3>${s.t}</h3></header><div class="body">${s.h}</div></section>`).join('')
+   +`<div class="stepnav"><button class="btn nextStep">Siguiente paso</button><button class="btn ghost allSteps">Ver todos</button></div>`;
+  el._shown=1;applyMode(el);
+}
+function applyMode(el){const st=[...el.querySelectorAll(':scope > .step')];const nav=el.querySelector(':scope > .stepnav');if(!nav)return;
+  if(!stepMode){st.forEach(s=>s.hidden=false);nav.hidden=true}
+  else{st.forEach((s,i)=>s.hidden=i>=el._shown);nav.hidden=el._shown>=st.length}
+  requestAnimationFrame(redrawPlots)}
+document.addEventListener('click',e=>{
+  const n=e.target.closest('.nextStep'),a=e.target.closest('.allSteps');
+  if(n||a){const el=e.target.closest('.steps');el._shown=a?999:el._shown+1;applyMode(el);
+    if(n){const st=[...el.querySelectorAll(':scope > .step')][el._shown-1];st&&st.scrollIntoView({behavior:reduceMotion()?'auto':'smooth',block:'nearest'})}}
+});
+function setMode(step){stepMode=step;try{localStorage.setItem('modo',step?'paso':'todo')}catch(e){}
+  $('#modeAll').setAttribute('aria-pressed',!step);$('#modeStep').setAttribute('aria-pressed',step);
+  document.querySelectorAll('.steps').forEach(el=>{el._shown=1;applyMode(el)})}
+$('#modeAll').onclick=()=>setMode(false);$('#modeStep').onclick=()=>setMode(true);
+
+/* --- pestañas --- */
+const TABS=['sistemas','pl','practicar'];
+function showTab(t){TABS.forEach(k=>{$('#panel-'+k).hidden=k!==t;$('#tab-'+k).setAttribute('aria-selected',k===t)});
+  requestAnimationFrame(()=>{draw3();drawMainLP();redrawPlots()});try{history.replaceState(null,'','#'+t)}catch(e){}}
+document.querySelectorAll('.tabbar button').forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
+
+/* ===================== SISTEMAS ===================== */
+const EX_S=[
+  {n:'Compatible determinado',t:'x + y + z = 6\n2x - y + 2z = 3\n3x + 2y - 3z = 3'},
+  {n:'Compatible indeterminado',t:'x + y + z = 3\n2x - y + z = 2\n3x + 2z = 5'},
+  {n:'Incompatible',t:'x + y + z = 3\n2x - y + z = 2\n3x + 2z = 4'},
+  {n:'Con fracciones',t:'x/2 + y - z = 1\nx - y + 2z = 3\n2x + y/3 + z = 7'}
+];
+let method='gauss',SYS=null;
+$('#mGauss').onclick=()=>{method='gauss';$('#mGauss').setAttribute('aria-pressed',true);$('#mCramer').setAttribute('aria-pressed',false);solveSys()};
+$('#mCramer').onclick=()=>{method='cramer';$('#mCramer').setAttribute('aria-pressed',true);$('#mGauss').setAttribute('aria-pressed',false);solveSys()};
+$('#exS').innerHTML=EX_S.map((e,i)=>`<button class="chip" data-i="${i}">${e.n}</button>`).join('');
+$('#exS').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;$('#sysIn').value=EX_S[b.dataset.i].t;$('#sysCtx').innerHTML='';solveSys()};
+$('#sysIn').addEventListener('input',()=>{$('#sysCtx').innerHTML=''});
+$('#sysGo').onclick=()=>{solveSys();scrollTo($('#sysSteps'))};
+function solveSys(){
+  $('#sysErr').hidden=true;
+  try{const R=buildSys($('#sysIn').value,method);mountSteps($('#sysSteps'),R.steps);$('#sysBadge').innerHTML=R.badge;SYS=R.SYS;setup3()}
+  catch(err){$('#sysErr').textContent=err.message;$('#sysErr').hidden=false}
+}
+
+/* --- visor 3D --- */
+const V3={yaw:-0.62,pitch:0.42,L:5,vis:[true,true,true,true]};
+const PCOL=['--p1','--p2','--p3','--p4'];
+function setup3(){
+  if(!SYS)return;
+  let L=5;
+  if(SYS.kind!=='SI'&&SYS.vals){const mx=Math.max(...SYS.vals.map(v=>Math.abs(v[0].num())));L=Math.min(60,Math.max(SYS.kind==='SCD'?4:5,Math.ceil(mx*1.3)+1))}
+  V3.L=L;
+  $('#legend3').innerHTML=SYS.rows.map((r,i)=>`<label><input type="checkbox" data-i="${i}" ${V3.vis[i]?'checked':''}><span class="sw" style="background:var(${PCOL[i]})"></span><span>π${ix(i+1)}:</span><span class="eq">${eqHTML(r)}</span></label>`).join('')
+    +(SYS.kind==='SCD'?`<span class="small">Punto: la solución.</span>`:SYS.kind==='SCI'&&SYS.nfree===1?`<span class="small">Recta negra: las infinitas soluciones.</span>`:'');
+  draw3();
+}
+$('#legend3').addEventListener('change',e=>{const i=e.target.dataset.i;if(i!==undefined){V3.vis[i]=e.target.checked;draw3()}});
+$('#v3reset').onclick=()=>{V3.yaw=-0.62;V3.pitch=0.42;draw3()};
+function planePoly(n,d,L){
+  const C=[];for(const i of[-1,1])for(const j of[-1,1])for(const k of[-1,1])C.push([i*L,j*L,k*L]);
+  const pts=[];const dot=p=>n[0]*p[0]+n[1]*p[1]+n[2]*p[2]-d;
+  for(let a=0;a<8;a++)for(let b=a+1;b<8;b++){
+    if([0,1,2].filter(t=>C[a][t]!==C[b][t]).length!==1)continue;
+    const fa=dot(C[a]),fb=dot(C[b]);
+    if(Math.abs(fa)<1e-12)pts.push(C[a]);
+    if(fa*fb<0){const t=fa/(fa-fb);pts.push(C[a].map((v,q)=>v+(C[b][q]-v)*t))}
+  }
+  const U=[];pts.forEach(p=>{if(!U.some(q=>Math.hypot(p[0]-q[0],p[1]-q[1],p[2]-q[2])<1e-9))U.push(p)});
+  if(U.length<3)return null;
+  const c=[0,1,2].map(t=>U.reduce((s,p)=>s+p[t],0)/U.length);
+  let u=Math.abs(n[0])<0.9*Math.hypot(...n)?[0,-n[2],n[1]]:[-n[2],0,n[0]];
+  if(Math.hypot(...u)<1e-12)u=[n[1],-n[0],0];
+  const w=[n[1]*u[2]-n[2]*u[1],n[2]*u[0]-n[0]*u[2],n[0]*u[1]-n[1]*u[0]];
+  const ang=p=>{const d0=[p[0]-c[0],p[1]-c[1],p[2]-c[2]];return Math.atan2(d0[0]*w[0]+d0[1]*w[1]+d0[2]*w[2],d0[0]*u[0]+d0[1]*u[1]+d0[2]*u[2])};
+  U.sort((p,q)=>ang(p)-ang(q));
+  return U;
+}
+function draw3(){
+  const cv=$('#cv3');if(!cv||cv.offsetParent===null)return;
+  const dpr=window.devicePixelRatio||1,W=cv.clientWidth,H=cv.clientHeight||W*0.75;
+  cv.width=W*dpr;cv.height=H*dpr;const ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,W,H);
+  const L=V3.L,R=Math.min(W,H)*0.36,cx=W/2,cy=H/2+H*0.03;
+  const cyw=Math.cos(V3.yaw),syw=Math.sin(V3.yaw),cp=Math.cos(V3.pitch),sp=Math.sin(V3.pitch);
+  const P=p=>{const x=p[0]/L,y=p[1]/L,z=p[2]/L;const X=x*cyw-y*syw,Y=x*syw+y*cyw;const v=z*cp-X*sp,w=X*cp+z*sp;const s=1/(1-w*0.18);return[cx+Y*s*R,cy-v*s*R,w]};
+  const ink=cssv('--ink'),muted=cssv('--muted'),line=cssv('--line'),mono=cssv('--f-mono');
+  ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle=line;ctx.lineWidth=1;
+  const C=[];for(const i of[-1,1])for(const j of[-1,1])for(const k of[-1,1])C.push([i*L,j*L,k*L]);
+  for(let a=0;a<8;a++)for(let b=a+1;b<8;b++){if([0,1,2].filter(t=>C[a][t]!==C[b][t]).length!==1)continue;const p=P(C[a]),q=P(C[b]);ctx.beginPath();ctx.moveTo(p[0],p[1]);ctx.lineTo(q[0],q[1]);ctx.stroke()}
+  const step=L<=6?1:L<=12?2:L<=30?5:10;
+  ['x','y','z'].forEach((nm,k)=>{const e=[0,0,0];e[k]=L*1.12;const ne=[0,0,0];ne[k]=-L;const a=P(ne),b=P(e);
+    ctx.strokeStyle=muted;ctx.lineWidth=1.3;ctx.beginPath();ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1]);ctx.stroke();
+    ctx.font='600 13px '+mono;ctx.fillStyle=ink;const lb=[0,0,0];lb[k]=L*1.22;const l=P(lb);ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(nm,l[0],l[1]);
+    ctx.font='11px '+mono;ctx.fillStyle=muted;
+    for(let t=step;t<=L;t+=step){const tp=[0,0,0];tp[k]=t;const q=P(tp);ctx.beginPath();ctx.arc(q[0],q[1],1.6,0,7);ctx.fill();if(t===Math.floor(L/step)*step)ctx.fillText(String(t),q[0]+10,q[1]-9)}
+  });
+  if(!SYS)return;
+  const polys=[];ctx.font='600 13px '+mono;
+  SYS.rows.forEach((r,i)=>{if(!V3.vis[i])return;const n=r.slice(0,3).map(q=>q.num());if(Math.hypot(...n)<1e-12)return;const poly=planePoly(n,r[3].num(),L);if(!poly)return;const pp=poly.map(P);polys.push({pp,depth:pp.reduce((s,p)=>s+p[2],0)/pp.length,col:cssv(PCOL[i]),i})});
+  polys.sort((a,b)=>a.depth-b.depth);
+  polys.forEach(o=>{ctx.beginPath();o.pp.forEach((p,k)=>k?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));ctx.closePath();
+    ctx.globalAlpha=0.26;ctx.fillStyle=o.col;ctx.fill();ctx.globalAlpha=0.95;ctx.strokeStyle=o.col;ctx.lineWidth=1.6;ctx.stroke();ctx.globalAlpha=1;
+    const top=o.pp.reduce((a,b)=>a[1]<b[1]?a:b);ctx.fillStyle=o.col;ctx.textAlign='left';ctx.fillText('π'+ix(o.i+1),top[0]+6,top[1]+12)});
+  if(SYS.kind==='SCI'&&SYS.nfree===1){
+    const p0=SYS.vals.map(v=>v[0].num()),d=SYS.vals.map(v=>v[1].num());
+    let t0=-Infinity,t1=Infinity;
+    for(let k=0;k<3;k++){if(Math.abs(d[k])<1e-12){if(Math.abs(p0[k])>L){t0=1;t1=0}continue}let a=(-L-p0[k])/d[k],b=(L-p0[k])/d[k];if(a>b)[a,b]=[b,a];t0=Math.max(t0,a);t1=Math.min(t1,b)}
+    if(t0<t1){const a=P(p0.map((v,k)=>v+d[k]*t0)),b=P(p0.map((v,k)=>v+d[k]*t1));ctx.strokeStyle=ink;ctx.lineWidth=3.5;ctx.beginPath();ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1]);ctx.stroke()}
+  }
+  if(SYS.kind==='SCD'){
+    const s=SYS.vals.map(v=>v[0]);const q=P(s.map(v=>v.num()));
+    ctx.setLineDash([3,4]);ctx.strokeStyle=muted;ctx.lineWidth=1;const fl=P([s[0].num(),s[1].num(),0]);ctx.beginPath();ctx.moveTo(q[0],q[1]);ctx.lineTo(fl[0],fl[1]);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle=cssv('--marker');ctx.strokeStyle=ink;ctx.lineWidth=2;ctx.beginPath();ctx.arc(q[0],q[1],7,0,7);ctx.fill();ctx.stroke();
+    const lbl='('+s.map(ftxt).join(', ')+')';ctx.font='700 13px '+mono;const tw=ctx.measureText(lbl).width;
+    let lx=q[0]+12;if(lx+tw>W-6)lx=q[0]-12-tw;
+    ctx.fillStyle=cssv('--card');ctx.fillRect(lx-4,q[1]-24,tw+8,20);ctx.fillStyle=ink;ctx.textAlign='left';ctx.fillText(lbl,lx,q[1]-14);
+  }
+}
+(function(){const cv=$('#cv3');let drag=null;
+  cv.addEventListener('pointerdown',e=>{drag=[e.clientX,e.clientY];cv.setPointerCapture(e.pointerId)});
+  cv.addEventListener('pointermove',e=>{if(!drag)return;V3.yaw+=(e.clientX-drag[0])*0.01;V3.pitch=Math.max(-1.45,Math.min(1.45,V3.pitch+(e.clientY-drag[1])*0.01));drag=[e.clientX,e.clientY];draw3()});
+  const end=()=>drag=null;cv.addEventListener('pointerup',end);cv.addEventListener('pointercancel',end);
+})();
+
+/* ===================== PROGRAMACIÓN LINEAL ===================== */
+const CCOL=['--p1','--p2','--p3','--p4','--p5','--p6'];
+const EX_P=[
+  {n:'Recinto (boletín 41)',s:'max',o:'x + 3y',c:'x + 2y >= 7\n2x - y <= 4\n4x - y >= 1\n3x + 2y <= 20'},
+  {n:'Máximo y mínimo',s:'ambos',o:'x + 4y',c:'y - 2x <= 7\n-x + 3y <= 21\nx + 2y <= 19\nx + y <= 14\nx, y >= 0'},
+  {n:'Solo la región (boletín 40d)',s:'max',o:'',c:'x + 2y <= 1600\nx + y <= 1000\nx <= 800\nx, y >= 0'},
+  {n:'Región no acotada (40f)',s:'min',o:'x + y',c:'15x + 15y >= 750\n30x + 10y >= 700\n10x + 20y >= 650'}
+];
+$('#exP').innerHTML=EX_P.map((e,i)=>`<button class="chip" data-i="${i}">${e.n}</button>`).join('');
+$('#exP').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;const ex=EX_P[b.dataset.i];$('#lpSense').value=ex.s;$('#lpObj').value=ex.o;$('#lpCons').value=ex.c;$('#lpCtx').innerHTML='';solveLP()};
+['#lpObj','#lpCons'].forEach(s=>$(s).addEventListener('input',()=>{$('#lpCtx').innerHTML=''}));
+$('#lpSense').onchange=solveLP;$('#lpGo').onclick=()=>{solveLP();scrollTo($('#lpSteps'))};
+let LP=null;
+
+function niceStep(r,n=8){const raw=r/n;const p=10**Math.floor(Math.log10(raw));const f=raw/p;return(f<1.5?1:f<3.5?2:f<7.5?5:10)*p}
+function fmt(n){return Math.abs(n-Math.round(n))<1e-9?String(Math.round(n)):n.toFixed(2).replace('.',',')}
+function clipLine(a,b,c,v){
+  const P=[];
+  if(Math.abs(b)>1e-12){[v.x0,v.x1].forEach(x=>{const y=(c-a*x)/b;if(y>=v.y0-1e-9&&y<=v.y1+1e-9)P.push([x,y])})}
+  if(Math.abs(a)>1e-12){[v.y0,v.y1].forEach(y=>{const x=(c-b*y)/a;if(x>=v.x0-1e-9&&x<=v.x1+1e-9)P.push([x,y])})}
+  const U=[];P.forEach(p=>{if(!U.some(q=>Math.hypot(p[0]-q[0],p[1]-q[1])<1e-9))U.push(p)});
+  return U.length>=2?[U[0],U[1]]:null;
+}
+function clipHalf(poly,a,b,c,op){ // Sutherland–Hodgman
+  const inside=p=>{const s=a*p[0]+b*p[1]-c;return op==='<='?s<=1e-9:s>=-1e-9};
+  const out=[];for(let i=0;i<poly.length;i++){const P=poly[i],Qp=poly[(i+1)%poly.length];const ip=inside(P),iq=inside(Qp);
+    if(ip)out.push(P);if(ip!==iq){const sp=a*P[0]+b*P[1]-c,sq=a*Qp[0]+b*Qp[1]-c;const t=sp/(sp-sq);out.push([P[0]+(Qp[0]-P[0])*t,P[1]+(Qp[1]-P[1])*t])}}
+  return out;
+}
+/* dibuja el plano de PL. o: {mini, half, region, lines:'all'|[i], emph:[i], pts:[{x,y,label,col}], vertices, level, hl} */
+function drawPlane(cv,D,o={}){
+  const dpr=window.devicePixelRatio||1,W=cv.clientWidth,H=cv.clientHeight||W;if(!W)return;
+  cv.width=W*dpr;cv.height=H*dpr;const ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,W,H);
+  const v=D.view,mini=!!o.mini,pl=mini?34:46,pr=mini?8:14,pt=mini?8:14,pb=mini?22:30;
+  const X=x=>pl+(x-v.x0)/(v.x1-v.x0)*(W-pl-pr),Y=y=>H-pb-(y-v.y0)/(v.y1-v.y0)*(H-pt-pb);
+  const ink=cssv('--ink'),muted=cssv('--muted'),line=cssv('--line'),acc=cssv('--accent'),mono=cssv('--f-mono');
+  ctx.font=(mini?'10px ':'11px ')+mono;ctx.fillStyle=muted;ctx.strokeStyle=line;ctx.lineWidth=1;
+  const sx=niceStep(v.x1-v.x0,mini?5:8),sy=niceStep(v.y1-v.y0,mini?5:8);
+  ctx.textAlign='center';ctx.textBaseline='top';
+  for(let x=Math.ceil(v.x0/sx)*sx;x<=v.x1+1e-9;x+=sx){ctx.beginPath();ctx.moveTo(X(x),pt);ctx.lineTo(X(x),H-pb);ctx.stroke();ctx.fillText(fmt(x),X(x),H-pb+5)}
+  ctx.textAlign='right';ctx.textBaseline='middle';
+  for(let y=Math.ceil(v.y0/sy)*sy;y<=v.y1+1e-9;y+=sy){ctx.beginPath();ctx.moveTo(pl,Y(y));ctx.lineTo(W-pr,Y(y));ctx.stroke();ctx.fillText(fmt(y),pl-5,Y(y))}
+  ctx.save();ctx.beginPath();ctx.rect(pl,pt,W-pl-pr,H-pt-pb);ctx.clip();
+  ctx.strokeStyle=muted;ctx.lineWidth=1.5;
+  if(v.y0<=0&&v.y1>=0){ctx.beginPath();ctx.moveTo(pl,Y(0));ctx.lineTo(W-pr,Y(0));ctx.stroke()}
+  if(v.x0<=0&&v.x1>=0){ctx.beginPath();ctx.moveTo(X(0),pt);ctx.lineTo(X(0),H-pb);ctx.stroke()}
+  if(o.half!=null){const k=D.cons[o.half];if(k.op!=='='){const poly=clipHalf([[v.x0,v.y0],[v.x1,v.y0],[v.x1,v.y1],[v.x0,v.y1]],k.a.num(),k.b.num(),k.c.num(),k.op);
+    if(poly.length>2){ctx.beginPath();poly.forEach((p,i)=>i?ctx.lineTo(X(p[0]),Y(p[1])):ctx.moveTo(X(p[0]),Y(p[1])));ctx.closePath();ctx.globalAlpha=0.2;ctx.fillStyle=cssv(CCOL[o.half%6]);ctx.fill();ctx.globalAlpha=1}}}
+  if(o.region&&D.pts.length){const H2=D.pts.map(p=>[X(p.x.num()),Y(p.y.num())]);ctx.beginPath();H2.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));if(H2.length>2)ctx.closePath();
+    ctx.globalAlpha=0.2;ctx.fillStyle=acc;ctx.fill();ctx.globalAlpha=1;ctx.strokeStyle=acc;ctx.lineWidth=H2.length>2?2.5:5;ctx.stroke()}
+  const idxs=o.lines==='all'||o.lines==null?D.cons.map((_,i)=>i):o.lines;
+  idxs.forEach(i=>{const k=D.cons[i];const seg=clipLine(k.a.num(),k.b.num(),k.c.num(),v);if(!seg)return;const col=cssv(CCOL[i%6]);
+    const em=!o.emph||o.emph.includes(i);ctx.globalAlpha=em?1:0.3;ctx.strokeStyle=col;ctx.lineWidth=em&&o.emph?3:2;
+    ctx.beginPath();ctx.moveTo(X(seg[0][0]),Y(seg[0][1]));ctx.lineTo(X(seg[1][0]),Y(seg[1][1]));ctx.stroke();
+    if(em){const t=0.86,lx=X(seg[0][0]+(seg[1][0]-seg[0][0])*t),ly=Y(seg[0][1]+(seg[1][1]-seg[0][1])*t);
+      ctx.font='700 12px '+mono;ctx.fillStyle=col;ctx.textAlign='left';ctx.textBaseline='bottom';ctx.fillText('r'+ix(i+1),lx+4,ly-3)}
+    ctx.globalAlpha=1});
+  if(o.level!=null&&D.O){const a=D.O.coef[0].num(),b=D.O.coef[1].num(),c=D.O.c.num();const seg=clipLine(a,b,o.level-c,v);
+    if(seg){ctx.setLineDash([8,6]);ctx.strokeStyle=o.levelHit?cssv('--good'):ink;ctx.lineWidth=o.levelHit?3:2;
+      ctx.beginPath();ctx.moveTo(X(seg[0][0]),Y(seg[0][1]));ctx.lineTo(X(seg[1][0]),Y(seg[1][1]));ctx.stroke();ctx.setLineDash([])}}
+  ctx.restore();
+  const label=(x,y,txt)=>{ctx.font='600 '+(mini?'11px ':'12px ')+mono;const tw=ctx.measureText(txt).width;let lx=x+8,ly=y-8;if(lx+tw>W-4)lx=x-8-tw;if(ly<14)ly=y+18;
+    ctx.fillStyle=cssv('--card');ctx.globalAlpha=0.88;ctx.fillRect(lx-3,ly-12,tw+6,16);ctx.globalAlpha=1;ctx.fillStyle=ink;ctx.textAlign='left';ctx.textBaseline='alphabetic';ctx.fillText(txt,lx,ly)};
+  (o.pts||[]).forEach(p=>{const x=X(p.x),y=Y(p.y);ctx.fillStyle=p.col?cssv(p.col):ink;ctx.strokeStyle=cssv('--card');ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(x,y,p.r||4.5,0,7);ctx.fill();ctx.stroke();if(p.label)label(x,y,p.label)});
+  if(o.vertices)D.real.forEach(p=>{const x=X(p.x.num()),y=Y(p.y.num());const best=o.hl&&o.hl.includes(p);
+    ctx.fillStyle=best?cssv('--marker'):cssv('--card');ctx.strokeStyle=ink;ctx.lineWidth=2;ctx.beginPath();ctx.arc(x,y,best?7:5,0,7);ctx.fill();ctx.stroke();
+    label(x,y,mini?p.name:`${p.name}(${ftxt(p.x)}, ${ftxt(p.y)})`)});
+  ctx.fillStyle=muted;ctx.font='italic 13px '+mono;ctx.textAlign='right';ctx.textBaseline='bottom';ctx.fillText('x',W-pr-2,H-pb-4);ctx.textAlign='left';ctx.textBaseline='top';ctx.fillText('y',pl+4,pt+2);
+}
+const consH=k=>`${lin([k.a,k.b],LH)} ${OPH[k.op]} ${fq(k.c)}`;
+const lineH=k=>`${lin([k.a,k.b],LH)} = ${fq(k.c)}`;
+const dotC=i=>`<span class="dot" style="background:var(${CCOL[i%6]})"></span>`;
+function exprVal(a,b,x,y){let t='';[[a,x],[b,y]].forEach(([c,v])=>{if(c.z())return;const ab=c.abs();t+=(t?(c.n<0?' − ':' + '):(c.n<0?'−':''))+(ab.isOne()?'':fq(ab)+'·')+fqp(v)});return t||'0'}
+
+function buildLPSteps(D){
+  const steps=[],O=D.O,cons=D.cons;
+  const objH=O?`${lin(O.coef,LH)}${O.c.z()?'':(O.c.n<0?' − ':' + ')+fq(O.c.abs())}`:'';
+  const what={max:'Maximizar',min:'Minimizar',ambos:'Buscar el máximo y el mínimo de'}[D.sense];
+  steps.push({t:'Planteamos el problema',h:`${O?`<div class="math">${what}&nbsp; f(${LH.join(', ')}) = ${objH}</div><p>sujeto a las restricciones:</p>`:'<p>Las restricciones que definen la región son:</p>'}<div class="eqs brace">${cons.map((k,i)=>`<span>${dotC(i)}r${ix(i+1)}: ${consH(k)}</span>`).join('')}</div>${D.strict?'<p class="small">Hay desigualdades estrictas (&lt; o &gt;). Las tratamos como ≤ o ≥ para dibujar la región; el borde no estaría incluido.</p>':''}<p>Cada restricción es un semiplano (un trozo del plano limitado por una recta). La región factible es la parte común a todos.</p>`});
+  // paso 2: cada restricción con su gráfica
+  let h2='<p>Para cada desigualdad: (1) la cambiamos por una igualdad para obtener la recta, (2) buscamos dos puntos para dibujarla, (3) probamos un punto que no esté en la recta para saber qué lado nos quedamos.</p>';
+  cons.forEach((k,i)=>{
+    const P2=[];let kind='';
+    if(k.b.z()){kind=`Es una recta <b>vertical</b>: todos sus puntos tienen ${LH[0]} = ${fq(k.c.div(k.a))}.`;P2.push([k.c.div(k.a),Q0])}
+    else if(k.a.z()){kind=`Es una recta <b>horizontal</b>: todos sus puntos tienen ${LH[1]} = ${fq(k.c.div(k.b))}.`;P2.push([Q0,k.c.div(k.b)])}
+    else if(!k.c.z()){P2.push([Q0,k.c.div(k.b)]);P2.push([k.c.div(k.a),Q0])}
+    else{P2.push([Q0,Q0]);let px=k.b.neg(),py=k.a;if(px.n<0){px=px.neg();py=py.neg()}P2.push([px,py])}
+    const cand=[[Q0,Q0],[Q1,Q0],[Q0,Q1],[Q1,new Q(2)]];
+    const tp=cand.find(([x,y])=>!k.a.mul(x).add(k.b.mul(y)).eq(k.c));
+    const val=k.a.mul(tp[0]).add(k.b.mul(tp[1]));const ok=feas(k,tp[0],tp[1]);const isO=tp[0].z()&&tp[1].z();
+    const tpTxt=isO?'el origen (0, 0)':`el punto (${fq(tp[0])}, ${fq(tp[1])})`;
+    let li=`<li>Recta: <span class="expr">${lineH(k)}</span></li>`;
+    if(kind)li+=`<li>${kind}</li>`;
+    else li+=`<li>Dos puntos de la recta${k.c.z()?' (pasa por el origen)':' (los cortes con los ejes)'}:<table class="pts"><tr><th>${LH[0]}</th><th>${LH[1]}</th></tr>${P2.map(p=>`<tr><td>${fq(p[0])}</td><td>${fq(p[1])}</td></tr>`).join('')}</table>${k.c.z()?'':`<span class="small">Con ${LH[0]} = 0 despejamos ${LH[1]}, y con ${LH[1]} = 0 despejamos ${LH[0]}.</span>`}</li>`;
+    if(k.op==='=')li+=`<li>Es una igualdad: solo valen los puntos de la propia recta.</li>`;
+    else li+=`<li>Probamos con ${tpTxt}: ${exprVal(k.a,k.b,tp[0],tp[1])} = ${fq(val)} ${OPH[k.op]} ${fq(k.c)} → ${ok?'<span class="ok">sí se cumple</span>':'<span class="no">no se cumple</span>'}</li><li>Nos quedamos con el lado ${ok?'donde está':'contrario a'} ${isO?'el origen':`(${fq(tp[0])}, ${fq(tp[1])})`} (sombreado).</li>`;
+    const pts=P2.map(p=>({x:p[0].num(),y:p[1].num(),label:`(${ftxt(p[0])}, ${ftxt(p[1])})`}));
+    if(k.op!=='=')pts.push({x:tp[0].num(),y:tp[1].num(),col:ok?'--good':'--bad',r:5.5,label:'prueba'});
+    h2+=`<div class="pair"><div><h4>${dotC(i)}r${ix(i+1)}: ${consH(k)}</h4><ol>${li}</ol></div>${plotSlot(cv=>drawPlane(cv,D,{mini:true,half:i,lines:[i],pts}))}</div>`;
+  });
+  steps.push({t:'Dibujamos cada restricción',h:h2});
+  if(D.empty){
+    steps.push({t:'La región factible está vacía',h:`<p>Ningún punto cumple todas las restricciones a la vez: los semiplanos no se solapan.</p>${plotSlot(cv=>drawPlane(cv,D,{}),'mid')}<div class="sol bad" style="margin-top:10px">El problema no tiene solución (no hay región factible).</div>`});
+    return{steps,badge:'<span class="badge si">Sin región factible</span>'};
+  }
+  steps.push({t:'Juntamos todo: la región factible',h:`<p>La región factible es la zona que está a la vez en <b>todos</b> los semiplanos (sombreada). ${D.real.length===1&&!D.unb?'En este caso las rectas se cortan todas en el mismo punto: la región es <b>un único punto</b>.':D.unb?'Es una región <b>no acotada</b>: se extiende hasta el infinito.':'Es una región <b>acotada</b>: un polígono cerrado.'} Sus esquinas son los <b>vértices</b>: ${D.real.length?D.real.map(p=>p.name).join(', '):'no tiene'}.</p>${plotSlot(cv=>drawPlane(cv,D,{region:true,vertices:true}),'mid')}`});
+  if(D.real.length){
+    let h4='<p>Cada vértice es el punto donde se cortan dos rectas. Para calcularlo resolvemos el sistema formado por esas dos rectas.</p>';
+    D.real.forEach(p=>{
+      const L=p.L.filter(k=>k<cons.length);let pair=null;
+      for(let a=0;a<L.length&&!pair;a++)for(let b=a+1;b<L.length;b++){const A=cons[L[a]],B=cons[L[b]];if(!A.a.mul(B.b).sub(B.a.mul(A.b)).z()){pair=[L[a],L[b]];break}}
+      const[i,j]=pair;const ex=explain2x2([cons[i].a,cons[i].b,cons[i].c],[cons[j].a,cons[j].b,cons[j].c]);
+      h4+=`<div class="pair"><div><h4><span class="vname">${p.name}</span> se cortan ${dotC(i)}r${ix(i+1)} y ${dotC(j)}r${ix(j+1)}</h4>${ex.html}<div class="sol" style="margin-top:6px">${p.name}(${fq(p.x)}, ${fq(p.y)})</div></div>${plotSlot(cv=>drawPlane(cv,D,{mini:true,region:true,lines:'all',emph:[i,j],pts:[{x:p.x.num(),y:p.y.num(),col:'--marker',r:7,label:p.name}]}))}</div>`;
+    });
+    steps.push({t:'Calculamos los vértices',h:h4});
+  }
+  if(!O){
+    steps.push({t:'Resumen',h:`<div class="sol">Vértices: ${D.real.map(p=>`${p.name}(${fq(p.x)}, ${fq(p.y)})`).join(', ')||'ninguno'}</div><p>La región es ${D.unb?'no acotada':'acotada'}. Si el ejercicio pide optimizar una función, escríbela arriba en «Función objetivo».</p>`});
+    return{steps,badge:`<span class="badge sci">${D.real.length} vértices · ${D.unb?'no acotada':'acotada'}</span>`};
+  }
+  const R=D.res;const isBest=p=>R.max&&R.max.opts.includes(p),isMin=p=>R.min&&R.min.opts.includes(p);
+  steps.push({t:'Evaluamos f en cada vértice',h:`<p>Por el teorema fundamental de la programación lineal, si existe el óptimo está en un vértice (o en todo un lado). Sustituimos cada vértice en f(${LH.join(', ')}) = ${objH}:</p><div class="scroll"><table class="t"><thead><tr><th>Vértice</th><th>Punto</th><th>f(${LH.join(', ')})</th><th></th></tr></thead><tbody>${D.real.map(p=>`<tr class="${isBest(p)?'best':isMin(p)?'bestmin':''}"><td><b>${p.name}</b></td><td class="m">(${fq(p.x)}, ${fq(p.y)})</td><td class="m">${exprVal(O.coef[0],O.coef[1],p.x,p.y)}${O.c.z()?'':(O.c.n<0?' − ':' + ')+fq(O.c.abs())} = ${fq(p.f)}</td><td>${isBest(p)?'máximo':isMin(p)?'mínimo':''}</td></tr>`).join('')}</tbody></table></div>`});
+  let fin='',badges=[];
+  for(const s of Object.keys(R)){const r=R[s];const word=s==='max'?'máximo':'mínimo';
+    if(r.artBetter){fin+=`<div class="sol bad">No existe ${word}: la región no está acotada y f puede hacerse tan ${s==='max'?'grande':'pequeña'} como queramos.</div>`;badges.push(`<span class="badge si">Sin ${word}</span>`)}
+    else if(r.opts.length>=2||r.artTie){
+      fin+=r.artTie?`<div class="sol">El ${word} es f = ${fq(r.best.f)}, en ${r.best.name}(${fq(r.best.x)}, ${fq(r.best.y)}) y en todos los puntos de la semirrecta de la frontera que sale de él.</div>`
+        :`<div class="sol">El ${word} es f = ${fq(r.best.f)}, y se alcanza en ${r.opts.map(p=>`${p.name}(${fq(p.x)}, ${fq(p.y)})`).join(' y ')} y en todos los puntos del segmento ${r.opts.map(p=>p.name).join('')}.</div>`;
+      fin+=`<p>Hay infinitas soluciones porque la recta de nivel es paralela a un lado de la región: al llegar al ${word} toca un lado entero, no un solo vértice. Si el problema habla de unidades enteras (personas, objetos…), valen los puntos del segmento con coordenadas enteras.</p>`;
+      badges.push(`<span class="badge sci">${s==='max'?'Máx':'Mín'} f = ${ftxt(r.best.f)} · infinitas soluciones</span>`)}
+    else{fin+=`<div class="sol">El ${word} es f = ${fq(r.best.f)}, en el punto ${r.best.name}(${fq(r.best.x)}, ${fq(r.best.y)}): ${LH[0]} = ${fq(r.best.x)}, ${LH[1]} = ${fq(r.best.y)}.</div>`;
+      badges.push(`<span class="badge ${s==='max'?'scd':'sci'}">${s==='max'?'Máx':'Mín'} f(${ftxt(r.best.x)}, ${ftxt(r.best.y)}) = ${ftxt(r.best.f)}</span>`);
+      if(D.unb)fin+=`<p>Aunque la región no está acotada, el ${word} existe porque f ${s==='max'?'decrece':'crece'} hacia la parte infinita.</p>`}
+  }
+  if(R.max&&R.min&&!R.max.artBetter&&!R.min.artBetter)fin+=`<p>Como la región es un solo trozo, f toma <b>todos</b> los valores entre el mínimo (${fq(R.min.best.f)}) y el máximo (${fq(R.max.best.f)}). Así se responde a preguntas del tipo «¿puede f valer…?».</p>`;
+  fin+=`<p><b>Comprobación gráfica:</b> en la gráfica de arriba mueve la recta de nivel ${lin(O.coef,LH)} = k: el óptimo es el último punto de la región que toca.</p>`;
+  if(D.real.some(p=>p.x.d!==1||p.y.d!==1))fin+=`<p class="small">Si las incógnitas son cantidades que solo pueden ser enteras (personas, objetos…) y el óptimo no sale entero, hay que buscar los puntos enteros de la región cercanos al vértice.</p>`;
+  steps.push({t:'Solución',h:fin});
+  return{steps,badge:badges.join(' ')};
+}
+function solveLP(){
+  $('#lpErr').hidden=true;
+  try{const D=computeLP($('#lpObj').value,$('#lpSense').value,$('#lpCons').value);const B=buildLPSteps(D);
+    LP=D;mountSteps($('#lpSteps'),B.steps);$('#lpBadge').innerHTML=B.badge;setupLevel();drawMainLP()}
+  catch(err){$('#lpErr').textContent=err.message;$('#lpErr').hidden=false}
+}
+function setupLevel(){
+  const s=$('#lvl');const off=!LP||LP.empty||!LP.O||!LP.real.length;$('#lvlRow').hidden=off;if(off)return;
+  const{x0,x1,y0,y1}=LP.view;const a=LP.O.coef[0].num(),b=LP.O.coef[1].num(),c=LP.O.c.num();
+  const vals=[[x0,y0],[x0,y1],[x1,y0],[x1,y1]].map(([x,y])=>a*x+b*y+c);
+  const lo=Math.min(...vals),hi=Math.max(...vals);s.min=lo;s.max=hi;s.step=(hi-lo)/400;
+  const r=LP.res.max||LP.res.min;s.value=r&&r.best&&!r.artBetter?r.best.f.num():(lo+hi)/2;updLvl();
+}
+function updLvl(){$('#lvlOut').textContent='f = '+fmt(+$('#lvl').value)}
+$('#lvl').addEventListener('input',()=>{updLvl();drawMainLP()});
+function drawMainLP(){
+  const cv=$('#cvlp');if(!cv||cv.offsetParent===null||!LP)return;
+  const hl=[];if(LP.res)Object.values(LP.res).forEach(r=>hl.push(...r.opts));
+  let level=null,hit=false;if(!$('#lvlRow').hidden){level=+$('#lvl').value;const st=+$('#lvl').step;hit=hl.some(p=>Math.abs(p.f.num()-level)<=st*1.5)}
+  drawPlane(cv,LP,{region:true,vertices:true,hl,level,levelHit:hit});
+}
+
+/* ===================== AYUDA DE CLAUDE (enunciado y dudas) ===================== */
+let SAMPLE=null,IMGOK=false;const AI={S:{img:null,ctl:null},P:{img:null,ctl:null}};
+function aiErrCopy(code){return({not_granted:'No se ha dado permiso a esta página para usar Claude.',sampling_disabled:'Claude no está disponible en esta cuenta.',rate_limited:'Demasiadas consultas seguidas. Espera un poco y vuelve a intentarlo.',session_expired:'Tu sesión ha caducado: vuelve a iniciar sesión en Claude.',invalid_json:'La respuesta no ha salido bien. Pulsa otra vez el botón.',image_rejected:'No se puede leer esa foto. Prueba con otra más clara (JPG o PNG).',refused:'No se ha podido procesar ese enunciado.',prompt_too_large:'El texto es demasiado largo.',empty_completion:'No ha llegado respuesta. Prueba a escribir el enunciado de otra forma.'})[code]||'Algo ha fallado. Vuelve a intentarlo.'}
+function aiHide(){['S','P'].forEach(k=>{$('#aiCard'+k).hidden=true;$('#askCard'+k).hidden=true})}
+(async()=>{
+  try{SAMPLE=window.claude&&window.claude.use?await window.claude.use('sample'):null}catch(e){SAMPLE=null}
+  if(!SAMPLE){aiHide();return}
+  try{const l=await SAMPLE.limits();IMGOK=!!(l&&l.images)}catch(e){IMGOK=false}
+  ['S','P'].forEach(k=>{$('#aiImgLbl'+k).hidden=!IMGOK;$('#askCard'+k).hidden=false;$('#aiCard'+k).hidden=false});
+})();
+['S','P'].forEach(k=>{
+  $('#aiImg'+k).addEventListener('change',e=>{const f=e.target.files&&e.target.files[0];AI[k].img=f||null;$('#aiImgName'+k).textContent=f?f.name:''});
+  $('#aiGo'+k).onclick=()=>runPlan(k);
+  $('#aiStop'+k).onclick=()=>AI[k].ctl&&AI[k].ctl.abort();
+  $('#askGo'+k).onclick=()=>runAsk(k);
+  $('#ask'+k).addEventListener('keydown',e=>{if(e.key==='Enter')runAsk(k)});
+});
+function planPrompt(k,text,hasImg){
+  const tab=k==='S'?'sistemas de ecuaciones lineales':'programación lineal';
+  return `Eres profesor de Matemáticas Aplicadas a las Ciencias Sociales II (2º de Bachillerato, España, nivel PEvAU). Un alumno que está estudiando ${tab} te da el enunciado de un problema${hasImg?' (está en la foto adjunta; si además hay texto escrito, úsalo también)':''}. Tu trabajo NO es resolverlo, sino enseñarle paso a paso cómo PLANTEARLO: qué se pide, qué incógnitas elegir y cómo se traduce cada dato del enunciado a una ecuación o inecuación.
+
+Escribe en español, con frases cortas y sencillas, como le hablarías a un alumno de 17 años. En "explicacion" cuenta el razonamiento (por ejemplo: "el 6 % de x se escribe 0.06x", "«al menos» significa ≥").
+
+Responde SOLO con un objeto JSON con esta forma exacta:
+{"tipo":"sistema" o "programacion",
+ "pide":"qué nos pregunta el problema, en una frase",
+ "incognitas":[{"letra":"x","significado":"número de ..."}],
+ "frases":[{"dato":"fragmento literal y corto del enunciado","explicacion":"cómo se traduce ese dato","expresion":"la ecuación o inecuación que sale"}],
+ "objetivo":null o {"sentido":"max" o "min" o "ambos","expresion":"40x + 15y","dato":"fragmento del enunciado","explicacion":"por qué es esa función"},
+ "sistema":["cada ecuación o inecuación final, una por elemento"],
+ "consejo":"un error típico que hay que evitar en este problema",
+ "aviso":""}
+
+Reglas para "expresion", "sistema" y "objetivo.expresion" (las lee un programa):
+- Solo las letras x, y, z. En sistemas, hasta 3 incógnitas (x, y, z). En programación lineal, solo x e y.
+- Números con punto decimal (0.25) o fracciones (3/4). Nunca paréntesis: desarrolla siempre (0.25(x+y) se escribe 0.25x + 0.25y). Multiplicación implícita: 3x.
+- Signos permitidos: =, <=, >=.
+- En programación lineal incluye "x >= 0" y "y >= 0" cuando las cantidades no puedan ser negativas, con su frase explicando por qué.
+- "sistema" es lo que se va a resolver: las mismas expresiones de "frases", en el mismo orden, sin la función objetivo.
+- Si el problema tiene varios apartados, plantea el que lleva a un sistema o a una optimización y explica en "aviso" qué hacer con el resto.
+- Si el enunciado no es de sistemas ni de programación lineal, o no se puede leer, deja "sistema" vacío y explícalo en "aviso".
+
+Enunciado:
+"""${text||'(en la foto)'}"""`;
+}
+function fmtLine(s,vars){try{const r=parseRel(s,vars);return{ok:true}}catch(e){return{ok:false,msg:e.message}}}
+async function runPlan(k){
+  const text=$('#aiText'+k).value.trim();const img=AI[k].img;
+  if(!text&&!img){$('#aiStatus'+k).textContent='Escribe o pega el enunciado primero.';return}
+  if(!SAMPLE)return;
+  const ctl=new AbortController();AI[k].ctl=ctl;
+  $('#aiGo'+k).disabled=true;$('#aiStop'+k).hidden=false;$('#aiStatus'+k).textContent='Pensando el planteamiento… (puede tardar unos segundos)';$('#aiOut'+k).innerHTML='';
+  try{
+    const opts={signal:ctl.signal,modelTier:'default'};if(img&&IMGOK)opts.images=[img];
+    const J=await SAMPLE.json(planPrompt(k,text,!!img),opts);
+    $('#aiStatus'+k).textContent='';renderPlan(k,J,text);
+  }catch(e){
+    if(e&&e.code==='cancelled'){$('#aiStatus'+k).textContent='Parado.'}
+    else{$('#aiStatus'+k).textContent=aiErrCopy(e&&e.code);if(e&&(e.code==='not_granted'||e.code==='sampling_disabled'))aiHide()}
+  }finally{$('#aiGo'+k).disabled=!SAMPLE;$('#aiStop'+k).hidden=true}
+}
+function renderPlan(k,J,text){
+  const steps=[];const isPL=J&&J.tipo==='programacion';const vars=isPL?LV:VN;
+  if(J.pide)steps.push({t:'¿Qué nos piden?',h:`<p>${esc(J.pide)}</p><p class="small">Leer bien la pregunta nos dice qué tienen que ser las incógnitas.</p>`});
+  if(Array.isArray(J.incognitas)&&J.incognitas.length)steps.push({t:'Elegimos las incógnitas',h:`<p>Llamamos con una letra a cada cantidad que no conocemos:</p><div class="eqs brace">${J.incognitas.map(v=>`<span><b>${esc(v.letra)}</b> = ${esc(v.significado)}</span>`).join('')}</div>`});
+  (J.frases||[]).forEach((f,i)=>steps.push({t:`Traducimos el dato ${i+1}`,h:`${f.dato?`<div class="quote">«${esc(f.dato)}»</div>`:''}<p>${esc(f.explicacion)}</p>${f.expresion?`<span class="expr">${pretty(f.expresion)}</span>`:''}`}));
+  if(J.objetivo&&J.objetivo.expresion)steps.push({t:'La función objetivo',h:`${J.objetivo.dato?`<div class="quote">«${esc(J.objetivo.dato)}»</div>`:''}<p>${esc(J.objetivo.explicacion)}</p><span class="expr">f(x, y) = ${pretty(J.objetivo.expresion)}</span> → <b>${{max:'maximizar',min:'minimizar',ambos:'máximo y mínimo'}[J.objetivo.sentido]||esc(J.objetivo.sentido)}</b>`});
+  const sys=Array.isArray(J.sistema)?J.sistema.filter(s=>typeof s==='string'&&s.trim()):[];
+  let h='';
+  if(sys.length){
+    const bad=sys.map(s=>({s,r:fmtLine(s.replace(/^([xy])\s*,\s*([xy])\s*(>=|<=)\s*0$/,'$1 $3 0'),vars)})).filter(o=>!o.r.ok&&!/^[xy]\s*,\s*[xy]\s*(>=|<=)/.test(o.s));
+    h+=`<p>${isPL?'El problema queda así:':'El sistema queda así:'}</p>${isPL&&J.objetivo&&J.objetivo.expresion?`<div class="math">${{max:'Maximizar',min:'Minimizar',ambos:'Máximo y mínimo de'}[J.objetivo.sentido]||''} f(x, y) = ${pretty(J.objetivo.expresion)}</div><p class="small">sujeto a:</p>`:''}<div class="eqs brace">${sys.map(s=>`<span>${pretty(s)}</span>`).join('')}</div>`;
+    if(bad.length)h+=`<p class="no">Hay alguna expresión que el resolutor no entiende (${esc(bad[0].s)}). Corrígela a mano en el cuadro de abajo.</p>`;
+    const target=isPL?'P':'S';
+    h+=`<div class="row" style="margin-top:10px"><button class="btn planSolve" data-k="${target}">${target===k?'Resolver paso a paso':'Resolver en la pestaña '+(target==='P'?'Programación lineal':'Sistemas')}</button></div>`;
+  }
+  if(J.consejo)h+=`<div class="tip"><b>Ojo:</b> ${esc(J.consejo)}</div>`;
+  if(J.aviso)h+=`<div class="tip"><b>Aviso:</b> ${esc(J.aviso)}</div>`;
+  if(h)steps.push({t:sys.length?'Escribimos el sistema completo':'Aviso',h});
+  if(!steps.length){$('#aiStatus'+k).textContent='No ha llegado un planteamiento válido. Pulsa otra vez el botón.';return}
+  const out=$('#aiOut'+k);mountSteps(out,steps);out._plan={J,sys,isPL};
+  out.querySelector('.planSolve')?.addEventListener('click',e=>{
+    const t=e.currentTarget.dataset.k;
+    if(t==='S'){$('#sysIn').value=sys.join('\n');$('#sysCtx').innerHTML=text?`<div class="ctx">${esc(text.slice(0,400))}${text.length>400?'…':''}</div>`:'';showTab('sistemas');solveSys();setTimeout(()=>scrollTo($('#sysSteps')),60)}
+    else{const o=J.objetivo||{};$('#lpSense').value=['max','min','ambos'].includes(o.sentido)?o.sentido:'max';$('#lpObj').value=o.expresion||'';$('#lpCons').value=sys.join('\n');$('#lpCtx').innerHTML=text?`<div class="ctx">${esc(text.slice(0,400))}${text.length>400?'…':''}</div>`:'';showTab('pl');solveLP();setTimeout(()=>scrollTo($('#lpSteps')),60)}
+  });
+}
+async function runAsk(k){
+  const q=$('#ask'+k).value.trim();if(!q||!SAMPLE)return;
+  const out=$('#askOut'+k);const btn=$('#askGo'+k);btn.disabled=true;out.textContent='Pensando…';
+  const prob=k==='S'?'Sistema: '+$('#sysIn').value:'Objetivo: '+$('#lpSense').value+' '+$('#lpObj').value+'\nRestricciones:\n'+$('#lpCons').value;
+  const steps=($(k==='S'?'#sysSteps':'#lpSteps').textContent||'').replace(/\s+/g,' ').slice(0,9000);
+  const prompt=`Eres profesor de Matemáticas Aplicadas a las Ciencias Sociales II (2º Bachillerato, España). Un alumno está viendo esta resolución paso a paso y tiene una duda.\n\n${prob}\n\nResolución que está viendo:\n${steps}\n\nDuda del alumno: ${q}\n\nResponde en español, con frases cortas y claras, como a un alumno de 17 años. Máximo 150 palabras. Texto plano: sin Markdown, sin LaTeX; escribe las ecuaciones así: 2x + 3y = 5. Si la duda no tiene que ver con matemáticas, reconduce amablemente.`;
+  try{await SAMPLE(prompt,{modelTier:'default',cache:false,onText:({text})=>{out.textContent=text}})}
+  catch(e){out.textContent=(e&&e.text)||'';if(e&&e.code!=='cancelled')out.textContent+=(out.textContent?'\n\n':'')+aiErrCopy(e&&e.code)}
+  finally{btn.disabled=false}
+}
+
+/* ===================== PRACTICAR ===================== */
+const BOLETIN=[
+ {id:'b10',n:10,tipo:'sis',titulo:'Festival de cine',enun:'En un festival de cine con tres sesiones se venden tres tipos de entradas: Estándar, Premium y VIP. En la sesión inaugural se vendieron 5 entradas Premium, 20 Estándar y 20 VIP, obteniéndose una recaudación de 1800 €. En la sesión nocturna se vendieron 10 VIP, 10 Estándar y 5 Premium, recaudándose 1000 €. El día de la clausura, el número de entradas Premium superó en 4 al resto de entradas, que fueron 12 VIP y 4 Estándar, arrojando una recaudación de 1560 €. a) Calcule el precio de cada tipo de entrada y la recaudación total. b) Determine el tipo de entrada con el que se obtuvo mayor recaudación y su valor.',
+  pide:'El precio de cada tipo de entrada.',vars:[['x','precio de la entrada Estándar (€)'],['y','precio de la entrada Premium (€)'],['z','precio de la entrada VIP (€)']],
+  frases:[{d:'5 Premium, 20 Estándar y 20 VIP… 1800 €',e:'Cada entrada vendida aporta su precio. Escribimos siempre en el orden x, y, z.',q:'20x + 5y + 20z = 1800'},
+   {d:'10 VIP, 10 Estándar y 5 Premium… 1000 €',e:'',q:'10x + 5y + 10z = 1000'},
+   {d:'las Premium superaron en 4 al resto de entradas, que fueron 12 VIP y 4 Estándar',e:'El resto son 12 + 4 = 16 entradas, así que se vendieron 16 + 4 = 20 Premium. Cuidado: esto es un número de entradas, no una incógnita.',q:'4x + 20y + 12z = 1560'}],
+  sistema:['20x + 5y + 20z = 1800','10x + 5y + 10z = 1000','4x + 20y + 12z = 1560'],
+  nota:'Recaudación total: 1800 + 1000 + 1560 = 4360 €. b) Entradas vendidas de cada tipo: Estándar 34, Premium 30 y VIP 42. Multiplica por su precio: la VIP es la que más recauda (42 · 55 = 2310 €).'},
+ {id:'b11',n:11,tipo:'sis',titulo:'Tabletas A, B y C',enun:'Una tienda de informática dispone de tres tipos de tabletas A, B y C cuyo coste por unidad es de 300, 230 y 420 euros respectivamente. El mes pasado vendió 280 tabletas en total, recaudando por todas ellas 83 650 euros. Calcule el número de tabletas que vendió de cada tipo sabiendo que la cantidad de tabletas vendidas del tipo C se corresponde con una tercera parte de las vendidas conjuntamente de los tipos A y B.',
+  pide:'Cuántas tabletas de cada tipo se vendieron.',vars:[['x','tabletas A'],['y','tabletas B'],['z','tabletas C']],
+  frases:[{d:'vendió 280 tabletas en total',e:'',q:'x + y + z = 280'},
+   {d:'recaudando por todas ellas 83 650 euros',e:'Cada tableta aporta su precio.',q:'300x + 230y + 420z = 83650'},
+   {d:'C es una tercera parte de las de A y B juntas',e:'z = (x + y)/3. Multiplicamos por 3: 3z = x + y, y pasamos todo a la izquierda.',q:'x + y - 3z = 0'}],
+  sistema:['x + y + z = 280','300x + 230y + 420z = 83650','x + y - 3z = 0']},
+ {id:'b12',n:12,tipo:'sis',titulo:'Festival gastronómico',enun:'En un festival gastronómico gaditano se han vendido 120 entradas para un taller de repostería, 50 para una demostración de cocina gourmet y 150 para una cata de vinos. El total recaudado ha sido de 6460 €. El precio de 10 entradas para el taller coincide con el coste de 2 entradas para la cata y 1 para la demostración gourmet. Además, el coste de 2 entradas para el taller y 1 para la cata supera en 6 € al de 2 entradas para la demostración gourmet. ¿Cuánto cuesta la entrada de cada evento?',
+  pide:'El precio de la entrada de cada evento.',vars:[['x','precio del taller de repostería (€)'],['y','precio de la demostración gourmet (€)'],['z','precio de la cata de vinos (€)']],
+  frases:[{d:'120 entradas… 50… 150… 6460 €',e:'',q:'120x + 50y + 150z = 6460'},
+   {d:'10 entradas del taller cuestan lo mismo que 2 de la cata y 1 de la demostración',e:'10x = 2z + y. Pasamos todo a la izquierda.',q:'10x - y - 2z = 0'},
+   {d:'2 del taller y 1 de la cata superan en 6 € a 2 de la demostración',e:'«Supera en 6» significa que lo primero es lo segundo más 6: 2x + z = 2y + 6.',q:'2x - 2y + z = 6'}],
+  sistema:['120x + 50y + 150z = 6460','10x - y - 2z = 0','2x - 2y + z = 6']},
+ {id:'b13',n:13,tipo:'sis',titulo:'Supermercado',enun:'Un cliente de un supermercado ha pagado un total de 156 € por 24 litros de leche, 6 kg de jamón serrano y 12 litros de aceite de oliva. Calcula el precio unitario de cada artículo, sabiendo que 1 litro de aceite cuesta el triple que un litro de leche y que 1 kg de jamón cuesta igual que 4 litros de aceite más 4 litros de leche.',
+  pide:'El precio de un litro de leche, un kilo de jamón y un litro de aceite.',vars:[['x','precio del litro de leche (€)'],['y','precio del kg de jamón (€)'],['z','precio del litro de aceite (€)']],
+  frases:[{d:'156 € por 24 litros de leche, 6 kg de jamón y 12 litros de aceite',e:'',q:'24x + 6y + 12z = 156'},
+   {d:'1 litro de aceite cuesta el triple que un litro de leche',e:'z = 3x.',q:'-3x + z = 0'},
+   {d:'1 kg de jamón cuesta igual que 4 litros de aceite más 4 litros de leche',e:'y = 4z + 4x.',q:'-4x + y - 4z = 0'}],
+  sistema:['24x + 6y + 12z = 156','-3x + z = 0','-4x + y - 4z = 0']},
+ {id:'b14',n:14,tipo:'sis',titulo:'Horas de Ana, Bruno y Carla',enun:'Ana, Bruno y Carla trabajan en un proyecto conjunto. a) Ana ha dedicado un tercio del total de horas del proyecto. La suma de las horas de Ana y Bruno excede en 6 horas a las de Carla, quien a su vez ha trabajado 4 horas más que Bruno. ¿Cuántas horas ha trabajado cada persona? b) Si la empresa paga 25 € por hora y de seguros sociales el 23,60 % del salario, ¿cuánto tiene que abonar la empresa?',
+  pide:'Las horas de cada persona.',vars:[['x','horas de Ana'],['y','horas de Bruno'],['z','horas de Carla']],
+  frases:[{d:'Ana ha dedicado un tercio del total de horas',e:'El total es x + y + z. x = (x + y + z)/3 → 3x = x + y + z → 2x − y − z = 0.',q:'2x - y - z = 0'},
+   {d:'Ana y Bruno exceden en 6 horas a Carla',e:'x + y = z + 6.',q:'x + y - z = 6'},
+   {d:'Carla ha trabajado 4 horas más que Bruno',e:'z = y + 4.',q:'-y + z = 4'}],
+  sistema:['2x - y - z = 0','x + y - z = 6','-y + z = 4'],
+  nota:'b) Total de horas = x + y + z. Salario = 25 · total. La empresa paga el salario más el 23,6 %: multiplica por 1,236.'},
+ {id:'b16',n:16,tipo:'sis',titulo:'Inversor en tres empresas',enun:'Un inversor compró acciones de las empresas A, B y C por un valor de 20 000 €, invirtiendo en C el doble que en A. Al cabo de un año la empresa A le pagó el 6 % de beneficio, la B el 8 % y la C el 10 %. Si el beneficio total fue de 1720 €, ¿qué dinero invirtió en cada empresa?',
+  pide:'Lo invertido en cada empresa.',vars:[['x','euros en A'],['y','euros en B'],['z','euros en C']],
+  frases:[{d:'por un valor de 20 000 €',e:'',q:'x + y + z = 20000'},
+   {d:'invirtiendo en C el doble que en A',e:'z = 2x.',q:'-2x + z = 0'},
+   {d:'6 %, 8 % y 10 %… 1720 €',e:'El 6 % de x es 0,06x.',q:'0.06x + 0.08y + 0.1z = 1720'}],
+  sistema:['x + y + z = 20000','-2x + z = 0','0.06x + 0.08y + 0.1z = 1720']},
+ {id:'b17',n:17,tipo:'sis',titulo:'Cuaderno, rotulador y carpeta',enun:'Después de aplicar un descuento del 10 % a cada uno de los precios originales, se ha pagado por un cuaderno, un rotulador y una carpeta 3,96 euros. El precio del rotulador es la mitad del precio del cuaderno y el precio de la carpeta es igual al precio del rotulador más el 20 % del precio del cuaderno. Calcule el precio original de cada objeto.',
+  pide:'Los precios ORIGINALES (sin descuento).',vars:[['x','precio del cuaderno (€)'],['y','precio del rotulador (€)'],['z','precio de la carpeta (€)']],
+  frases:[{d:'un descuento del 10 %… se ha pagado 3,96 euros',e:'Con un 10 % de descuento se paga el 90 %: 0,9(x + y + z) = 3,96.',q:'0.9x + 0.9y + 0.9z = 3.96'},
+   {d:'el rotulador es la mitad del cuaderno',e:'y = x/2 → 2y = x.',q:'x - 2y = 0'},
+   {d:'la carpeta es el rotulador más el 20 % del cuaderno',e:'z = y + 0,2x.',q:'-0.2x - y + z = 0'}],
+  sistema:['0.9x + 0.9y + 0.9z = 3.96','x - 2y = 0','-0.2x - y + z = 0']},
+ {id:'b18',n:18,tipo:'sis',titulo:'Viajeros de autobús',enun:'Un autobús transporta 90 viajeros con 3 tarifas: 1ª, billete entero, que vale 0,70 €; 2ª, estudiantes, con descuento del 50 %; 3ª, jubilados, con descuento del 80 %. El número de estudiantes es 10 veces el de jubilados y la recaudación total ha sido de 46,76 €. Determina el número de viajeros de cada tarifa.',
+  pide:'Cuántos viajeros hay de cada tarifa.',vars:[['x','viajeros con billete entero'],['y','estudiantes'],['z','jubilados']],
+  frases:[{d:'90 viajeros',e:'',q:'x + y + z = 90'},
+   {d:'estudiantes es 10 veces el de jubilados',e:'y = 10z.',q:'y - 10z = 0'},
+   {d:'0,70 €; 50 % y 80 % de descuento… 46,76 €',e:'Primero calculamos cada precio: estudiantes pagan la mitad, 0,35 €; jubilados pagan el 20 %, 0,14 €.',q:'0.7x + 0.35y + 0.14z = 46.76'}],
+  sistema:['x + y + z = 90','y - 10z = 0','0.7x + 0.35y + 0.14z = 46.76']},
+ {id:'b19',n:19,tipo:'sis',titulo:'Envíos de paquetes',enun:'En una empresa de logística se realizan envíos de paquetes pequeños, medianos y grandes. Durante una semana se procesaron 150 envíos y se generaron ingresos de 2450 euros. El número de envíos medianos es la suma de los grandes y la mitad de los pequeños. Los precios por envío son 10 € los pequeños, 15 € los medianos y 20 € los grandes. ¿Cuántos envíos de cada tipo se realizaron?',
+  pide:'Cuántos envíos de cada tipo.',vars:[['x','paquetes pequeños'],['y','paquetes medianos'],['z','paquetes grandes']],
+  frases:[{d:'150 envíos',e:'',q:'x + y + z = 150'},
+   {d:'2450 euros… 10, 15 y 20 euros',e:'',q:'10x + 15y + 20z = 2450'},
+   {d:'medianos = grandes + la mitad de los pequeños',e:'y = z + x/2. Multiplicando por 2: 2y = 2z + x.',q:'-x + 2y - 2z = 0'}],
+  sistema:['x + y + z = 150','10x + 15y + 20z = 2450','-x + 2y - 2z = 0']},
+ {id:'b20',n:20,tipo:'sis',titulo:'Examen de tres problemas',enun:'En un examen de tres problemas, un alumno obtuvo una calificación total de 7,2. La puntuación del primer problema fue un 40 % más que la del segundo, y la del tercero fue el doble de la suma de las puntuaciones del primero y el segundo. ¿Cuál fue la puntuación de cada problema?',
+  pide:'La nota de cada problema.',vars:[['x','nota del 1º'],['y','nota del 2º'],['z','nota del 3º']],
+  frases:[{d:'calificación total de 7,2',e:'',q:'x + y + z = 7.2'},
+   {d:'el primero fue un 40 % más que el segundo',e:'Un 40 % más es multiplicar por 1,4: x = 1,4y.',q:'x - 1.4y = 0'},
+   {d:'el tercero fue el doble de la suma del primero y el segundo',e:'z = 2(x + y) = 2x + 2y.',q:'-2x - 2y + z = 0'}],
+  sistema:['x + y + z = 7.2','x - 1.4y = 0','-2x - 2y + z = 0']},
+ {id:'b21',n:21,tipo:'sis',titulo:'Billetes del cajero',enun:'Un cajero solo dispone de billetes de 10, 20 y 50 euros. Hemos sacado 290 euros y el cajero nos ha entregado exactamente 8 billetes. El número de billetes de 10 euros es el doble del de 20 euros. ¿Cuántos billetes de cada tipo nos ha entregado?',
+  pide:'Cuántos billetes de cada tipo.',vars:[['x','billetes de 10 €'],['y','billetes de 20 €'],['z','billetes de 50 €']],
+  frases:[{d:'exactamente 8 billetes',e:'',q:'x + y + z = 8'},
+   {d:'290 euros',e:'Cada billete aporta su valor.',q:'10x + 20y + 50z = 290'},
+   {d:'billetes de 10 es el doble de los de 20',e:'x = 2y.',q:'x - 2y = 0'}],
+  sistema:['x + y + z = 8','10x + 20y + 50z = 290','x - 2y = 0']},
+ {id:'b22',n:22,tipo:'sis',titulo:'Tomates, carne y gambas',enun:'El precio del kilo de tomates es la mitad que el del kilo de carne. El precio del kilo de gambas es el doble que el de carne. Si pagamos 18 euros por 3 kilos de tomates, 1 kilo de carne y 250 gramos de gambas, ¿cuánto pagaríamos por 2 kilos de carne, 1 kilo de tomates y 500 gramos de gambas?',
+  pide:'Lo que costaría la segunda compra. Para eso necesitamos antes el precio de cada kilo.',vars:[['x','precio del kg de tomates (€)'],['y','precio del kg de carne (€)'],['z','precio del kg de gambas (€)']],
+  frases:[{d:'tomates es la mitad que la carne',e:'x = y/2 → 2x = y.',q:'2x - y = 0'},
+   {d:'gambas es el doble que la carne',e:'z = 2y.',q:'-2y + z = 0'},
+   {d:'18 euros por 3 kg de tomates, 1 kg de carne y 250 g de gambas',e:'¡Unidades! 250 g = 0,25 kg.',q:'3x + y + 0.25z = 18'}],
+  sistema:['2x - y = 0','-2y + z = 0','3x + y + 0.25z = 18'],nota:'Con los precios, calcula 2y + x + 0,5z.'},
+ {id:'b23',n:23,tipo:'sis',titulo:'Monedero (2, 5 y 10 céntimos)',enun:'Un monedero contiene 1 euro en monedas de 2, 5 y 10 céntimos; en total hay 22 monedas. El número de monedas de 5 y 10 céntimos juntas excede en 2 unidades al número de monedas de 2 céntimos. Obtenga el número de monedas de cada tipo.',
+  pide:'Cuántas monedas hay de cada tipo.',vars:[['x','monedas de 2 cént.'],['y','monedas de 5 cént.'],['z','monedas de 10 cént.']],
+  frases:[{d:'en total hay 22 monedas',e:'',q:'x + y + z = 22'},
+   {d:'1 euro en monedas de 2, 5 y 10 céntimos',e:'Trabajamos en céntimos para no usar decimales: 1 € = 100 céntimos.',q:'2x + 5y + 10z = 100'},
+   {d:'las de 5 y 10 juntas exceden en 2 a las de 2',e:'y + z = x + 2.',q:'-x + y + z = 2'}],
+  sistema:['x + y + z = 22','2x + 5y + 10z = 100','-x + y + z = 2']},
+ {id:'b24',n:24,tipo:'sis',titulo:'Lorena invierte',enun:'Lorena invierte 20 000 euros en tres productos financieros A, B y C. Invierte en C lo mismo que en A y B juntos. Pasado un año, obtiene un beneficio del 4 % en A, un 8 % en B y un 10 % en C. Si el beneficio total fue de 1640 euros, ¿cuánto dinero invirtió en cada producto?',
+  pide:'Lo invertido en cada producto.',vars:[['x','euros en A'],['y','euros en B'],['z','euros en C']],
+  frases:[{d:'invierte 20 000 euros',e:'',q:'x + y + z = 20000'},
+   {d:'en C lo mismo que en A y B juntos',e:'z = x + y.',q:'x + y - z = 0'},
+   {d:'4 %, 8 % y 10 %… 1640 euros',e:'',q:'0.04x + 0.08y + 0.1z = 1640'}],
+  sistema:['x + y + z = 20000','x + y - z = 0','0.04x + 0.08y + 0.1z = 1640']},
+ {id:'b25',n:25,tipo:'sis',titulo:'Monedero (10, 20 y 50 céntimos)',enun:'Un monedero contiene 3 euros en monedas de 10, 20 y 50 céntimos. Hay 15 monedas en total. El número de monedas de 20 y 50 céntimos juntas excede en 3 unidades al número de monedas de 10 céntimos. Obtenga el número de monedas de cada tipo.',
+  pide:'Cuántas monedas hay de cada tipo.',vars:[['x','monedas de 10 cént.'],['y','monedas de 20 cént.'],['z','monedas de 50 cént.']],
+  frases:[{d:'15 monedas en total',e:'',q:'x + y + z = 15'},
+   {d:'3 euros',e:'En céntimos: 300.',q:'10x + 20y + 50z = 300'},
+   {d:'las de 20 y 50 juntas exceden en 3 a las de 10',e:'y + z = x + 3.',q:'-x + y + z = 3'}],
+  sistema:['x + y + z = 15','10x + 20y + 50z = 300','-x + y + z = 3']},
+ {id:'b26',n:26,tipo:'sis',titulo:'Empleados de una empresa',enun:'Los empleados de una empresa se dividen en mozos de almacén, comerciales y administrativos. Los mozos son el triple que los comerciales. Entre comerciales y administrativos hay 25 empleados. Si a la suma de mozos y comerciales añadimos 5 tenemos el triple de los administrativos. ¿Cuántos empleados de cada tipo hay?',
+  pide:'Cuántos empleados de cada tipo.',vars:[['x','mozos de almacén'],['y','comerciales'],['z','administrativos']],
+  frases:[{d:'los mozos son el triple que los comerciales',e:'x = 3y.',q:'x - 3y = 0'},
+   {d:'entre comerciales y administrativos hay 25',e:'',q:'y + z = 25'},
+   {d:'mozos + comerciales + 5 es el triple de los administrativos',e:'x + y + 5 = 3z.',q:'x + y - 3z = -5'}],
+  sistema:['x - 3y = 0','y + z = 25','x + y - 3z = -5']},
+ {id:'b27',n:27,tipo:'sis',titulo:'Listones de madera',enun:'Un comercio de bricolaje vende listones de 0,90 m, 1,50 m y 2,40 m, cuyos precios son 4 €, 6 € y 10 €. Un cliente ha comprado 19 listones, con una longitud total de 30 m, que le han costado 126 €. Plantee el sistema para saber cuántos listones de cada longitud ha comprado.',
+  pide:'Cuántos listones de cada longitud.',vars:[['x','listones de 0,90 m'],['y','listones de 1,50 m'],['z','listones de 2,40 m']],
+  frases:[{d:'19 listones',e:'',q:'x + y + z = 19'},
+   {d:'longitud total de 30 m',e:'Cada listón aporta su longitud.',q:'0.9x + 1.5y + 2.4z = 30'},
+   {d:'le han costado 126 €',e:'',q:'4x + 6y + 10z = 126'}],
+  sistema:['x + y + z = 19','0.9x + 1.5y + 2.4z = 30','4x + 6y + 10z = 126']},
+ {id:'b28',n:28,tipo:'sis',titulo:'Latas de tomate',enun:'Una tienda tiene latas de tomate de tres fabricantes: A envasa en latas de 250 g, B en latas de 500 g y C en latas de 1 kg. Las latas se venden a 1 €, 1,80 € y 3,30 €. Compramos 20 latas, que pesan 10 kg y cuestan 35,60 €. ¿Cuántas latas de cada fabricante hemos comprado?',
+  pide:'Cuántas latas de cada fabricante.',vars:[['x','latas de A'],['y','latas de B'],['z','latas de C']],
+  frases:[{d:'20 latas',e:'',q:'x + y + z = 20'},
+   {d:'pesan 10 kg',e:'Todo en kg: 250 g = 0,25 kg y 500 g = 0,5 kg.',q:'0.25x + 0.5y + z = 10'},
+   {d:'cuestan 35,60 €',e:'',q:'x + 1.8y + 3.3z = 35.6'}],
+  sistema:['x + y + z = 20','0.25x + 0.5y + z = 10','x + 1.8y + 3.3z = 35.6']},
+ {id:'b29',n:29,tipo:'sis',titulo:'Taller de carpintería',enun:'Un taller de carpintería ha vendido 15 muebles, entre sillas, sillones y butacas, por 1600 €. Cobra 50 € por silla, 150 € por sillón y 200 € por butaca, y el número de butacas es la cuarta parte del número que suman los demás muebles. ¿Cuántos muebles de cada clase ha vendido?',
+  pide:'Cuántos muebles de cada clase.',vars:[['x','sillas'],['y','sillones'],['z','butacas']],
+  frases:[{d:'15 muebles',e:'',q:'x + y + z = 15'},
+   {d:'por 1600 €… 50, 150 y 200 €',e:'',q:'50x + 150y + 200z = 1600'},
+   {d:'las butacas son la cuarta parte de los demás',e:'z = (x + y)/4 → 4z = x + y.',q:'x + y - 4z = 0'}],
+  sistema:['x + y + z = 15','50x + 150y + 200z = 1600','x + y - 4z = 0']},
+ {id:'b30',n:30,tipo:'sis',titulo:'Jersey, camisa y pantalón',enun:'Juan ha gastado 80 € en un jersey, una camisa y un pantalón. El precio del jersey es un tercio del precio de la camisa y el pantalón juntos. a) ¿Es posible determinar de forma única el precio del jersey? ¿Y el de la camisa? b) En rebajas habría gastado 57 €, pues el jersey, la camisa y el pantalón tenían un descuento del 30 %, del 40 % y del 20 %. Calcula el precio de cada prenda antes de las rebajas.',
+  pide:'a) Si se pueden saber los precios con dos datos. b) Los precios con el dato de las rebajas.',vars:[['x','precio del jersey (€)'],['y','precio de la camisa (€)'],['z','precio del pantalón (€)']],
+  frases:[{d:'ha gastado 80 €',e:'',q:'x + y + z = 80'},
+   {d:'el jersey es un tercio de la camisa y el pantalón juntos',e:'x = (y + z)/3 → 3x = y + z.',q:'3x - y - z = 0'},
+   {d:'apartado a)',e:'Con estas dos ecuaciones el sistema es compatible indeterminado. Pero sumando ambas: 4x = 80, así que el jersey sí se sabe (20 €). La camisa y el pantalón no: solo sabemos que suman 60.',q:''},
+   {d:'descuentos del 30 %, 40 % y 20 %… 57 €',e:'Con un 30 % de descuento se paga el 70 %: 0,7x. Igual 0,6y y 0,8z.',q:'0.7x + 0.6y + 0.8z = 57'}],
+  sistema:['x + y + z = 80','3x - y - z = 0','0.7x + 0.6y + 0.8z = 57']},
+ {id:'b31',n:31,tipo:'sis',titulo:'Número de tres cifras',enun:'Determina un número natural de tres cifras sabiendo que la suma de sus dígitos es 9, que la diferencia de dicho número con el que se obtiene al intercambiar la cifra de las centenas por las de las unidades es 198, y que la suma entre ambos números es 828.',
+  pide:'Un número de tres cifras: las incógnitas son sus cifras.',vars:[['x','cifra de las centenas'],['y','cifra de las decenas'],['z','cifra de las unidades']],
+  frases:[{d:'la suma de sus dígitos es 9',e:'',q:'x + y + z = 9'},
+   {d:'la diferencia con el número intercambiado es 198',e:'El número es 100x + 10y + z y el intercambiado 100z + 10y + x. Restando: 99x − 99z = 198. Dividimos entre 99.',q:'x - z = 2'},
+   {d:'la suma de ambos es 828',e:'(100x + 10y + z) + (100z + 10y + x) = 101x + 20y + 101z = 828.',q:'101x + 20y + 101z = 828'}],
+  sistema:['x + y + z = 9','x - z = 2','101x + 20y + 101z = 828']},
+ {id:'b32',n:32,tipo:'sis',titulo:'Coches de tres colores',enun:'Una marca ha vendido coches blancos, negros y rojos. El 60 % de los blancos más el 50 % de los negros representan el 30 % de los coches vendidos. El 20 % de los blancos junto con el 60 % de los negros y el 60 % de los rojos representan la mitad de los coches vendidos. Se han vendido 100 coches negros más que blancos. Determina el número de coches de cada color.',
+  pide:'Cuántos coches de cada color.',vars:[['x','coches blancos'],['y','coches negros'],['z','coches rojos']],
+  frases:[{d:'el 60 % de los blancos más el 50 % de los negros es el 30 % del total',e:'0,6x + 0,5y = 0,3(x + y + z). Quitamos el paréntesis y pasamos todo a la izquierda: 0,3x + 0,2y − 0,3z = 0. Multiplicando por 10: 3x + 2y − 3z = 0.',q:'3x + 2y - 3z = 0'},
+   {d:'20 % blancos + 60 % negros + 60 % rojos es la mitad del total',e:'0,2x + 0,6y + 0,6z = 0,5(x + y + z) → −0,3x + 0,1y + 0,1z = 0. Por 10: −3x + y + z = 0.',q:'-3x + y + z = 0'},
+   {d:'100 negros más que blancos',e:'y = x + 100.',q:'-x + y = 100'}],
+  sistema:['3x + 2y - 3z = 0','-3x + y + z = 0','-x + y = 100']},
+ {id:'b33',n:33,tipo:'sis',titulo:'Cociente y resto',enun:'La suma de tres números naturales es 113; al dividir el mayor entre el menor se obtiene de cociente 6 y resto 4, y al dividir el mayor entre el intermedio se obtiene de cociente 2 y resto 6. Halle dichos números.',
+  pide:'Los tres números.',vars:[['x','el mayor'],['y','el intermedio'],['z','el menor']],
+  frases:[{d:'la suma es 113',e:'',q:'x + y + z = 113'},
+   {d:'mayor entre menor: cociente 6 y resto 4',e:'Dividendo = divisor · cociente + resto: x = 6z + 4.',q:'x - 6z = 4'},
+   {d:'mayor entre intermedio: cociente 2 y resto 6',e:'x = 2y + 6.',q:'x - 2y = 6'}],
+  sistema:['x + y + z = 113','x - 6z = 4','x - 2y = 6']},
+ {id:'b34',n:34,tipo:'sis',titulo:'Series de streaming',enun:'Una plataforma tiene series de animación, ciencia ficción y comedia. El 30 % de las de animación más el 50 % de las de ciencia ficción coincide con el 20 % del total. El 25 % de las de animación más el 50 % de las de ciencia ficción más el 60 % de las de comedia representan la mitad del total. Hay 100 series menos de animación que de ciencia ficción. Halla el número de series de cada género.',
+  pide:'Cuántas series de cada género.',vars:[['x','series de animación'],['y','series de ciencia ficción'],['z','series de comedia']],
+  frases:[{d:'30 % animación + 50 % ciencia ficción = 20 % del total',e:'0,3x + 0,5y = 0,2(x + y + z) → 0,1x + 0,3y − 0,2z = 0. Por 10: x + 3y − 2z = 0.',q:'x + 3y - 2z = 0'},
+   {d:'25 % + 50 % + 60 % = la mitad del total',e:'0,25x + 0,5y + 0,6z = 0,5(x + y + z) → −0,25x + 0,1z = 0. Por 20: −5x + 2z = 0.',q:'-5x + 2z = 0'},
+   {d:'100 series menos de animación que de ciencia ficción',e:'x = y − 100.',q:'x - y = -100'}],
+  sistema:['x + 3y - 2z = 0','-5x + 2z = 0','x - y = -100']},
+ {id:'b35',n:35,tipo:'sis',titulo:'Bebidas con impuestos',enun:'El dueño de un bar ha comprado refrescos, cerveza y vino por 500 € sin impuestos. El gasto en vino es 60 € menos que los gastos en refrescos y cerveza conjuntamente, sin impuestos. Los impuestos son el 6 %, el 12 % y el 30 %, respectivamente, y el importe total con impuestos ha sido 592,40 €. Calcula el importe, incluyendo impuestos, invertido en cada bebida.',
+  pide:'Lo pagado por cada bebida CON impuestos. Usamos como incógnitas los importes sin impuestos.',vars:[['x','refrescos sin impuestos (€)'],['y','cerveza sin impuestos (€)'],['z','vino sin impuestos (€)']],
+  frases:[{d:'500 € sin impuestos',e:'',q:'x + y + z = 500'},
+   {d:'el vino es 60 € menos que refrescos y cerveza juntos',e:'z = x + y − 60.',q:'x + y - z = 60'},
+   {d:'6 %, 12 % y 30 %… 592,40 €',e:'Con un 6 % de impuesto se paga el 106 %: 1,06x.',q:'1.06x + 1.12y + 1.3z = 592.4'}],
+  sistema:['x + y + z = 500','x + y - z = 60','1.06x + 1.12y + 1.3z = 592.4'],nota:'Al final multiplica: 1,06x, 1,12y y 1,30z son los importes con impuestos.'},
+
+ {id:'b44',n:44,tipo:'pl',titulo:'Lechugas iceberg y romana',enun:'Un agricultor cultiva lechugas iceberg y romana. La cantidad de iceberg debe ser al menos la mitad de la de romana, pero no puede superar las 1500 unidades. Además, deben cultivarse en total entre 900 y 2400 lechugas. La iceberg requiere 15 litros de agua por unidad y la romana 18 litros. ¿Cuántas unidades de cada tipo deben cultivarse para minimizar el consumo de agua?',
+  pide:'Cuántas lechugas de cada tipo para gastar la menor agua posible.',vars:[['x','lechugas iceberg'],['y','lechugas romanas']],
+  frases:[{d:'iceberg al menos la mitad de la de romana',e:'x ≥ y/2 → 2x ≥ y → 2x − y ≥ 0.',q:'2x - y >= 0'},
+   {d:'no puede superar las 1500 unidades',e:'Se refiere a la iceberg.',q:'x <= 1500'},
+   {d:'en total entre 900',e:'«Entre» da dos restricciones.',q:'x + y >= 900'},{d:'y 2400 lechugas',e:'',q:'x + y <= 2400'},
+   {d:'(cantidades no negativas)',e:'',q:'x, y >= 0'}],
+  obj:{s:'min',q:'15x + 18y',d:'15 litros… 18 litros',e:'Agua total: 15x + 18y. Hay que minimizarla.'},
+  sistema:['2x - y >= 0','x <= 1500','x + y >= 900','x + y <= 2400','x, y >= 0']},
+ {id:'b45',n:45,tipo:'pl',titulo:'Manuel reparte folletos',enun:'La empresa A paga a Manuel 10 céntimos por paquete repartido y la empresa B 15 céntimos. Manuel lleva una bolsa para A en la que caben 120 paquetes y otra para B en la que caben 100. Cada día puede repartir 160 paquetes como máximo. ¿Cuántos le conviene repartir de cada clase para que su beneficio sea máximo? ¿Cuál es su beneficio?',
+  pide:'Cuántos paquetes de cada empresa repartir.',vars:[['x','paquetes de A'],['y','paquetes de B']],
+  frases:[{d:'caben 120 paquetes',e:'',q:'x <= 120'},{d:'caben 100 paquetes',e:'',q:'y <= 100'},
+   {d:'160 paquetes como máximo',e:'',q:'x + y <= 160'},{d:'(no negativos)',e:'',q:'x, y >= 0'}],
+  obj:{s:'max',q:'0.1x + 0.15y',d:'10 céntimos… 15 céntimos',e:'Beneficio en euros: 0,10x + 0,15y (o en céntimos 10x + 15y).'},
+  sistema:['x <= 120','y <= 100','x + y <= 160','x, y >= 0']},
+ {id:'b46',n:46,tipo:'pl',titulo:'Tableros DM y aglomerado',enun:'Para producir 1 m² de tablero DM se consumen 10 m³ de madera triturada y se gana 10 €. Para 1 m² de aglomerado se consumen 30 m³ y se gana 20 €. Se pueden fabricar como máximo 12 m² de DM y 18 m² de aglomerado al día, la producción conjunta está limitada a 26 m² y hay 600 m³ de madera al día. ¿Cuántos m² de cada tipo deben producirse para maximizar el beneficio?',
+  pide:'Los m² de cada tablero.',vars:[['x','m² de DM'],['y','m² de aglomerado']],
+  frases:[{d:'como máximo 12 m² de DM',e:'',q:'x <= 12'},{d:'y 18 m² de aglomerado',e:'',q:'y <= 18'},
+   {d:'producción conjunta 26 m²',e:'',q:'x + y <= 26'},{d:'600 m³ de madera',e:'10 m³ por m² de DM y 30 por m² de aglomerado.',q:'10x + 30y <= 600'},{d:'(no negativos)',e:'',q:'x, y >= 0'}],
+  obj:{s:'max',q:'10x + 20y',d:'beneficio de 10 €… 20 €',e:''},
+  sistema:['x <= 12','y <= 18','x + y <= 26','10x + 30y <= 600','x, y >= 0']},
+ {id:'b47',n:47,tipo:'pl',titulo:'Equipos de desarrolladores',enun:'Hay 150 desarrolladores de Javascript y 120 de Python. El primer tipo de equipo tiene 2 de Javascript y 3 de Python, y el segundo 6 de Javascript y 4 de Python. Se requieren al menos 6 equipos del segundo tipo. ¿Cuántos equipos de cada tipo se podrán formar para tener el mayor número de equipos posible? ¿Cuántos desarrolladores se usarán?',
+  pide:'Cuántos equipos de cada tipo.',vars:[['x','equipos del primer tipo'],['y','equipos del segundo tipo']],
+  frases:[{d:'150 de Javascript',e:'2 por equipo del tipo 1 y 6 por equipo del tipo 2.',q:'2x + 6y <= 150'},
+   {d:'120 de Python',e:'',q:'3x + 4y <= 120'},{d:'al menos 6 equipos del segundo tipo',e:'',q:'y >= 6'},{d:'(no negativos)',e:'',q:'x >= 0'}],
+  obj:{s:'max',q:'x + y',d:'el mayor número de equipos',e:'Número total de equipos: x + y.'},
+  sistema:['2x + 6y <= 150','3x + 4y <= 120','y >= 6','x >= 0']},
+ {id:'b48',n:48,tipo:'pl',titulo:'Fertilizantes',enun:'Una agricultora necesita como mínimo 24 g de una sustancia A y 21 g de una sustancia B. Hay dos fertilizantes: uno con 2 g de A y 7 g de B, que cuesta 16 €, y otro con 6 g de A y 3 g de B, que cuesta 20 €. ¿Qué cantidad ha de comprar de cada uno para que el coste sea mínimo?',
+  pide:'Cuántas unidades de cada fertilizante.',vars:[['x','unidades del primer fertilizante'],['y','unidades del segundo']],
+  frases:[{d:'como mínimo 24 g de A',e:'',q:'2x + 6y >= 24'},{d:'y 21 g de B',e:'',q:'7x + 3y >= 21'},{d:'(no negativos)',e:'',q:'x, y >= 0'}],
+  obj:{s:'min',q:'16x + 20y',d:'16 €… 20 €',e:'Coste total.'},
+  sistema:['2x + 6y >= 24','7x + 3y >= 21','x, y >= 0']},
+ {id:'b49',n:49,tipo:'pl',titulo:'Bidones de pintura',enun:'Un almacén tiene capacidad para 160 bidones. Deben mantenerse al menos 60 bidones, siendo como mínimo 20 de pintura interior. El número de bidones de exterior no podrá ser inferior al de interior. Almacenar un bidón de interior cuesta 1,50 € al día y uno de exterior 0,90 €. ¿Cuántos bidones de cada tipo deben almacenarse para que el gasto sea mínimo?',
+  pide:'Cuántos bidones de cada tipo.',vars:[['x','bidones de interior'],['y','bidones de exterior']],
+  frases:[{d:'capacidad máxima de 160',e:'',q:'x + y <= 160'},{d:'al menos 60 bidones',e:'',q:'x + y >= 60'},
+   {d:'como mínimo 20 de interior',e:'',q:'x >= 20'},{d:'exterior no inferior al de interior',e:'«No inferior» es ≥: y ≥ x.',q:'-x + y >= 0'}],
+  obj:{s:'min',q:'1.5x + 0.9y',d:'1,50 €… 0,90 €',e:'Gasto diario.'},
+  sistema:['x + y <= 160','x + y >= 60','x >= 20','-x + y >= 0']},
+ {id:'b50',n:50,tipo:'pl',titulo:'Centros florales y candelabros',enun:'En el salón se montan entre 12 y 40 mesas. En cada mesa solo se puede poner un centro floral o un candelabro, y el número de candelabros no puede ser superior a una tercera parte de los centros florales. Cada centro floral cuesta 32 € y cada candelabro 35 €. ¿Cuántos artículos de cada tipo debe seleccionar para maximizar los ingresos?',
+  pide:'Cuántos centros y candelabros.',vars:[['x','centros florales'],['y','candelabros']],
+  frases:[{d:'entre 12',e:'Cada mesa lleva un artículo: el total de artículos es el número de mesas.',q:'x + y >= 12'},{d:'y 40 mesas',e:'',q:'x + y <= 40'},
+   {d:'candelabros no superior a un tercio de los centros',e:'y ≤ x/3 → 3y ≤ x → x − 3y ≥ 0.',q:'x - 3y >= 0'},{d:'(no negativos)',e:'',q:'x, y >= 0'}],
+  obj:{s:'max',q:'32x + 35y',d:'32 €… 35 €',e:'Ingresos.'},
+  sistema:['x + y >= 12','x + y <= 40','x - 3y >= 0','x, y >= 0']},
+ {id:'b51',n:51,tipo:'pl',titulo:'Olivar de secano y regadío',enun:'Un agricultor quiere mantener un mínimo de 20 hectáreas de secano. Dispone al año de 30 000 m³ de agua, 5500 kg de abono y 3000 kg de fitosanitarios. Cada hectárea de regadío necesita 1500 m³ de agua, 110 kg de abono y 80 kg de fitosanitarios; cada hectárea de secano, 100 kg de abono y 50 kg de fitosanitarios. La producción anual por hectárea es de 5000 kg en secano y 10 000 kg en regadío. ¿Cuántas hectáreas de cada tipo debe cultivar para maximizar la producción?',
+  pide:'Las hectáreas de secano y de regadío.',vars:[['x','hectáreas de secano'],['y','hectáreas de regadío']],
+  frases:[{d:'un mínimo de 20 hectáreas de secano',e:'',q:'x >= 20'},
+   {d:'30 000 m³ de agua',e:'Solo el regadío gasta agua.',q:'1500y <= 30000'},
+   {d:'5500 kg de abono',e:'',q:'100x + 110y <= 5500'},{d:'3000 kg de fitosanitarios',e:'',q:'50x + 80y <= 3000'},{d:'(no negativos)',e:'',q:'y >= 0'}],
+  obj:{s:'max',q:'5000x + 10000y',d:'5000 kg… 10 000 kg',e:'Producción total.'},
+  sistema:['x >= 20','1500y <= 30000','100x + 110y <= 5500','50x + 80y <= 3000','y >= 0']},
+ {id:'b52',n:52,tipo:'pl',titulo:'Pulseras de oro, platino y plata',enun:'Un joyero dispone de 50 g de oro, 40 g de platino y 25 g de plata. Las pulseras A necesitan 1 g de oro y 2 g de platino; las B, 2 g de oro, 1 g de platino y 1 g de plata. A se vende por 150 € y B por 200 €. ¿Cuántas pulseras de cada tipo debe fabricar para maximizar los ingresos? ¿Qué cantidad de cada metal sobrará?',
+  pide:'Cuántas pulseras de cada tipo.',vars:[['x','pulseras A'],['y','pulseras B']],
+  frases:[{d:'50 g de oro',e:'',q:'x + 2y <= 50'},{d:'40 g de platino',e:'',q:'2x + y <= 40'},{d:'25 g de plata',e:'Solo B usa plata.',q:'y <= 25'},{d:'(no negativos)',e:'',q:'x, y >= 0'}],
+  obj:{s:'max',q:'150x + 200y',d:'150 €… 200 €',e:'Ingresos.'},
+  sistema:['x + 2y <= 50','2x + y <= 40','y <= 25','x, y >= 0'],nota:'Para lo que sobra, sustituye la solución en cada restricción y réstalo de lo disponible.'},
+ {id:'b53',n:53,tipo:'pl',titulo:'Anuncios de radio y televisión',enun:'Una empresa tiene 78 000 € para anuncios. Uno de radio cuesta 2400 € y uno de televisión 3600 €. La diferencia entre el número de anuncios de cada tipo no puede ser mayor que 10, y se deben emitir al menos 10 anuncios. Un anuncio de radio llega a 34 000 personas y uno de televisión a 72 000. ¿Cuántos de cada tipo debe contratar para que la audiencia sea máxima?',
+  pide:'Cuántos anuncios de cada tipo.',vars:[['x','anuncios de radio'],['y','anuncios de televisión']],
+  frases:[{d:'presupuesto de 78 000 €',e:'',q:'2400x + 3600y <= 78000'},
+   {d:'la diferencia no mayor que 10',e:'Puede ganar cualquiera de los dos, así que salen dos restricciones: x − y ≤ 10 y y − x ≤ 10.',q:'x - y <= 10'},{d:'(la otra diferencia)',e:'',q:'-x + y <= 10'},
+   {d:'al menos 10 anuncios',e:'',q:'x + y >= 10'},{d:'(no negativos)',e:'',q:'x, y >= 0'}],
+  obj:{s:'max',q:'34000x + 72000y',d:'34 000… 72 000 personas',e:'Audiencia.'},
+  sistema:['2400x + 3600y <= 78000','x - y <= 10','-x + y <= 10','x + y >= 10','x, y >= 0']},
+ {id:'b54',n:54,tipo:'pl',titulo:'Pañuelos y corbatas',enun:'Un taller tiene 60 horas semanales. Cada pañuelo supone 2 horas y un beneficio de 4 €; cada corbata, 3 horas y 6 €. El número de corbatas más el doble del de pañuelos debe ser como mínimo 28. ¿Cuántas unidades de cada tipo debe confeccionar para obtener el máximo beneficio?',
+  pide:'Cuántos pañuelos y corbatas.',vars:[['x','pañuelos'],['y','corbatas']],
+  frases:[{d:'60 horas',e:'',q:'2x + 3y <= 60'},{d:'corbatas más el doble de pañuelos, como mínimo 28',e:'',q:'2x + y >= 28'},{d:'(no negativos)',e:'',q:'x, y >= 0'}],
+  obj:{s:'max',q:'4x + 6y',d:'4 €… 6 €',e:'Beneficio. Fíjate: 4x + 6y es el doble de 2x + 3y.'},
+  sistema:['2x + 3y <= 60','2x + y >= 28','x, y >= 0']},
+ {id:'b55',n:55,tipo:'pl',titulo:'Horas extra en dos cadenas',enun:'En una hora extra, la cadena A prepara 15 portátiles y 6 tablets, y la B 10 portátiles y 10 tablets. La hora extra cuesta 300 € en A y 600 € en B. B puede hacer como máximo el triple de horas que A. Hay que producir como máximo 360 portátiles y al menos 216 tablets. ¿Qué planificación minimiza los costes?',
+  pide:'Horas extra de cada cadena.',vars:[['x','horas extra de A'],['y','horas extra de B']],
+  frases:[{d:'B como máximo el triple que A',e:'y ≤ 3x.',q:'-3x + y <= 0'},{d:'como máximo 360 portátiles',e:'',q:'15x + 10y <= 360'},
+   {d:'al menos 216 tablets',e:'',q:'6x + 10y >= 216'},{d:'(no negativos)',e:'',q:'x, y >= 0'}],
+  obj:{s:'min',q:'300x + 600y',d:'300 €… 600 €',e:'Coste.'},
+  sistema:['-3x + y <= 0','15x + 10y <= 360','6x + 10y >= 216','x, y >= 0']},
+ {id:'b56',n:56,tipo:'pl',titulo:'Microbuses',enun:'Hay que llevar a 160 personas. La empresa tiene microbuses de 12 plazas (96 €) y de 16 plazas (110 €). Solo dispone de 12 conductores y el número de microbuses grandes no puede superar la mitad del de pequeños. ¿Cuántos microbuses de cada tipo deben contratarse para minimizar el coste?',
+  pide:'Cuántos microbuses de cada tipo.',vars:[['x','microbuses de 12 plazas'],['y','microbuses de 16 plazas']],
+  frases:[{d:'160 integrantes',e:'Las plazas deben llegar para todos.',q:'12x + 16y >= 160'},{d:'12 conductores',e:'Un conductor por microbús.',q:'x + y <= 12'},
+   {d:'grandes no superan la mitad de los pequeños',e:'y ≤ x/2 → 2y ≤ x.',q:'x - 2y >= 0'},{d:'(no negativos)',e:'',q:'x, y >= 0'}],
+  obj:{s:'min',q:'96x + 110y',d:'96 €… 110 €',e:'Coste.'},
+  sistema:['12x + 16y >= 160','x + y <= 12','x - 2y >= 0','x, y >= 0'],nota:'Si el vértice óptimo no sale entero, hay que buscar los puntos enteros cercanos dentro de la región.'},
+ {id:'b57',n:57,tipo:'pl',titulo:'Viajes de dos barcos',enun:'El barco B₁ no puede hacer más de 14 viajes y debe hacer tantos o más que B₂. Entre los dos deben hacer al menos 10 viajes y como mucho 24. El beneficio es de 15 000 € por viaje de B₁ y 17 000 € por viaje de B₂. ¿Cuántos viajes debe hacer cada barco para maximizar el beneficio?',
+  pide:'Viajes de cada barco.',vars:[['x','viajes de B₁'],['y','viajes de B₂']],
+  frases:[{d:'B₁ no más de 14',e:'',q:'x <= 14'},{d:'B₁ tantos o más que B₂',e:'x ≥ y.',q:'x - y >= 0'},
+   {d:'al menos 10',e:'',q:'x + y >= 10'},{d:'como mucho 24',e:'',q:'x + y <= 24'},{d:'(no negativos)',e:'',q:'y >= 0'}],
+  obj:{s:'max',q:'15000x + 17000y',d:'15 000 €… 17 000 €',e:''},
+  sistema:['x <= 14','x - y >= 0','x + y >= 10','x + y <= 24','y >= 0']},
+ {id:'b58',n:58,tipo:'pl',titulo:'Aforo de un campo de fútbol',enun:'El aforo es de 10 000 personas. Como máximo se venden 3000 entradas a visitantes, y por cada visitante debe haber como mínimo dos locales y como máximo cuatro. La entrada cuesta 50 €, pero el local tiene un 20 % de descuento. ¿Cuántos locales y visitantes deben asistir para obtener el mayor importe?',
+  pide:'Cuántos aficionados locales y visitantes.',vars:[['x','aficionados locales'],['y','aficionados visitantes']],
+  frases:[{d:'aforo de 10 000',e:'',q:'x + y <= 10000'},{d:'como máximo 3000 visitantes',e:'',q:'y <= 3000'},
+   {d:'por cada visitante, como mínimo dos locales',e:'x ≥ 2y.',q:'x - 2y >= 0'},{d:'y como máximo cuatro',e:'x ≤ 4y.',q:'x - 4y <= 0'},{d:'(no negativos)',e:'',q:'y >= 0'}],
+  obj:{s:'max',q:'40x + 50y',d:'50 €, el local con un 20 % de descuento',e:'El local paga el 80 % de 50: 40 €.'},
+  sistema:['x + y <= 10000','y <= 3000','x - 2y >= 0','x - 4y <= 0','y >= 0']},
+ {id:'b59',n:59,tipo:'pl',titulo:'Pinturas Júpiter y Minerva',enun:'Hay 1000 kg de pintura verde, 800 kg de morada y 300 kg de naranja. Un bote Júpiter necesita 10 kg de verde, 5 de morada y 5 de naranja; un bote Minerva, 5 kg de verde y 5 de morada. Júpiter deja 30 € de beneficio y Minerva 20 €. ¿Cuántos botes de cada tipo para un beneficio máximo?',
+  pide:'Cuántos botes de cada tipo.',vars:[['x','botes Júpiter'],['y','botes Minerva']],
+  frases:[{d:'1000 kg de verde',e:'',q:'10x + 5y <= 1000'},{d:'800 kg de morada',e:'',q:'5x + 5y <= 800'},{d:'300 kg de naranja',e:'Solo Júpiter usa naranja.',q:'5x <= 300'},{d:'(no negativos)',e:'',q:'x, y >= 0'}],
+  obj:{s:'max',q:'30x + 20y',d:'30 €… 20 €',e:''},
+  sistema:['10x + 5y <= 1000','5x + 5y <= 800','5x <= 300','x, y >= 0']},
+ {id:'b60',n:60,tipo:'pl',titulo:'Anillos con piedras',enun:'El anillo 1 tarda 20 minutos y usa 1 piedra de mayor calidad y 2 de menor; el anillo 2 tarda 50 minutos y usa 3 de mayor y 1 de menor. Hay 200 piedras de mayor calidad y 150 de menor a la semana. Quiere trabajar al menos 1900 minutos y fabricar al menos 20 anillos del tipo 1. El anillo 1 se vende a 21 € y el 2 a 50 €. ¿Cuántos de cada tipo para maximizar las ventas?',
+  pide:'Cuántos anillos de cada tipo.',vars:[['x','anillos del tipo 1'],['y','anillos del tipo 2']],
+  frases:[{d:'200 piedras de mayor calidad',e:'',q:'x + 3y <= 200'},{d:'150 de menor calidad',e:'',q:'2x + y <= 150'},
+   {d:'al menos 1900 minutos',e:'',q:'20x + 50y >= 1900'},{d:'al menos 20 del primer tipo',e:'',q:'x >= 20'},{d:'(no negativos)',e:'',q:'y >= 0'}],
+  obj:{s:'max',q:'21x + 50y',d:'21 €… 50 €',e:''},
+  sistema:['x + 3y <= 200','2x + y <= 150','20x + 50y >= 1900','x >= 20','y >= 0']},
+ {id:'b61',n:61,tipo:'pl',titulo:'Cajas de pastelitos',enun:'Hay 120 piononos y 150 pestiños. La caja 1 lleva 3 piononos y 2 pestiños; la caja 2, 4 piononos y 6 pestiños. Deben prepararse al menos 9 cajas del tipo 2. ¿Cuántas cajas de cada tipo para hacer el máximo número de regalos? ¿Cuántos piononos y pestiños se usarán?',
+  pide:'Cuántas cajas de cada tipo.',vars:[['x','cajas del tipo 1'],['y','cajas del tipo 2']],
+  frases:[{d:'120 piononos',e:'',q:'3x + 4y <= 120'},{d:'150 pestiños',e:'',q:'2x + 6y <= 150'},{d:'al menos 9 del tipo 2',e:'',q:'y >= 9'},{d:'(no negativos)',e:'',q:'x >= 0'}],
+  obj:{s:'max',q:'x + y',d:'el máximo número de regalos',e:'Total de cajas.'},
+  sistema:['3x + 4y <= 120','2x + 6y <= 150','y >= 9','x >= 0']},
+ {id:'b62',n:62,tipo:'pl',titulo:'Plazas de avión',enun:'Turista permite 10 kg de equipaje y clase superior 14 kg. El billete superior cuesta 160 € y el turista 100 €. El avión tiene 250 plazas, admite 3000 kg en cabina y como máximo 70 plazas pueden ser de clase superior. ¿Cuántas plazas de cada tarifa debe ofertar para el máximo beneficio?',
+  pide:'Plazas de cada tarifa.',vars:[['x','plazas de clase superior'],['y','plazas de turista']],
+  frases:[{d:'250 plazas',e:'',q:'x + y <= 250'},{d:'hasta 3000 kg en cabina',e:'',q:'14x + 10y <= 3000'},{d:'máximo 70 en clase superior',e:'',q:'x <= 70'},{d:'(no negativos)',e:'',q:'x, y >= 0'}],
+  obj:{s:'max',q:'160x + 100y',d:'160 €… 100 €',e:''},
+  sistema:['x + y <= 250','14x + 10y <= 3000','x <= 70','x, y >= 0']},
+ {id:'b63',n:63,tipo:'pl',titulo:'Trajes y vestidos',enun:'Una sastrería dispone de 70 m² de lino y 150 m² de algodón. Un traje usa 1 m² de lino y 3 m² de algodón; un vestido, 2 m² de cada. Se ganan 60 € por traje y 70 € por vestido. ¿Cuántos trajes y vestidos para el máximo beneficio?',
+  pide:'Cuántos trajes y vestidos.',vars:[['x','trajes'],['y','vestidos']],
+  frases:[{d:'70 m² de lino',e:'',q:'x + 2y <= 70'},{d:'150 m² de algodón',e:'',q:'3x + 2y <= 150'},{d:'(no negativos)',e:'',q:'x, y >= 0'}],
+  obj:{s:'max',q:'60x + 70y',d:'60 €… 70 €',e:''},
+  sistema:['x + 2y <= 70','3x + 2y <= 150','x, y >= 0']},
+ {id:'b64',n:64,tipo:'pl',titulo:'Vuelos de dos aviones',enun:'El avión T₁ debe hacer más trayectos que T₂, pero no más de 160. Entre los dos deben hacer más de 80 vuelos y menos de 200. T₁ consume 2800 kg de combustible por vuelo y T₂ 2400 kg. ¿Cuántos vuelos debe hacer cada uno para que el consumo sea mínimo?',
+  pide:'Vuelos de cada avión.',vars:[['x','vuelos de T₁'],['y','vuelos de T₂']],
+  frases:[{d:'T₁ más que T₂',e:'«Más que» es estricto (>). Para dibujar usamos la recta x = y, que no está incluida.',q:'x - y > 0'},{d:'no más de 160',e:'',q:'x <= 160'},
+   {d:'más de 80 vuelos',e:'',q:'x + y > 80'},{d:'menos de 200',e:'',q:'x + y < 200'},{d:'(no negativos)',e:'',q:'y >= 0'}],
+  obj:{s:'min',q:'2800x + 2400y',d:'2800 kg… 2400 kg',e:''},
+  sistema:['x - y > 0','x <= 160','x + y > 80','x + y < 200','y >= 0'],nota:'Como hay desigualdades estrictas, el vértice exacto no vale: hay que tomar el punto entero más cercano que cumpla todo (por ejemplo, T₁ = 41 y T₂ = 40, 81 vuelos).'},
+ {id:'b65',n:65,tipo:'pl',titulo:'Lotes de cuadernos y estuches',enun:'Una papelería quiere vender 400 cuadernos y 300 estuches. Los lotes A tienen 2 cuadernos y 2 estuches; los B, 3 cuadernos y 1 estuche. No se pueden vender más de 100 lotes B. El lote A se vende a 35 € y el B a 45 €. ¿Cuántos lotes de cada tipo para el máximo valor de ventas?',
+  pide:'Cuántos lotes de cada tipo.',vars:[['x','lotes A'],['y','lotes B']],
+  frases:[{d:'400 cuadernos',e:'',q:'2x + 3y <= 400'},{d:'300 estuches',e:'',q:'2x + y <= 300'},{d:'no más de 100 lotes B',e:'',q:'y <= 100'},{d:'(no negativos)',e:'',q:'x, y >= 0'}],
+  obj:{s:'max',q:'35x + 45y',d:'35 €… 45 €',e:''},
+  sistema:['2x + 3y <= 400','2x + y <= 300','y <= 100','x, y >= 0']},
+ {id:'b66',n:66,tipo:'pl',titulo:'Raquetas',enun:'Una raqueta estándar usa 0,125 kg de aleación y 10 minutos; una extragrande, 0,4 kg y 12 minutos. Para las próximas dos semanas hay 80 kg de aleación y 40 horas de producción por semana. Beneficio: 10 € la estándar y 15 € la extragrande. Al menos el 20 % de la producción debe ser estándar. ¿Cuántas raquetas de cada tipo para maximizar el beneficio?',
+  pide:'Cuántas raquetas de cada tipo (en las dos semanas).',vars:[['x','raquetas estándar'],['y','raquetas extragrandes']],
+  frases:[{d:'80 kg de aleación',e:'',q:'0.125x + 0.4y <= 80'},
+   {d:'40 horas por semana (dos semanas)',e:'¡Unidades! 2 semanas · 40 h = 80 h = 4800 minutos.',q:'10x + 12y <= 4800'},
+   {d:'al menos el 20 % estándar',e:'x ≥ 0,2(x + y) → 0,8x − 0,2y ≥ 0. Por 5: 4x − y ≥ 0.',q:'4x - y >= 0'},{d:'(no negativos)',e:'',q:'x, y >= 0'}],
+  obj:{s:'max',q:'10x + 15y',d:'10 €… 15 €',e:''},
+  sistema:['0.125x + 0.4y <= 80','10x + 12y <= 4800','4x - y >= 0','x, y >= 0']},
+ {id:'b67',n:67,tipo:'pl',titulo:'Ajedrez y dominó',enun:'Un ajedrez necesita 2 kg de madera y 4 horas; un dominó, 1 kg y 1 hora. Hay que hacer al menos 3 juegos al día y usar como máximo 7 kg de madera y 9 horas. El ajedrez se vende por 40 € y el dominó por 15 €. ¿Cuántos juegos de cada tipo para la ganancia máxima?',
+  pide:'Cuántos juegos de cada tipo.',vars:[['x','ajedreces'],['y','dominós']],
+  frases:[{d:'al menos 3 juegos',e:'',q:'x + y >= 3'},{d:'como máximo 7 kg de madera',e:'',q:'2x + y <= 7'},{d:'y 9 horas',e:'',q:'4x + y <= 9'},{d:'(no negativos)',e:'',q:'x, y >= 0'}],
+  obj:{s:'max',q:'40x + 15y',d:'40 €… 15 €',e:''},
+  sistema:['x + y >= 3','2x + y <= 7','4x + y <= 9','x, y >= 0']},
+ {id:'b68',n:68,tipo:'pl',titulo:'Talleres de bicicletas',enun:'El taller A fabrica al día 3 bicis de carretera y 2 de montaña con un coste de 900 €; el B, 2 de carretera y 5 de montaña por 1200 €. A no puede abrir más de 90 días al año y hay que completar un pedido de al menos 350 bicis de carretera y 500 de montaña. ¿Cuántos días abrirá cada taller para que el coste sea mínimo?',
+  pide:'Días que abre cada taller.',vars:[['x','días que abre A'],['y','días que abre B']],
+  frases:[{d:'A no más de 90 días',e:'',q:'x <= 90'},{d:'al menos 350 de carretera',e:'',q:'3x + 2y >= 350'},{d:'y 500 de montaña',e:'',q:'2x + 5y >= 500'},{d:'(no negativos)',e:'',q:'x, y >= 0'}],
+  obj:{s:'min',q:'900x + 1200y',d:'900 €… 1200 €',e:''},
+  sistema:['x <= 90','3x + 2y >= 350','2x + 5y >= 500','x, y >= 0']},
+ {id:'b69',n:69,tipo:'pl',titulo:'Lotes de bombillas',enun:'Sara quiere 375 bombillas led, 350 fluorescentes y 200 halógenas. Lushop vende lotes de 20 led, 15 fluorescentes y 12 halógenas por 405 €; Light, lotes de 10 led, 10 fluorescentes y 20 halógenas por 210 €. ¿Cuántos lotes debe comprar en cada tienda para que el coste sea mínimo?',
+  pide:'Lotes de cada tienda.',vars:[['x','lotes de Lushop'],['y','lotes de Light']],
+  frases:[{d:'375 led',e:'Necesita al menos esa cantidad.',q:'20x + 10y >= 375'},{d:'350 fluorescentes',e:'',q:'15x + 10y >= 350'},{d:'200 halógenas',e:'',q:'12x + 20y >= 200'},{d:'(no negativos)',e:'',q:'x, y >= 0'}],
+  obj:{s:'min',q:'405x + 210y',d:'405 €… 210 €',e:''},
+  sistema:['20x + 10y >= 375','15x + 10y >= 350','12x + 20y >= 200','x, y >= 0']},
+ {id:'b70',n:70,tipo:'pl',titulo:'Portátiles A y B',enun:'El modelo A se vende a 1000 € y el B a 800 €. Solo hay 30 ordenadores A y 40 B. Se quiere vender del modelo A al menos el doble que del B y obtener unos ingresos mínimos de 30 000 €. ¿Cuántas unidades de cada modelo para obtener los ingresos máximos?',
+  pide:'Unidades de cada modelo.',vars:[['x','portátiles A'],['y','portátiles B']],
+  frases:[{d:'30 del modelo A',e:'',q:'x <= 30'},{d:'40 del modelo B',e:'',q:'y <= 40'},{d:'de A al menos el doble que de B',e:'x ≥ 2y.',q:'x - 2y >= 0'},
+   {d:'ingresos mínimos de 30 000 €',e:'',q:'1000x + 800y >= 30000'},{d:'(no negativos)',e:'',q:'y >= 0'}],
+  obj:{s:'max',q:'1000x + 800y',d:'1000 €… 800 €',e:'Ingresos.'},
+  sistema:['x <= 30','y <= 40','x - 2y >= 0','1000x + 800y >= 30000','y >= 0']}
+];
+
+const EXTRA=[
+ {id:'s1',tipo:'sis',titulo:'Entradas de teatro',enun:'Un teatro vende entradas de patio, de anfiteatro y de palco, que cuestan 25 €, 18 € y 40 € respectivamente. En una función se vendieron 300 entradas y se recaudaron 7120 €. Además, se vendieron el triple de entradas de patio que de palco. ¿Cuántas entradas de cada tipo se vendieron?',
+  pide:'El número de entradas de cada tipo: tres cantidades, así que tres incógnitas.',vars:[['x','entradas de patio'],['y','entradas de anfiteatro'],['z','entradas de palco']],
+  frases:[{d:'se vendieron 300 entradas',e:'El total es la suma de las entradas de los tres tipos.',q:'x + y + z = 300'},
+   {d:'se recaudaron 7120 €',e:'Cada entrada de patio aporta 25 €, así que x entradas aportan 25x euros. Hacemos lo mismo con las otras y sumamos.',q:'25x + 18y + 40z = 7120'},
+   {d:'el triple de entradas de patio que de palco',e:'Las de patio (x) son tres veces las de palco (z): x = 3z. Pasamos todo a la izquierda.',q:'x - 3z = 0'}],
+  sistema:['x + y + z = 300','25x + 18y + 40z = 7120','x - 3z = 0']},
+ {id:'s2',tipo:'sis',titulo:'Inversión en tres fondos',enun:'Lucía invierte 30 000 € repartidos en tres fondos, A, B y C. En el fondo B invierte 4000 € más que en el A. Al cabo de un año, el fondo A le da un 3 % de beneficio, el B un 5 % y el C un 6 %, y gana en total 1440 €. ¿Cuánto invirtió en cada fondo?',
+  pide:'El dinero invertido en cada fondo.',vars:[['x','euros invertidos en A'],['y','euros invertidos en B'],['z','euros invertidos en C']],
+  frases:[{d:'invierte 30 000 € repartidos en tres fondos',e:'Lo que pone en los tres fondos suma 30 000.',q:'x + y + z = 30000'},
+   {d:'En el fondo B invierte 4000 € más que en el A',e:'B es lo de A más 4000: y = x + 4000. Pasamos la x a la izquierda.',q:'-x + y = 4000'},
+   {d:'un 3 %, un 5 % y un 6 %, y gana en total 1440 €',e:'El 3 % de x es 0,03x. Sumamos lo que gana en cada fondo. Para no trabajar con decimales se puede multiplicar todo por 100: 3x + 5y + 6z = 144000.',q:'0.03x + 0.05y + 0.06z = 1440'}],
+  sistema:['x + y + z = 30000','-x + y = 4000','0.03x + 0.05y + 0.06z = 1440']},
+ {id:'s3',tipo:'sis',titulo:'Un número de tres cifras',enun:'Halla un número de tres cifras sabiendo que sus cifras suman 14, que la cifra de las decenas es igual a la suma de las otras dos, y que si se intercambian la cifra de las centenas y la de las unidades el número disminuye en 99.',
+  pide:'Un número de tres cifras: las incógnitas son sus tres cifras.',vars:[['x','cifra de las centenas'],['y','cifra de las decenas'],['z','cifra de las unidades']],
+  frases:[{d:'sus cifras suman 14',e:'Sumamos las tres cifras.',q:'x + y + z = 14'},
+   {d:'la cifra de las decenas es igual a la suma de las otras dos',e:'y = x + z. Pasamos todo a un lado.',q:'x - y + z = 0'},
+   {d:'si se intercambian la cifra de las centenas y la de las unidades el número disminuye en 99',e:'El número vale 100x + 10y + z. Al intercambiar queda 100z + 10y + x. El original menos el nuevo es 99: (100x + 10y + z) − (100z + 10y + x) = 99, es decir 99x − 99z = 99. Dividimos entre 99.',q:'x - z = 1'}],
+  sistema:['x + y + z = 14','x - y + z = 0','x - z = 1'],nota:'Con las cifras, el número es 100x + 10y + z.'},
+ {id:'s4',tipo:'sis',titulo:'Ventas con porcentajes',enun:'Una tienda de electrónica ha vendido este mes portátiles, tablets y móviles. El 20 % de los portátiles más el 10 % de las tablets equivale al 5 % del total de aparatos vendidos. Se han vendido 100 tablets más que portátiles, y la mitad de los móviles coincide con el número de tablets. ¿Cuántos aparatos de cada tipo se han vendido?',
+  pide:'Cuántos portátiles, tablets y móviles se han vendido.',vars:[['x','portátiles'],['y','tablets'],['z','móviles']],
+  frases:[{d:'El 20 % de los portátiles más el 10 % de las tablets equivale al 5 % del total',e:'El total es x + y + z. Queda 0,2x + 0,1y = 0,05(x + y + z). Quitamos el paréntesis y pasamos todo a la izquierda: 0,15x + 0,05y − 0,05z = 0. Multiplicando por 20 queda más limpio.',q:'3x + y - z = 0'},
+   {d:'Se han vendido 100 tablets más que portátiles',e:'y = x + 100.',q:'-x + y = 100'},
+   {d:'la mitad de los móviles coincide con el número de tablets',e:'z/2 = y. Multiplicamos por 2: z = 2y.',q:'-2y + z = 0'}],
+  sistema:['3x + y - z = 0','-x + y = 100','-2y + z = 0']},
+ {id:'s5',tipo:'sis',titulo:'Rebajas (con apartado de SCI)',enun:'Marcos compra un libro, un estuche y una mochila y paga 60 €. La mochila cuesta el doble que el libro y el estuche juntos. a) ¿Se puede saber el precio de cada artículo solo con estos datos? b) Si hubiera comprado en rebajas, con un 10 % de descuento en el libro, un 20 % en el estuche y un 25 % en la mochila, habría pagado 47,50 €. ¿Cuánto cuesta cada artículo?',
+  pide:'El precio de cada artículo (sin rebaja).',vars:[['x','precio del libro (€)'],['y','precio del estuche (€)'],['z','precio de la mochila (€)']],
+  frases:[{d:'paga 60 €',e:'La suma de los tres precios.',q:'x + y + z = 60'},
+   {d:'La mochila cuesta el doble que el libro y el estuche juntos',e:'z = 2(x + y) = 2x + 2y. Pasamos todo a la izquierda.',q:'2x + 2y - z = 0'},
+   {d:'apartado a)',e:'Con solo estas dos ecuaciones hay 2 ecuaciones y 3 incógnitas: el sistema es compatible indeterminado (rg = 2 < 3), así que no se puede saber el precio de cada artículo. Curiosidad: la mochila sí se puede saber (z = 40), pero el libro y el estuche no.',q:''},
+   {d:'un 10 %, un 20 % y un 25 % de descuento… 47,50 €',e:'Con un 10 % de descuento se paga el 90 %: 0,9x. Igual con el resto: 0,8y y 0,75z.',q:'0.9x + 0.8y + 0.75z = 47.5'}],
+  sistema:['x + y + z = 60','2x + 2y - z = 0','0.9x + 0.8y + 0.75z = 47.5']},
+ {id:'s6',tipo:'sis',titulo:'Cociente y resto',enun:'La suma de tres números naturales es 90. Al dividir el mayor entre el menor, el cociente es 5 y el resto 4. Al dividir el mayor entre el mediano, el cociente es 2 y el resto 2. Halla los tres números.',
+  pide:'Los tres números.',vars:[['x','el número mayor'],['y','el mediano'],['z','el menor']],
+  frases:[{d:'La suma de tres números naturales es 90',e:'Sumamos los tres.',q:'x + y + z = 90'},
+   {d:'Al dividir el mayor entre el menor, el cociente es 5 y el resto 4',e:'Recuerda: dividendo = divisor · cociente + resto. Entonces x = 5z + 4.',q:'x - 5z = 4'},
+   {d:'Al dividir el mayor entre el mediano, el cociente es 2 y el resto 2',e:'x = 2y + 2.',q:'x - 2y = 2'}],
+  sistema:['x + y + z = 90','x - 5z = 4','x - 2y = 2']},
+ {id:'s7',tipo:'sis',titulo:'Factura con impuestos',enun:'El dueño de un bar compra refrescos, cerveza y vino por 600 € sin impuestos. El gasto en vino es 100 € menor que el gasto en refrescos y cerveza juntos. Los impuestos son del 6 % para los refrescos, del 12 % para la cerveza y del 30 % para el vino, y la factura total con impuestos asciende a 705 €. ¿Cuánto pagó por cada bebida, con los impuestos incluidos?',
+  pide:'Lo pagado por cada bebida CON impuestos. Ojo: conviene usar como incógnitas los importes sin impuestos y al final sumarles el impuesto.',vars:[['x','gasto en refrescos sin impuestos (€)'],['y','gasto en cerveza sin impuestos (€)'],['z','gasto en vino sin impuestos (€)']],
+  frases:[{d:'compra … por 600 € sin impuestos',e:'La suma de los tres importes sin impuestos.',q:'x + y + z = 600'},
+   {d:'El gasto en vino es 100 € menor que el gasto en refrescos y cerveza juntos',e:'z = x + y − 100. Pasamos las incógnitas a la izquierda.',q:'x + y - z = 100'},
+   {d:'6 %, 12 % y 30 %… 705 €',e:'Con un 6 % de impuesto se paga el 106 %: 1,06x. Igual con 1,12y y 1,30z.',q:'1.06x + 1.12y + 1.3z = 705'}],
+  sistema:['x + y + z = 600','x + y - z = 100','1.06x + 1.12y + 1.3z = 705'],nota:'Al terminar, multiplica: 1,06x, 1,12y y 1,30z son lo que se pagó con impuestos (212 €, 168 € y 325 €).'},
+ {id:'p1',tipo:'pl',titulo:'Taller de lámparas',enun:'Un taller fabrica lámparas de pie y lámparas de mesa. Cada lámpara de pie necesita 2 horas de trabajo y 3 kg de metal, y cada lámpara de mesa, 1 hora y 1 kg de metal. Cada lámpara se envía en una caja. A la semana dispone de 80 horas de trabajo, 100 kg de metal y 70 cajas, y tiene un pedido que le obliga a fabricar al menos 10 lámparas de mesa. Gana 40 € con cada lámpara de pie y 15 € con cada una de mesa. ¿Cuántas lámparas de cada tipo debe fabricar a la semana para que el beneficio sea máximo? ¿Cuál es ese beneficio? ¿Sobra algún recurso?',
+  pide:'Cuántas lámparas de cada tipo fabricar para ganar lo máximo.',vars:[['x','lámparas de pie'],['y','lámparas de mesa']],
+  frases:[{d:'80 horas de trabajo',e:'Horas usadas: 2 por cada lámpara de pie y 1 por cada una de mesa. No pueden pasar de 80.',q:'2x + y <= 80'},
+   {d:'100 kg de metal',e:'Metal usado: 3x + y, como mucho 100.',q:'3x + y <= 100'},
+   {d:'70 cajas',e:'Una caja por lámpara: el total de lámparas no puede pasar de 70.',q:'x + y <= 70'},
+   {d:'al menos 10 lámparas de mesa',e:'«Al menos» significa mayor o igual.',q:'y >= 10'},
+   {d:'(no se pueden fabricar cantidades negativas)',e:'Siempre hay que añadirlo cuando las incógnitas son cantidades.',q:'x >= 0'}],
+  obj:{s:'max',q:'40x + 15y',d:'Gana 40 € con cada lámpara de pie y 15 € con cada una de mesa',e:'El beneficio es 40 por cada lámpara de pie más 15 por cada una de mesa. Queremos que sea máximo.'},
+  sistema:['2x + y <= 80','3x + y <= 100','x + y <= 70','y >= 10','x >= 0'],nota:'Para ver si sobra algún recurso, sustituye la solución en cada restricción: las horas y el metal se gastan enteros, pero sobran 10 cajas.'},
+ {id:'p2',tipo:'pl',titulo:'Mezcla de piensos',enun:'Un ganadero prepara una mezcla con dos piensos, A y B. Cada kilo de A aporta 2 unidades de proteína y 1 de vitaminas, y cada kilo de B, 1 unidad de proteína y 2 de vitaminas. La mezcla debe aportar como mínimo 16 unidades de proteína y 14 de vitaminas, y por problemas de suministro no puede usar más de 12 kg de pienso A. El kilo de A cuesta 5 € y el de B, 4 €. ¿Cuántos kilos de cada pienso debe usar para que el coste sea mínimo?',
+  pide:'Los kilos de cada pienso que hacen mínimo el coste.',vars:[['x','kg de pienso A'],['y','kg de pienso B']],
+  frases:[{d:'como mínimo 16 unidades de proteína',e:'Proteína: 2 por kilo de A y 1 por kilo de B. «Como mínimo» es ≥.',q:'2x + y >= 16'},
+   {d:'como mínimo … 14 de vitaminas',e:'Vitaminas: 1 por kilo de A y 2 por kilo de B.',q:'x + 2y >= 14'},
+   {d:'no puede usar más de 12 kg de pienso A',e:'«No más de» es ≤.',q:'x <= 12'},
+   {d:'(los kilos no pueden ser negativos)',e:'',q:'x, y >= 0'}],
+  obj:{s:'min',q:'5x + 4y',d:'El kilo de A cuesta 5 € y el de B, 4 €',e:'Coste total: 5x + 4y. Queremos que sea mínimo.'},
+  sistema:['2x + y >= 16','x + 2y >= 14','x <= 12','x, y >= 0'],nota:'La región no está acotada (hacia arriba no tiene fin), pero el mínimo existe.'},
+ {id:'p3',tipo:'pl',titulo:'Vivero de plantas',enun:'Un vivero va a producir rosales y geranios. Por su capacidad, debe producir entre 150 y 600 plantas en total. El número de geranios no puede ser menor que la mitad del número de rosales ni mayor que el doble. Cada rosal deja un beneficio de 5 € y cada geranio de 3 €. ¿Cuántas plantas de cada tipo debe producir para maximizar el beneficio?',
+  pide:'Cuántos rosales y geranios producir.',vars:[['x','rosales'],['y','geranios']],
+  frases:[{d:'entre 150 y 600 plantas en total',e:'«Entre» da dos restricciones: el total es al menos 150 y como mucho 600.',q:'x + y >= 150'},
+   {d:'(sigue) … y 600',e:'',q:'x + y <= 600'},
+   {d:'no puede ser menor que la mitad del número de rosales',e:'y ≥ x/2. Multiplicamos por 2 y pasamos todo a la izquierda: x − 2y ≤ 0.',q:'x - 2y <= 0'},
+   {d:'ni mayor que el doble',e:'y ≤ 2x, es decir y − 2x ≤ 0.',q:'-2x + y <= 0'},
+   {d:'(no hay plantas negativas)',e:'',q:'x, y >= 0'}],
+  obj:{s:'max',q:'5x + 3y',d:'Cada rosal deja un beneficio de 5 € y cada geranio de 3 €',e:'Beneficio: 5x + 3y.'},
+  sistema:['x + y >= 150','x + y <= 600','x - 2y <= 0','-2x + y <= 0','x, y >= 0']},
+ {id:'p4',tipo:'pl',titulo:'Patinetes y porcentaje',enun:'Una empresa fabrica patinetes eléctricos urbanos y todoterreno. Cada urbano necesita 2 horas de montaje y 1 batería, y cada todoterreno, 3 horas de montaje y 2 baterías. Al mes dispone de 270 horas de montaje y 160 baterías. Además, al menos el 25 % de los patinetes fabricados deben ser todoterreno. Gana 60 € con cada urbano y 100 € con cada todoterreno. ¿Cuántos patinetes de cada tipo debe fabricar para maximizar el beneficio?',
+  pide:'Cuántos patinetes de cada tipo fabricar.',vars:[['x','patinetes urbanos'],['y','patinetes todoterreno']],
+  frases:[{d:'270 horas de montaje',e:'Horas: 2x + 3y, como mucho 270.',q:'2x + 3y <= 270'},
+   {d:'160 baterías',e:'Baterías: x + 2y, como mucho 160.',q:'x + 2y <= 160'},
+   {d:'al menos el 25 % de los patinetes fabricados deben ser todoterreno',e:'El total es x + y. Queda y ≥ 0,25(x + y) = 0,25x + 0,25y. Pasamos todo a la izquierda: 0,75y − 0,25x ≥ 0. Multiplicando por 4: 3y − x ≥ 0, o lo que es lo mismo, x − 3y ≤ 0.',q:'x - 3y <= 0'},
+   {d:'(cantidades no negativas)',e:'',q:'x, y >= 0'}],
+  obj:{s:'max',q:'60x + 100y',d:'Gana 60 € con cada urbano y 100 € con cada todoterreno',e:'Beneficio: 60x + 100y.'},
+  sistema:['2x + 3y <= 270','x + 2y <= 160','x - 3y <= 0','x, y >= 0']},
+ {id:'p5',tipo:'pl',titulo:'Academia (infinitas soluciones)',enun:'Una academia ofrece cursos presenciales y cursos online. Cada trimestre puede organizar como máximo 8 cursos presenciales y 6 online, y no más de 12 cursos en total. Además, debe organizar al menos 2 cursos presenciales. Cada curso, sea del tipo que sea, le deja 500 € de beneficio. ¿Cuántos cursos de cada tipo le conviene organizar?',
+  pide:'Cuántos cursos de cada tipo organizar para ganar lo máximo.',vars:[['x','cursos presenciales'],['y','cursos online']],
+  frases:[{d:'como máximo 8 cursos presenciales',e:'',q:'x <= 8'},{d:'y 6 online',e:'',q:'y <= 6'},
+   {d:'no más de 12 cursos en total',e:'',q:'x + y <= 12'},{d:'al menos 2 cursos presenciales',e:'',q:'x >= 2'},{d:'(no hay cursos negativos)',e:'',q:'y >= 0'}],
+  obj:{s:'max',q:'500x + 500y',d:'Cada curso le deja 500 € de beneficio',e:'Beneficio: 500x + 500y.'},
+  sistema:['x <= 8','y <= 6','x + y <= 12','x >= 2','y >= 0'],nota:'La función objetivo es paralela a la recta x + y = 12: el máximo se alcanza en todo un segmento. Como los cursos son enteros, valen (8, 4), (7, 5) y (6, 6).'},
+ {id:'p6',tipo:'pl',titulo:'Alquiler de camiones',enun:'Una constructora necesita transportar al menos 40 toneladas de grava y 45 toneladas de arena. Puede alquilar camiones grandes, que llevan 4 t de grava y 3 t de arena cada uno, y camiones pequeños, que llevan 2 t de grava y 3 t de arena. Dispone como máximo de 12 camiones grandes y 20 pequeños. Cada camión grande cuesta 300 € y cada pequeño 200 €. ¿Cuántos camiones de cada tipo debe alquilar para que el coste sea mínimo? ¿Cuál es ese coste?',
+  pide:'Cuántos camiones de cada tipo alquilar gastando lo mínimo.',vars:[['x','camiones grandes'],['y','camiones pequeños']],
+  frases:[{d:'al menos 40 toneladas de grava',e:'Grava: 4 t por camión grande y 2 t por pequeño.',q:'4x + 2y >= 40'},
+   {d:'al menos … 45 toneladas de arena',e:'Arena: 3 t por cada camión, sea grande o pequeño.',q:'3x + 3y >= 45'},
+   {d:'como máximo 12 camiones grandes',e:'',q:'x <= 12'},{d:'y 20 pequeños',e:'',q:'y <= 20'},{d:'(no hay camiones negativos)',e:'',q:'x, y >= 0'}],
+  obj:{s:'min',q:'300x + 200y',d:'Cada camión grande cuesta 300 € y cada pequeño 200 €',e:'Coste: 300x + 200y.'},
+  sistema:['4x + 2y >= 40','3x + 3y >= 45','x <= 12','y <= 20','x, y >= 0']},
+ {id:'p7',tipo:'pl',titulo:'Recinto: máximo, mínimo y valores',enun:'Se considera el recinto definido por las inecuaciones x + y ≥ 4, y − x ≤ 2, x ≤ 6, y ≥ 1. a) Represéntalo y calcula sus vértices. b) Halla el máximo y el mínimo de F(x, y) = 2x + 3y en el recinto. c) ¿Puede F tomar el valor 20 en algún punto del recinto? ¿Y el valor 40? d) ¿Pertenece el punto (2, 3) al recinto?',
+  pide:'Dibujar el recinto, sus vértices, el máximo y el mínimo de F y contestar a c) y d).',vars:[['x','primera coordenada'],['y','segunda coordenada']],
+  frases:[{d:'x + y ≥ 4',e:'Aquí las inecuaciones ya vienen dadas: solo hay que copiarlas.',q:'x + y >= 4'},{d:'y − x ≤ 2',e:'',q:'-x + y <= 2'},{d:'x ≤ 6',e:'',q:'x <= 6'},{d:'y ≥ 1',e:'',q:'y >= 1'}],
+  obj:{s:'ambos',q:'2x + 3y',d:'máximo y el mínimo de F(x, y) = 2x + 3y',e:'Nos piden las dos cosas.'},
+  sistema:['x + y >= 4','-x + y <= 2','x <= 6','y >= 1'],nota:'c) F toma todos los valores entre el mínimo (9) y el máximo (36): 20 sí, 40 no. d) Sustituye (2, 3) en cada inecuación: 5 ≥ 4, 1 ≤ 2, 2 ≤ 6 y 3 ≥ 1. Cumple todas, así que sí pertenece.'}
+];
+const BANK=[...BOLETIN,...EXTRA];
+let CUR=null,HINT=0,FILT='bs';
+const GROUPS=[['bs','Boletín · Sistemas',b=>b.n&&b.tipo==='sis'],['bp','Boletín · Programación lineal',b=>b.n&&b.tipo==='pl'],['ex','Problemas extra',b=>!b.n]];
+const groupOf=b=>GROUPS.find(g=>g[2](b))[0];
+function renderBankList(){
+  $('#bankFilt').innerHTML=GROUPS.map(g=>`<button class="chip" data-f="${g[0]}" aria-pressed="${g[0]===FILT}">${g[1]}</button>`).join('');
+  const g=GROUPS.find(x=>x[0]===FILT);
+  $('#bankList').innerHTML=BANK.filter(g[2]).map(b=>`<button class="bankitem" data-id="${b.id}" aria-current="${CUR&&CUR.id===b.id}"><span class="tag ${b.tipo==='pl'?'pl':''}">${b.n?'Boletín nº '+b.n:(b.tipo==='pl'?'Programación lineal':'Sistemas')}</span><b>${b.titulo}</b><span class="small">${esc(b.enun.slice(0,80))}…</span></button>`).join('');
+}
+$('#bankFilt').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;FILT=b.dataset.f;renderBankList();if(FILT!=='ex')setDict(FILT==='bp'?'P':'S')};
+function setDict(k){$('#dictBodyS').hidden=k!=='S';$('#dictBodyP').hidden=k!=='P';$('#dictS').setAttribute('aria-pressed',k==='S');$('#dictP').setAttribute('aria-pressed',k==='P')}
+$('#dictS').onclick=()=>setDict('S');$('#dictP').onclick=()=>setDict('P');
+$('#bankList').onclick=e=>{const b=e.target.closest('.bankitem');if(!b)return;openBank(b.dataset.id);if(matchMedia('(max-width:860px)').matches)scrollTo($('#bankDetail'))};
+/* selector del boletín en cada pestaña del resolutor */
+['S','P'].forEach(k=>{
+  const tipo=k==='S'?'sis':'pl';
+  $('#bolSel'+k).innerHTML=BOLETIN.filter(b=>b.tipo===tipo).map(b=>`<option value="${b.id}">Nº ${b.n} · ${b.titulo}</option>`).join('');
+  $('#bolGo'+k).onclick=()=>{openBank($('#bolSel'+k).value,1);showTab('practicar');setTimeout(()=>scrollTo($('#hintsCard')),60)};
+});
+function hintItems(b){
+  const H=[{k:'Qué nos piden',h:`<p>${b.pide}</p>`},{k:'Las incógnitas',h:`<div class="eqs brace">${b.vars.map(v=>`<span><b>${v[0]}</b> = ${v[1]}</span>`).join('')}</div>`}];
+  b.frases.forEach(f=>H.push({k:'Traducimos un dato',h:`<div class="quote">«${f.d}»</div>${f.e?`<p>${f.e}</p>`:''}${f.q?`<span class="expr">${pretty(f.q)}</span>`:''}`}));
+  if(b.obj)H.push({k:'La función objetivo',h:`<div class="quote">«${b.obj.d}»</div><p>${b.obj.e}</p><span class="expr">f(x, y) = ${pretty(b.obj.q)}</span> → <b>${{max:'máximo',min:'mínimo',ambos:'máximo y mínimo'}[b.obj.s]}</b>`});
+  H.push({k:b.tipo==='pl'?'El problema completo':'El sistema completo',h:`${b.obj?`<div class="math">${{max:'Maximizar',min:'Minimizar',ambos:'Máximo y mínimo de'}[b.obj.s]} f(x, y) = ${pretty(b.obj.q)}</div>`:''}<div class="eqs brace">${b.sistema.map(s=>`<span>${pretty(s)}</span>`).join('')}</div>${b.nota?`<div class="tip"><b>Al final:</b> ${b.nota}</div>`:''}`});
+  return H;
+}
+function openBank(id,hint=0){
+  CUR=BANK.find(b=>b.id===id);HINT=hint;FILT=groupOf(CUR);renderBankList();setDict(CUR.tipo==='pl'?'P':'S');const b=CUR;const isPL=b.tipo==='pl';
+  $('#bankDetail').innerHTML=`
+   <div class="card"><span class="tag ${isPL?'pl':''}">${b.n?'Boletín nº '+b.n+' · ':''}${isPL?'Programación lineal':'Sistemas de ecuaciones'}</span><h2 style="margin-top:6px">${b.titulo}</h2><p class="enun">${b.enun}</p></div>
+   <div class="card"><h2>1 · Plantéalo tú</h2>
+     <p class="small" style="margin-top:0">Para poder corregirte, usa estas letras: ${b.vars.map(v=>`<b>${v[0]}</b> = ${v[1]}`).join('; ')}.</p>
+     ${isPL?`<label class="lbl" for="myObj">Función objetivo</label><div class="row" style="flex-wrap:nowrap"><select id="mySense" style="width:auto;flex:none"><option value="max">Máximo</option><option value="min">Mínimo</option><option value="ambos">Máximo y mínimo</option></select><input type="text" id="myObj" spellcheck="false" placeholder="por ejemplo 3x + 2y" style="min-width:0"></div>`:''}
+     <label class="lbl" for="mySys">${isPL?'Restricciones (una por línea)':'Tus ecuaciones (una por línea)'}</label>
+     <textarea id="mySys" spellcheck="false" rows="4" placeholder="${isPL?'2x + y <= 80\n…':'x + y + z = …\n…'}"></textarea>
+     <div class="row" style="margin-top:10px"><button class="btn" id="myCheck">Comprobar mi planteamiento</button></div>
+     <div class="feed" id="myFeed"></div>
+   </div>
+   <div class="card" id="hintsCard"><h2>2 · ¿Atascado? El planteamiento paso a paso</h2>
+     <div class="hints" id="hints"></div>
+     <div class="row" style="margin-top:12px"><button class="btn ghost" id="hintNext">Siguiente paso</button><button class="btn ghost" id="hintAll">Ver todo el planteamiento</button></div>
+   </div>
+   <div class="card"><h2>3 · Resuélvelo</h2><p class="small" style="margin-top:0">Intenta resolverlo en el cuaderno y después compara con la resolución paso a paso.</p><button class="btn" id="bankSolve">Ver la resolución paso a paso</button></div>`;
+  showHints();
+  $('#hintNext').onclick=()=>{HINT++;showHints()};$('#hintAll').onclick=()=>{HINT=999;showHints()};
+  $('#myCheck').onclick=checkMine;
+  $('#bankSolve').onclick=()=>{
+    if(isPL){$('#lpSense').value=b.obj.s;$('#lpObj').value=b.obj.q;$('#lpCons').value=b.sistema.join('\n');$('#lpCtx').innerHTML=`<div class="ctx">${b.enun}</div>`;showTab('pl');solveLP();setTimeout(()=>scrollTo($('#lpSteps')),60)}
+    else{$('#sysIn').value=b.sistema.join('\n');$('#sysCtx').innerHTML=`<div class="ctx">${b.enun}</div>`;showTab('sistemas');solveSys();setTimeout(()=>scrollTo($('#sysSteps')),60)}
+  };
+}
+function showHints(){const H=hintItems(CUR);const n=Math.min(HINT,H.length);
+  $('#hints').innerHTML=n?H.slice(0,n).map(x=>`<div class="hintc"><div class="k">${x.k}</div>${x.h}</div>`).join(''):'<p class="small" style="margin:0">Intenta plantearlo tú primero. Si te atascas, pulsa «Siguiente paso».</p>';
+  $('#hintNext').hidden=n>=H.length;$('#hintAll').hidden=n>=H.length}
+function canon(k){let a=k.a,b=k.b,c=k.c,op=k.op;if(op==='>='){a=a.neg();b=b.neg();c=c.neg();op='<='}return{a,b,c,op}}
+function sameCons(k1,k2){const p=canon(k1),q=canon(k2);if(p.op!==q.op)return false;const u=[p.a,p.b,p.c],v=[q.a,q.b,q.c];if(!proportional(u,v))return false;
+  if(p.op==='=')return true;const i=u.findIndex(t=>!t.z());return Math.sign(u[i].n)===Math.sign(v[i].n)}
+function checkMine(){
+  const b=CUR,F=$('#myFeed'),out=[];
+  const add=(cls,h)=>out.push(`<div class="${cls}">${h}</div>`);
+  try{
+    if(b.tipo==='sis'){
+      const off=buildSys(b.sistema.join('\n'),'gauss').SYS;const sol=off.vals.map(v=>v[0]);
+      const lines=$('#mySys').value.split(/[\n;]/).map(s=>s.trim()).filter(Boolean);
+      if(!lines.length)throw new Error('Escribe tus ecuaciones, una por línea.');
+      let allOk=true;
+      lines.forEach((l,i)=>{const e=parseRel(l,VN);if(e.op!=='=')throw new Error(`La ecuación ${i+1} debe llevar =.`);
+        const val=e.coef.reduce((s,q,j)=>s.add(q.mul(sol[j])),Q0);
+        if(val.eq(e.c))add('g',`Ecuación ${i+1} (${pretty(l)}): <span class="ok">correcta</span>.`);
+        else{allOk=false;add('b',`Ecuación ${i+1} (${pretty(l)}): <span class="no">no es correcta</span>. Busca qué dato del enunciado querías traducir y revísalo (mira la pista de ese dato si hace falta).`)}});
+      if(allOk){const mine=buildSys(lines.join('\n'),'gauss').SYS;
+        if(mine.kind==='SCD')add('g','<b>¡Planteamiento correcto!</b> Ahora resuélvelo y compara con la resolución paso a paso.');
+        else add('n','Todas tus ecuaciones son correctas, pero te falta información: con ellas el sistema tiene infinitas soluciones. Te falta usar algún dato o tienes dos ecuaciones que dicen lo mismo.')}
+    }else{
+      const off=parseCons(b.sistema.join('\n')).cons;const mine=parseCons($('#mySys').value).cons;
+      if(!mine.length)throw new Error('Escribe tus restricciones, una por línea.');
+      const used=new Set();let ok=0;
+      mine.forEach((k,i)=>{const j=off.findIndex((o,jj)=>!used.has(jj)&&sameCons(o,k));
+        if(j>=0){used.add(j);ok++;add('g',`${pretty(k.raw)}: <span class="ok">correcta</span>.`)}
+        else{const flip=off.some(o=>sameCons(o,{...k,op:k.op==='<='?'>=':k.op==='>='?'<=':'='}));
+          add('b',`${pretty(k.raw)}: <span class="no">no coincide</span>.${flip?' La recta está bien, pero el sentido de la desigualdad (≤ o ≥) está al revés. Revisa si el enunciado dice «como mucho» o «al menos».':' Revisa qué dato traduce.'}`)}});
+      const missing=off.filter((_,j)=>!used.has(j));
+      if(missing.length){const neg=missing.filter(o=>o.c.z()&&(o.a.z()||o.b.z())&&o.op==='>=');
+        add('n',`Te falta${missing.length>1?'n':''} ${missing.length} restricci${missing.length>1?'ones':'ón'}.${neg.length?' ¿Has puesto que las incógnitas no pueden ser negativas (x ≥ 0, y ≥ 0)?':''}`)}
+      const os=$('#myObj').value.trim();
+      if(os){const O=parseLinear(os.includes('=')?os.slice(os.lastIndexOf('=')+1):os,LV);const T=parseLinear(b.obj.q,LV);
+        const sameF=proportional(O.coef,T.coef)&&Math.sign((O.coef[0].z()?O.coef[1]:O.coef[0]).n)===Math.sign((T.coef[0].z()?T.coef[1]:T.coef[0]).n);
+        const sameS=$('#mySense').value===b.obj.s;
+        add(sameF&&sameS?'g':'b',sameF?(sameS?'Función objetivo: <span class="ok">correcta</span>.':'La función objetivo está bien, pero revisa si hay que maximizar o minimizar.'):'Función objetivo: <span class="no">no coincide</span>. ¿Qué cantidad hay que hacer máxima o mínima? ¿Cuánto aporta cada unidad?')}
+      else add('n','Te falta la función objetivo.');
+      if(!missing.length&&ok===mine.length&&os)add('g','<b>¡Planteamiento correcto!</b> Ahora resuélvelo y compara.');
+    }
+  }catch(err){add('b',esc(err.message))}
+  F.innerHTML=out.join('');
+}
+
+/* ===================== ARRANQUE ===================== */
+new ResizeObserver(()=>{draw3();drawMainLP();redrawPlots()}).observe(document.body);
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{draw3();drawMainLP();redrawPlots()});
+new MutationObserver(()=>{draw3();drawMainLP();redrawPlots()}).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+setMode(stepMode);
+$('#sysIn').value=EX_S[0].t;$('#lpSense').value=EX_P[0].s;$('#lpObj').value=EX_P[0].o;$('#lpCons').value=EX_P[0].c;
+solveSys();solveLP();openBank('b10');
+const h0=(location.hash||'').slice(1);showTab(TABS.includes(h0)?h0:'sistemas');
+</script>
+
+</body>
+</html>
