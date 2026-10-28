@@ -7494,3 +7494,98 @@
     :root .ah-ver { grid-column: 1 / -1; }
     :root .ah-ver small { display: block; }
 }
+
+
+/* ---------- Botones ★ y ⚙ del menú (solo ordenador) ---------- */
+
+:root .menu-icono {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    border: 1px solid var(--borde);
+    border-radius: 10px;
+    background: var(--tarjeta);
+    color: var(--tinta-2);
+    cursor: pointer;
+    transition: border-color .15s ease, color .15s ease;
+}
+
+:root .menu-icono:hover { border-color: var(--acento); color: var(--tinta); }
+:root .menu-icono svg { width: 17px; height: 17px; fill: currentColor; }
+:root .menu-favs:hover svg { fill: #f5b301; }
+
+:root[data-cabecera="si"].arriba #menu-container:not(:has(.menu.abierto)) .menu-icono {
+    background: rgba(255, 255, 255, .07);
+    border-color: rgba(255, 255, 255, .16);
+    color: #fff;
+}
+
+/* En el móvil ya están en la barra de abajo y en «Más» */
+@media (max-width: 760px) {
+    :root .menu-icono { display: none !important; }
+}
+
+/* Ventanas de favoritos y ajustes */
+:root .v-favs .cp-caja,
+:root .v-ajustes .cp-caja { max-width: 480px; }
+:root .fav-cuerpo { padding-top: 6px; padding-bottom: 18px; }
+:root .fav-cuerpo .fav-fila { padding: 12px 4px; }
+
+:root .aj-cuerpo { padding-top: 12px; padding-bottom: 20px; }
+
+:root .aj-fila {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    margin: 0 0 8px;
+    padding: 14px 16px;
+    box-sizing: border-box;
+    border: 1px solid var(--borde);
+    border-radius: 14px;
+    background: var(--tarjeta);
+    color: var(--tinta);
+    font-family: var(--sans);
+    text-align: left;
+    cursor: pointer;
+}
+
+:root div.aj-fila { cursor: default; }
+:root .aj-txt { display: flex; flex-direction: column; gap: 2px; }
+:root .aj-txt strong { font-size: .95rem; font-weight: 600; }
+:root .aj-txt small { font-size: .78rem; color: var(--gris); }
+:root .aj-fila .colores { gap: 8px; }
+:root .aj-fila .color-op { width: 32px; height: 32px; }
+
+:root .v-ajustes .interruptor {
+    position: relative;
+    flex: 0 0 auto;
+    width: 46px;
+    height: 28px;
+    border-radius: 999px;
+    background: var(--borde);
+    transition: background-color .2s ease;
+}
+
+:root .v-ajustes .interruptor span {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .3);
+    transition: transform .2s ease;
+}
+
+:root .v-ajustes .interruptor.on { background: var(--granate); }
+:root .v-ajustes .interruptor.on span { transform: translateX(18px); }
+
+/* «Sigue donde lo dejaste» ya no se muestra */
+:root .continuar { display: none !important; }

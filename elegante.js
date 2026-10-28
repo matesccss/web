@@ -78,6 +78,9 @@
             return;
         }
 
+        if (e.target.closest(".menu-favs")) { abrirFavsVentana(); return; }
+        if (e.target.closest(".menu-ajustes")) { abrirAjustes(); return; }
+
         if (e.target.closest(".menu-buscar, .abrir-buscador")) {
             abrirBuscador();
             return;
@@ -1514,6 +1517,65 @@
                   ["Buen domingo.", "Preparar la semana hoy es empezar el lunes con ventaja."]]
     };
 
+    /* Coletillas según el día de la semana: «Buenos días, Lucía. Feliz miércoles: …» */
+    var DIAS_SEMANA = [
+        /* domingo */ ["Feliz domingo. El clásico domingo de repaso: mejor hoy que el lunes a primera hora.",
+                       "Feliz domingo. Prepara la semana hoy y el lunes empezarás con ventaja.",
+                       "Feliz domingo. Descansa bien, que mañana arranca otra semana."],
+        /* lunes */   ["Feliz lunes: semana nueva, página en blanco.",
+                       "Feliz lunes. Empezar con ganas es la mitad del trabajo.",
+                       "Feliz lunes. Un café, buena música y a por la semana."],
+        /* martes */  ["Feliz martes. La semana ya ha arrancado: tú también.",
+                       "Feliz martes. Buen día para ese ejercicio que se te resistía.",
+                       "Feliz martes. Ni lunes ni viernes: el día perfecto para avanzar."],
+        /* miércoles */["Feliz miércoles: ya estamos a mitad de semana.",
+                       "Feliz miércoles. Ecuador de la semana: desde aquí, todo cuesta abajo.",
+                       "Feliz miércoles. Media semana hecha; la otra media, a por ella."],
+        /* jueves */  ["Feliz jueves. Casi viernes: un último empujón.",
+                       "Feliz jueves. Lo que hagas hoy, mañana no tendrás que hacerlo.",
+                       "Feliz jueves. La semana ya huele a fin de semana."],
+        /* viernes */ ["¡Feliz viernes! Un repaso rápido y a disfrutar del finde.",
+                       "Feliz viernes. Cierra la semana con algo bien hecho.",
+                       "¡Por fin viernes! Has llegado: ahora toca descansar."],
+        /* sábado */  ["Feliz sábado. Hoy toca descansar… aunque un repasito no hace daño a nadie.",
+                       "Feliz sábado. ¿En sábado por aquí? Eso es compromiso.",
+                       "Feliz sábado. Disfruta del día: el lunes queda muy lejos."]
+    ];
+
+    /* Domingo de Pascua (algoritmo de Gauss/Butcher) para la Semana Santa */
+    function pascua(an) {
+        var a = an % 19, b = Math.floor(an / 100), c = an % 100, d = Math.floor(b / 4), e = b % 4,
+            f = Math.floor((b + 8) / 25), g = Math.floor((b - f + 1) / 3), h = (19 * a + b - d - g + 15) % 30,
+            i = Math.floor(c / 4), k = c % 4, l = (32 + 2 * e + 2 * i - h - k) % 7, m = Math.floor((a + 11 * h + 22 * l) / 451),
+            mes = Math.floor((h + l - 7 * m + 114) / 31), dia = ((h + l - 7 * m + 114) % 31) + 1;
+        return new Date(an, mes - 1, dia);
+    }
+
+    /* Fechas especiales: si hoy es una de ellas, se usa siempre */
+    function saludoEspecial(f) {
+        var d = f.getDate(), m = f.getMonth() + 1, an = f.getFullYear();
+        var hoy = new Date(an, m - 1, d).getTime();
+        var p = pascua(an).getTime(), dia = 86400000;
+
+        if (an === 2027 && m === 6 && d >= 1 && d <= 3) return ["¡Mucha suerte en la PAU!", "Respira, lee bien cada enunciado y confía en todo lo que has trabajado."];
+        if (an === 2027 && m === 5 && d === 31) return ["Mañana empieza la PAU.", "Repaso ligero, mochila preparada y a dormir pronto. ¡Tú puedes!"];
+        if (m === 10 && d === 31) return ["¡Feliz Halloween!", "Lo único que da miedo de verdad es dejarlo todo para el último día. 🎃"];
+        if (m === 11 && d === 1) return ["Feliz día festivo.", "Hoy no hay clase: descansa, que te lo has ganado."];
+        if (m === 12 && (d === 6 || d === 7 || d === 8)) return ["¡Feliz puente!", "Disfruta de estos días… y si te aburres, aquí tienes tus tarjetas."];
+        if (m === 12 && d === 24) return ["¡Feliz Nochebuena!", "Hoy toca familia y comida rica. Las mates pueden esperar."];
+        if (m === 12 && d === 25) return ["¡Feliz Navidad!", "Que Papá Noel te traiga muchas cosas… y una calculadora con pilas nuevas. 🎄"];
+        if (m === 12 && d === 31) return ["¡Feliz Nochevieja!", "Doce uvas, doce campanadas y un año entero por delante."];
+        if (m === 1 && d === 1) return ["¡Feliz año nuevo!", "Año nuevo, propósito nuevo: este curso, a por todas."];
+        if (m === 1 && d === 6) return ["¡Feliz día de Reyes!", "Ojalá te hayan traído lo que pediste… y no carbón. 👑"];
+        if ((m === 12 && d >= 22) || (m === 1 && d <= 7)) return ["¡Felices fiestas!", "Turrón, familia y, si te apetece, un repaso sin agobios."];
+        if (m === 2 && d === 14) return ["Feliz San Valentín.", "Las matemáticas también se quieren: x nunca va sin su y. 💜"];
+        if (m === 2 && d === 28) return ["¡Feliz Día de Andalucía!", "Verdiblanca y festiva: disfruta del día. 💚"];
+        if (m === 3 && d === 14) return ["¡Feliz Día de π!", "3,14159… Hoy es el día más matemático del año."];
+        if (hoy >= p - 7 * dia && hoy <= p) return ["Felices vacaciones de Semana Santa.", "Descansa, y antes de volver, un repaso ligero para no oxidarte."];
+        if (m === 4 && d === 23) return ["Feliz Día del Libro.", "Los apuntes también cuentan como lectura, ¿no? 📚"];
+        return null;
+    }
+
     function ocurrenciaDelDia() {
 
         var el = document.getElementById("ocurrencia");
@@ -1522,23 +1584,28 @@
         var ahora = new Date();
         var h = ahora.getHours();
         var dia = ahora.getDay();           /* 0 domingo … 6 sábado */
-        var opciones = null;
+        var ultimo = leer("saludo-ultimo");
+        var par = saludoEspecial(ahora);
 
-        if (dia === 5 && h >= 15 && h < 21) opciones = SALUDOS_ESPECIALES.viernes;
-        else if (dia === 6 && h >= 9 && h < 21) opciones = SALUDOS_ESPECIALES.sabado;
-        else if (dia === 0 && h >= 9 && h < 21) opciones = SALUDOS_ESPECIALES.domingo;
-
-        if (!opciones) {
+        if (!par) {
+            var base = h < 6 ? "Buenas noches." : h < 14 ? "Buenos días." : h < 21 ? "Buenas tardes." : "Buenas noches.";
+            var opciones = null;
             for (var i = 0; i < SALUDOS.length; i++) {
                 if (h >= SALUDOS[i][0] && h < SALUDOS[i][1]) { opciones = SALUDOS[i][2]; break; }
             }
-        }
 
-        /* Uno al azar en cada visita, sin repetir el último que se vio */
-        var ultimo = leer("saludo-ultimo");
-        var candidatos = opciones.filter(function (o) { return o[1] !== ultimo; });
-        if (!candidatos.length) candidatos = opciones;
-        var par = candidatos[Math.floor(Math.random() * candidatos.length)];
+            /* La mitad de las veces, el saludo del día de la semana (de 7:00 a 23:00) */
+            if (h >= 7 && h < 23 && Math.random() < .5) {
+                opciones = DIAS_SEMANA[dia].map(function (c) { return [base, c]; });
+            } else if (dia === 5 && h >= 15 && h < 21) opciones = SALUDOS_ESPECIALES.viernes;
+            else if (dia === 6 && h >= 9 && h < 21) opciones = SALUDOS_ESPECIALES.sabado;
+            else if (dia === 0 && h >= 9 && h < 21) opciones = SALUDOS_ESPECIALES.domingo;
+
+            /* Uno al azar en cada visita, sin repetir el último que se vio */
+            var candidatos = opciones.filter(function (o) { return o[1] !== ultimo; });
+            if (!candidatos.length) candidatos = opciones;
+            par = candidatos[Math.floor(Math.random() * candidatos.length)];
+        }
         guardar("saludo-ultimo", par[1]);
 
         el.innerHTML = '<strong class="saludo-hora"></strong> <span class="saludo-coletilla"></span>';
@@ -3225,6 +3292,40 @@
     }
 
 
+    /* ---------- Ordenador: ventanas de Favoritos y Ajustes (en el móvil
+       están en la barra de abajo y en «Más») ---------- */
+
+    var ventanaFavs = null, ventanaAjustes = null;
+
+    function abrirFavsVentana() {
+        if (!ventanaFavs) ventanaFavs = crearVentana("v-favs", "Tus guardados", "Mis favoritos", '<div class="cp-cuerpo fav-cuerpo"></div>');
+        ventanaFavs.querySelector(".fav-cuerpo").innerHTML = listaFavsHTML();
+        ventanaFavs.abrir();
+    }
+
+    function abrirAjustes() {
+        if (!ventanaAjustes) {
+            ventanaAjustes = crearVentana("v-ajustes", "Solo en este dispositivo", "Ajustes", '<div class="cp-cuerpo aj-cuerpo"></div>');
+        }
+        var p = miPerfil(), noche = html.getAttribute("data-tema") === "noche";
+        var c = ventanaAjustes.querySelector(".aj-cuerpo");
+        c.innerHTML =
+            '<div class="aj-fila"><span class="aj-txt"><strong>Tu color</strong><small>Cambia el color de toda la web</small></span>' + selectorColores() + '</div>' +
+            '<button type="button" class="aj-fila aj-noche"><span class="aj-txt"><strong>Modo noche</strong><small>Fondo oscuro, ideal por la noche</small></span>' +
+            '<span class="interruptor' + (noche ? " on" : "") + '"><span></span></span></button>' +
+            '<button type="button" class="aj-fila aj-quien"><span class="aj-txt"><strong>' + (p && p.nombre ? "Eres " + escaparHTML(p.nombre) : "¿Quién eres?") + '</strong>' +
+            '<small>' + (p && p.nombre ? "Toca para cambiarlo" : "Elige tu nombre para que la web te salude") + '</small></span><span class="hf-flecha">›</span></button>';
+        c.querySelector(".aj-noche").onclick = function () {
+            var nuevo = html.getAttribute("data-tema") === "noche" ? "claro" : "noche";
+            aplicarTema(nuevo);
+            guardar("tema-web", nuevo);
+            c.querySelector(".interruptor").classList.toggle("on", nuevo === "noche");
+        };
+        c.querySelector(".aj-quien").onclick = function () { ventanaAjustes.querySelector(".cp-cerrar").click(); abrirQuienEres(); };
+        ventanaAjustes.abrir();
+    }
+
+
     /* =====================================================
        ARRANQUE
     ===================================================== */
@@ -3238,13 +3339,10 @@
             saludoYRacha();
             ocurrenciaDelDia();
             aplicarPerfil(false);
-            pintarContinuar();
             pintarLogros();
             pintarMediaTile();
             pintarRepasoHoy();
             pintarAhora();
-            pintarColorTile();
-            pintarFavsTile();
             var bm = document.getElementById("abrir-media");
             if (bm) bm.addEventListener("click", abrirMedia);
             proximoExamen();
