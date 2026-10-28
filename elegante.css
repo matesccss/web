@@ -7635,3 +7635,44 @@
 }
 
 :root .hf-nuevo, :root .nv-badge { white-space: nowrap; display: inline-block; }
+
+
+/* ---------- Móvil: botones con más aire respecto a los bordes ---------- */
+
+@media (max-width: 760px) {
+
+    /* Barra de abajo: más separada de los lados y más arriba */
+    :root .tabbar {
+        padding: 8px 18px calc(16px + env(safe-area-inset-bottom));
+        gap: 4px;
+    }
+
+    :root .tab {
+        min-height: 54px;
+    }
+
+    :root.con-tabbar body {
+        padding-bottom: calc(86px + env(safe-area-inset-bottom)) !important;
+    }
+
+    :root.con-tabbar .volver-arriba {
+        right: 22px;
+        bottom: calc(100px + env(safe-area-inset-bottom));
+    }
+
+    :root .hoja-caja {
+        padding-bottom: calc(92px + env(safe-area-inset-bottom));
+    }
+
+    /* Barra de arriba: botones algo más separados del borde */
+    :root .menu,
+    :root.con-tabbar .menu {
+        padding-left: 20px;
+        padding-right: 20px;
+        min-height: 62px;
+    }
+
+    :root.con-tabbar #menu-container {
+        min-height: 62px;
+    }
+}
