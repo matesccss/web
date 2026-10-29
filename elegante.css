@@ -7676,3 +7676,448 @@
         min-height: 62px;
     }
 }
+
+
+/* #########################################################
+   ##                                                     ##
+   ##   TABLETS: el mismo menú que en el móvil             ##
+   ##   (barra de abajo y paneles que suben). Se activa    ##
+   ##   en pantallas táctiles de hasta 1366 px; en el      ##
+   ##   ordenador, que se usa con ratón, no cambia nada.   ##
+   ##                                                     ##
+######################################################### */
+
+@media (min-width: 761px) and (max-width: 1366px) and (hover: none) and (pointer: coarse) {
+
+    :root .tabbar {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 2500;
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        padding: 6px 6px calc(6px + env(safe-area-inset-bottom));
+        background: rgba(255, 255, 255, .88);
+        backdrop-filter: saturate(180%) blur(18px);
+        -webkit-backdrop-filter: saturate(180%) blur(18px);
+        border-top: 1px solid var(--borde);
+    }
+
+    :root[data-tema="noche"] .tabbar {
+        background: rgba(14, 14, 30, .86);
+        border-top-color: rgba(255, 255, 255, .08);
+    }
+
+    :root .tab {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+        min-height: 50px;
+        padding: 4px 0;
+        border: 0;
+        border-radius: 12px;
+        background: transparent;
+        color: var(--gris);
+        font-family: var(--sans);
+        font-size: .66rem;
+        font-weight: 600;
+        text-decoration: none;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+        transition: color .15s ease, transform .1s ease;
+    }
+
+    :root .tab:active {
+        transform: scale(.92);
+    }
+
+    :root .tab svg {
+        width: 23px;
+        height: 23px;
+        fill: currentColor;
+    }
+
+    :root .tab.activa {
+        color: var(--granate);
+    }
+
+    :root .tab.activa svg {
+        filter: drop-shadow(0 4px 10px rgba(112, 72, 255, .35));
+    }
+
+    :root .tab-buscar svg {
+        box-sizing: content-box;
+        width: 20px;
+        height: 20px;
+        padding: 8px;
+        border-radius: 14px;
+        background: linear-gradient(135deg, var(--c1), var(--c2));
+        fill: #fff;
+        box-shadow: 0 8px 18px -6px rgba(112, 72, 255, .7);
+        margin-top: -14px;
+    }
+
+    :root .tab-buscar.activa svg {
+        filter: none;
+    }
+
+    :root.con-tabbar body {
+        padding-bottom: calc(68px + env(safe-area-inset-bottom)) !important;
+    }
+
+    :root.con-tabbar .volver-arriba {
+        bottom: calc(82px + env(safe-area-inset-bottom));
+    }
+
+    :root.con-tabbar :is(.menu-toggle, .menu-buscar) {
+        display: none !important;
+    }
+
+    :root.con-tabbar .menu-contenido {
+        display: none !important;
+    }
+
+    :root.con-tabbar .menu-acciones {
+        margin-right: 0;
+    }
+
+    :root.con-tabbar .menu,
+    :root.con-tabbar #menu-container {
+        min-height: 56px;
+    }
+
+    :root .hoja {
+        position: fixed;
+        inset: 0;
+        z-index: 2400;
+        display: block;
+        pointer-events: none;
+    }
+
+    :root .hoja-fondo {
+        position: absolute;
+        inset: 0;
+        background: rgba(8, 8, 20, .45);
+        opacity: 0;
+        transition: opacity .25s ease;
+    }
+
+    :root .hoja-caja {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        flex-direction: column;
+        max-height: 78vh;
+        padding-bottom: calc(76px + env(safe-area-inset-bottom));
+        border-radius: 24px 24px 0 0;
+        background: var(--papel);
+        box-shadow: 0 -20px 50px rgba(0, 0, 0, .25);
+        transform: translateY(105%);
+        transition: transform .32s cubic-bezier(.2, .8, .2, 1);
+    }
+
+    :root[data-tema="noche"] .hoja-caja {
+        background: #12122a;
+    }
+
+    :root .hoja.abierto {
+        pointer-events: auto;
+    }
+
+    :root .hoja.abierto .hoja-fondo {
+        opacity: 1;
+    }
+
+    :root .hoja.abierto .hoja-caja {
+        transform: none;
+    }
+
+    :root .hoja-asa {
+        width: 40px;
+        height: 5px;
+        margin: 10px auto 2px;
+        border-radius: 3px;
+        background: var(--borde);
+    }
+
+    :root .hoja-cab {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 6px 20px 10px;
+    }
+
+    :root .hoja-cab h2 {
+        margin: 0;
+        font-family: var(--serif);
+        font-size: 1.35rem;
+        font-weight: 700;
+        letter-spacing: -.02em;
+        color: var(--tinta);
+    }
+
+    :root .hoja-cerrar {
+        width: 34px;
+        height: 34px;
+        border: 0;
+        border-radius: 50%;
+        background: var(--relleno);
+        color: var(--tinta-2);
+        font-size: 1.3rem;
+        line-height: 1;
+    }
+
+    :root .hoja-cuerpo {
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        padding: 0 14px 10px;
+    }
+
+    :root .hoja-grupo {
+        margin: 16px 8px 6px;
+        font-size: .7rem;
+        font-weight: 700;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+        color: var(--granate);
+    }
+
+    :root .hoja-cargando {
+        padding: 30px 0;
+        text-align: center;
+        color: var(--gris);
+    }
+
+    :root .hoja-fila {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+        min-height: 56px;
+        margin: 0 0 6px;
+        padding: 10px 14px;
+        box-sizing: border-box;
+        border: 1px solid var(--borde);
+        border-radius: 14px;
+        background: var(--tarjeta);
+        color: var(--tinta);
+        font-family: var(--sans);
+        text-align: left;
+        text-decoration: none;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    :root .hoja-fila:active {
+        transform: scale(.98);
+        background: var(--relleno);
+    }
+
+    :root .hf-txt {
+        flex: 1 1 auto;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    :root .hf-txt strong {
+        font-size: .95rem;
+        font-weight: 600;
+        line-height: 1.3;
+    }
+
+    :root .hf-txt small {
+        font-size: .76rem;
+        color: var(--gris);
+    }
+
+    :root .hf-flecha {
+        font-size: 1.4rem;
+        color: var(--gris-claro);
+    }
+
+    :root .hf-num {
+        flex: 0 0 auto;
+        display: grid;
+        place-items: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        background: var(--granate-suave);
+        color: var(--granate);
+        font-family: var(--serif);
+        font-weight: 700;
+    }
+
+    :root .hf-ic {
+        flex: 0 0 auto;
+        display: grid;
+        place-items: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        background: var(--azul-suave);
+    }
+
+    :root .hf-ic svg {
+        width: 18px; height: 18px; fill: var(--azul);
+    }
+
+    :root .hf-examen {
+        align-self: flex-start;
+        margin-top: 3px;
+        padding: 2px 8px;
+        border-radius: 999px;
+        background: rgba(255, 90, 54, .12);
+        color: #d43d1a;
+        font-size: .7rem;
+        font-style: normal;
+        font-weight: 600;
+    }
+
+    :root .hoja-desplegable {
+        margin-top: 14px;
+    }
+
+    :root .hoja-desplegable summary {
+        padding: 10px 8px;
+        list-style: none;
+        font-size: .82rem;
+        font-weight: 600;
+        color: var(--gris);
+        cursor: pointer;
+    }
+
+    :root .hoja-desplegable summary::-webkit-details-marker {
+        display: none;
+    }
+
+    :root .hoja-desplegable summary::after {
+        content: " ▾";
+    }
+
+    :root .hoja-desplegable[open] summary::after {
+        content: " ▴";
+    }
+
+    :root .hoja-desplegable summary small {
+        font-weight: 400; opacity: .8;
+    }
+
+    :root .hoja-desplegable .hf-num {
+        background: var(--azul-suave); color: var(--azul);
+    }
+
+    :root .interruptor {
+        position: relative;
+        flex: 0 0 auto;
+        width: 46px;
+        height: 28px;
+        border-radius: 999px;
+        background: var(--borde);
+        transition: background-color .2s ease;
+    }
+
+    :root .interruptor span {
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: #fff;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, .3);
+        transition: transform .2s ease;
+    }
+
+    :root .interruptor.on {
+        background: var(--granate);
+    }
+
+    :root .interruptor.on span {
+        transform: translateX(18px);
+    }
+
+    @keyframes subir-hoja {
+        from { transform: translateY(100%); }
+        to   { transform: none; }
+    }
+
+    :root .menu-icono {
+        display: none !important;
+    }
+
+    :root .tabbar {
+        padding: 8px 18px calc(16px + env(safe-area-inset-bottom));
+        gap: 4px;
+    }
+
+    :root .tab {
+        min-height: 54px;
+    }
+
+    :root.con-tabbar body {
+        padding-bottom: calc(86px + env(safe-area-inset-bottom)) !important;
+    }
+
+    :root.con-tabbar .volver-arriba {
+        right: 22px;
+        bottom: calc(100px + env(safe-area-inset-bottom));
+    }
+
+    :root .hoja-caja {
+        padding-bottom: calc(92px + env(safe-area-inset-bottom));
+    }
+
+    :root .menu,
+    :root.con-tabbar .menu {
+        padding-left: 20px;
+        padding-right: 20px;
+        min-height: 62px;
+    }
+
+    :root.con-tabbar #menu-container {
+        min-height: 62px;
+    }
+
+    /* En la tablet la barra no ocupa todo el ancho: va centrada */
+    :root .tabbar {
+        left: 0;
+        right: 0;
+        width: min(640px, calc(100% - 48px));
+        margin: 0 auto;
+        bottom: calc(12px + env(safe-area-inset-bottom));
+        padding: 8px 14px;
+        border: 1px solid var(--borde);
+        border-radius: 22px;
+        box-shadow: 0 12px 34px rgba(20, 21, 28, .14);
+    }
+
+    :root[data-tema="noche"] .tabbar {
+        border-color: rgba(255, 255, 255, .1);
+    }
+
+    :root.con-tabbar body {
+        padding-bottom: calc(110px + env(safe-area-inset-bottom)) !important;
+    }
+
+    :root.con-tabbar .volver-arriba {
+        bottom: calc(110px + env(safe-area-inset-bottom));
+    }
+
+    /* Los paneles, centrados y con un ancho cómodo */
+    :root .hoja-caja {
+        left: 0;
+        right: 0;
+        width: min(640px, 100%);
+        margin: 0 auto;
+        max-height: 72vh;
+        padding-bottom: calc(110px + env(safe-area-inset-bottom));
+    }
+
+}
